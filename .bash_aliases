@@ -38,7 +38,6 @@ alias ..="cd .."
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)'
 
-
 ##
 ## Network
 ##
@@ -93,7 +92,8 @@ ds () {
 ## Security
 ##
 
-# generate a random password $1 = length (default 8), set $2 to 0 for no special chars
+# generate a random password $1 = length (default 8),
+# set $2 to 0 for no special chars
 randpass () {
     if [[ $2 == "!" ]]; then
         echo $(cat /dev/urandom | tr -cd '[:graph:]' | head -c ${1:-8})
@@ -124,6 +124,7 @@ zero () {
 }
 
 
+#################################################################################################################################
 ##
 ## Fun Stuff
 ##
@@ -135,8 +136,13 @@ rot13 () { echo $@ | tr A-Za-z N-ZA-Mn-za-m; }
 bullshit () { cat /dev/urandom | hexdump -C | grep --color=auto "ca fe"; }
 
 # Excuses
-#bofh () { telnet bofh.jeffballard.us 666 2>/dev/null | grep --color -o "Your excuse is:.*$"; }
-bofh () { randomline ~/bin/data/bofh }
+bofh () {
+    # telnet bofh.jeffballard.us 666 2>/dev/null | grep --color -o "Your excuse is:.*$";
+    ## instead of above, download excuses locally and use internal randomline()
+    ## wget http://pages.cs.wisc.edu/~ballard/bofh/excuses
+
+    randomline ~/bin/data/bofh;
+}
 
 
 ##
