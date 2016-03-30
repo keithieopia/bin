@@ -163,6 +163,8 @@ prompt_command () {
             ;;
     esac
 
+    echo
+
     # Root PS1
     if [ "$(id -u)" == "0" ]; then
         export PS1="$TITLEBAR$BLUE[$RED$NEW_PWD$BLUE]$WHITE\$$NO_COLOR "
