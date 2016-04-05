@@ -84,16 +84,12 @@ fi
 
 shopt -s extglob # needed for bash completion (programmable completion)
 
-if [[ -f /etc/bash_completion ]]; then
-    source /etc/bash_completion
-    complete -cf sudo
-    complete -o dirnames -d cd
+# Bash Completion
+if [ -f /etc/git-completion.bash ]; then
+  source /etc/git-completion.bash
 fi
-
-# Git completion
-if [ -f ~/bin/git-completion.bash ]; then
-  source ~/bin/git-completion.bash
-fi
+complete -cf sudo
+complete -cf man
 
 
 ##
@@ -111,7 +107,6 @@ fi
 
 # QOTD
 echo -e "\e[00;33m$(fortune -sa)\e[00m\n"
-
 
 prompt_command () {
 
@@ -163,11 +158,9 @@ prompt_command () {
             ;;
     esac
 
-    echo
-
     # Root PS1
     if [ "$(id -u)" == "0" ]; then
-        export PS1="$TITLEBAR$BLUE[$RED$NEW_PWD$BLUE]$WHITE\$$NO_COLOR "
+        export PS1="$TITLEBAR$BLUE[ $RED$NEW_PWD$BLUE ] $WHITE#$NO_COLOR "
 
     # User PS1
     else
@@ -181,10 +174,7 @@ prompt_command () {
             BRANCH="\$(__git_ps1 '[ %s ] ')"
         fi
 
-        local TIME=$(format_time)
-        local LOAD=$(uptime|awk '{print $8}'|awk '{gsub(/,$/,""); print}')
-
-        export PS1="$TITLEBAR$BLUE[ $BOLD_CYAN\u$GREEN@$BOLD_CYAN\h $BOLD_BLACK($LOAD) $WHITE$TIME $CYAN] $GRAY$NEW_PWD\n$GREEN$BRANCH$WHITE\$$NO_COLOR "
+        export PS1="$TITLEBAR$BLUE[ $BOLD_BLACK$NEW_PWD$BLUE ]$BRANCH$WHITE\$$NO_COLOR "
     fi
 
     export PS2='> '
