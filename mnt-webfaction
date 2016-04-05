@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run as root" 1>&2
+    exit 1
+fi
+
+if mount | grep /mnt/webfaction > /dev/null; then
+    echo 'Unmounting webfaction server...'
+    umount /mnt/webfaction
+else
+    echo 'Mounting webfaction server...'
+    sshfs keithieopia@keithieopia.com:/home/keithieopia /mnt/webfaction/ -o uid=1000 -o gid=100
+    cd /mnt/webfaction
+fi
+

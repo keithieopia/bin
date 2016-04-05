@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Cleaning Backup Files..."
+rm -rfv *.bak
+rm -rfv "*~"
+rm -rfv "."*~
+
+echo "Cleaning Thumbnails..."
+rm -rfv ~/.thumbnails/*
+
+echo "Removing Chromium cache..."
+rm -rfv ~/.cache/chromium/*
+
+echo "Removing Firefox cache..."
+rm -rfv ~/.cache/mozilla/firefox/*
+
+echo "Removing Flash Player cache..."
+rm -rfv ~/.adobe/Flash_Player/*
+
+echo "Cleaning Trash..."
+rm -rfv ~/.local/share/Trash/*
+
+echo

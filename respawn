@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo -e "\e[34m"
+echo "This script will indefinitely restart $1 after it exits, to prevent"
+echo "this on the next exit, send a SIGUSR1 or simply run /tmp/respawn/respawnkill"
+echo "All output from the program will be captured to /tmp/respawn/*.log"
+echo -e "\e[39m"
+
+cleanup() {
+    TIMESTAMP=`date "+%Y-%m-%d-%H:%M:%S"`
+    echo -e "\e[34m[$TIMESTAMP] \e[33mProgram has exited, but SIGUSR1 received so not restarting...\e[39m"
+
+    echo -e "\e[34mClearing logs and kill script...\e[39m"
+    rm -rf /tmp/respawn/*
+    exit 0
+}
+
+if [ ! -d "/tmp/respawn" ]; then
+    mkdir /tmp/respawn
+fi
+
+echo -e "\e[34mCreating kill script...\e[39m"
+echo "#!/bin/bash" >> /tmp/respawn/respawnkill
+echo "kill -SIGUSR1 ${$}" >> /tmp/respawn/respawnkill
+chmod +x /tmp/respawn/respawnkill
+
+TIMESTAMP=`date "+%Y-%m-%d-%H:%M:%S"`
+echo -e "\e[34m[$TIMESTAMP] \e[32mStarting $1...\e[39m"
+$1 > /tmp/respawn/$1-$TIMESTAMP.log 2>&1
+
+trap cleanup SIGUSR1
+while : ; do
+    TIMESTAMP=`date "+%Y-%m-%d-%H:%M:%S"`
+    echo -e "\e[34m[$TIMESTAMP] \e[33mProgram exited, restarting...\e[39m"
+    $1 > /tmp/respawn/$1-$TIMESTAMP.log 2>&1
+done
