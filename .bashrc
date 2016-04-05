@@ -165,7 +165,7 @@ prompt_command () {
     # User PS1
     else
         # Set $__git_ps1
-        if [ -f ~/bin/git-completion.bash ]; then
+        if [ -f ~/bin/git-prompt.sh ]; then
             source ~/bin/git-prompt.sh
         fi
 
