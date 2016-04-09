@@ -28,7 +28,7 @@ set bell-style visible
 ## Command History Stuff
 ##
 export HISTSIZE=2000
-export HISTIGNORE=*history*:ls:ll:df:cd:pwd:su:clear:exit:gpg:shred
+export HISTIGNORE=*history*:ls*:df*:cd*:pwd:su:clear:exit:gpg*:shred*
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT='%F %T '
 shopt -s histappend
