@@ -1,0 +1,27 @@
+#!/bin/bash
+
+interval=300
+warn_level=20
+critical_level=10
+kill_level=5
+
+while true
+do
+    if [ "$(acpi -a | grep -o off)" == "off" ]; then
+        battery_level=`acpi -b | awk '{print $4}' | sed 's/\(.*\)../\1/'`
+
+        if [ $battery_level -le $kill_level ]; then
+            notify-send -u critical "Battery Dead!" \
+            "System will use remaining power to shutdown safely"
+            sleep 10
+            systemctl poweroff
+        elif [ $battery_level -le $critical_level ]; then
+            notify-send -u critical "Battery level is very low!" \
+            "Please plug into AC adapter. Only $battery_level% remains"
+        elif [ $battery_level -le $warn_level ]; then
+            notify-send -u normal "Battery level is low!" \
+            "Only $battery_level% remains"
+        fi
+    fi
+    sleep $interval
+done
