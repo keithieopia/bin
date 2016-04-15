@@ -85,8 +85,8 @@ fi
 shopt -s extglob # needed for bash completion (programmable completion)
 
 # Bash Completion
-if [ -f /etc/git-completion.bash ]; then
-  source /etc/git-completion.bash
+if [ -f /usr/share/git/completion/git-completion.bash ]; then
+  source /usr/share/git/completion/git-completion.bash
 fi
 complete -cf sudo
 complete -cf man
@@ -165,8 +165,8 @@ prompt_command () {
     # User PS1
     else
         # Set $__git_ps1
-        if [ -f ~/bin/git-prompt.sh ]; then
-            source ~/bin/git-prompt.sh
+        if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+            source /usr/share/git/completion/git-prompt.sh
         fi
 
         # if we're in a Git repo, show current branch
