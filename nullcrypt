@@ -1,0 +1,75 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+    echo -e "\e[33mThis script must be run as root, recalling self with sudo...\e[39m"
+    sudo $0 $*
+    exit 0
+fi
+
+if [ ! -f /home/$SUDO_USER/.$1 ]; then
+    echo -e "\e[31m~/.$1 does not exist\e[39m"
+
+    read -p "  Would you like to create it?: " answer
+    case ${answer:0:1} in
+        y|Y )
+            read -p "  Size of container?: " answer
+            truncate -s ${answer} .$1
+
+            cryptsetup luksFormat .$1
+
+            echo -e "\e[34mUnlocking encrypted container...\e[39m"
+            cryptsetup luksOpen .$1 $1
+
+            echo -e "\e[33mCreating filesystem...\e[39m"
+            mkfs.ext2 /dev/mapper/$1
+            tune2fs -m 0 /dev/mapper/$1
+
+            echo -e "\e[33mCreating mount point...\e[39m"
+            mkdir -p /home/$SUDO_USER/Private/$1
+            mount /dev/mapper/$1 /home/$SUDO_USER/Private/$1
+
+            echo -e "\e[33mFixing permissions...\e[39m"
+            chown $SUDO_USER:users /home/$SUDO_USER/Private/$1
+            chmod g-rwx /home/$SUDO_USER/Private/$1
+            chmod o-rwx /home/$SUDO_USER/Private/$1
+
+            echo -e "\e[33mUnmounting and re-runing self...\e[39m"
+            umount /home/$SUDO_USER/Private/$1
+            cryptsetup luksClose $1
+
+            echo -e "\e[32m$1 successfully created!\e[39m"
+            exit 0
+        ;;
+        * )
+            echo -e "\e[31m~/.$1 does not exist, not creating it\e[39m"
+            exit 1
+        ;;
+    esac
+fi
+
+if mount | grep /home/$SUDO_USER/Private/$1 > /dev/null; then
+    echo -e "\e[34mEncrypted container already unlocked, closing...\e[39m"
+    umount /home/$SUDO_USER/Private/$1
+    cryptsetup luksClose $1
+    echo -e "\e[32m$1 successfully closed!\e[39m"
+    exit 0
+else
+    if [ ! -d /home/$SUDO_USER/Private/$1 ]; then
+        echo -e "\e[33mMount point does not exist, creating it...\e[39m"
+        mkdir -p /home/$SUDO_USER/Private/$1
+    fi
+
+    echo -e "\e[34mUnlocking encrypted container...\e[39m"
+    cryptsetup luksOpen /home/$SUDO_USER/.$1 $1
+
+    echo -e "\e[34mMounting container...\e[39m"
+    mount -o noatime,nodev,nosuid /dev/mapper/$1 /home/$SUDO_USER/Private/$1
+
+    if [ $DISPLAY ]; then
+        echo -e "\e[34mI noticed you are in Xorg, starting thunar for you...\e[39m"
+        su $SUDO_USER -c "thunar /home/$SUDO_USER/Private/$1" &
+    fi
+
+    echo -e "\e[32m$1 successfully opened!\e[39m"
+    exit 0
+fi
