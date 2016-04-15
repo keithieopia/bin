@@ -4,10 +4,10 @@
 
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
-
 ##
 ## Start SSH agent if not currently running
 ##
+
 
 SSH_ENV="$HOME/.ssh/env"
 
@@ -23,7 +23,7 @@ function start_agent {
 if [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
     #ps ${SSH_AGENT_PID} doesn't work under cywgin
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+    /usr/bin/ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
         start_agent;
     }
 else
