@@ -1,75 +1,225 @@
 #!/bin/bash
 
-if [ "$(id -u)" != "0" ]; then
-    echo -e "\e[33mThis script must be run as root, recalling self with sudo...\e[39m"
-    sudo $0 $*
-    exit 0
-fi
+PRIVATE_DIR="$HOME/.private"
+MOUNT_DIR="/mnt"
+WHOAMI=${SUDO_USER:-$(whoami)}
 
-if [ ! -f /home/$SUDO_USER/.$1 ]; then
-    echo -e "\e[31m~/.$1 does not exist\e[39m"
+source /home/$WHOAMI/bin/colorize
 
-    read -p "  Would you like to create it?: " answer
+function unlockContainer() {
+    echo -n "Password?: " | colorize GRAY
+    read -s PASSWORD
+    echo
+
+    echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $PRIVATE_DIR/$1 $1 || {
+        echo "Could not open encrypted container!" | bcolorize RED
+        exit 1
+    }
+}
+
+function mountContainer() {
+
+    if [ ! -d $MOUNT_DIR/$1 ]; then
+        sudo mkdir -p $MOUNT_DIR/$1
+    fi
+
+    sudo mount -o noatime,nodev,nosuid /dev/mapper/$1 $MOUNT_DIR/$1
+}
+
+function makeContainer() {
+    echo "Container '$1' doesn't exist; create it?" | bcolorize WHITE
+    echo -n "(y/N): " | colorize WHITE
+    read answer
+    echo
+
     case ${answer:0:1} in
-        y|Y )
-            read -p "  Size of container?: " answer
-            truncate -s ${answer} .$1
+        y|Y)
+            #
+            # Ask for new password
+            #
+            while [ -z "$PASSWORD" ]; do
+                echo -n "Password?: " | colorize WHITE
+                read -s PASSWORD1
+                echo
 
-            cryptsetup luksFormat .$1
+                echo -n "Confirm password?: " | colorize WHITE
+                read -s PASSWORD2
+                echo
 
-            echo -e "\e[34mUnlocking encrypted container...\e[39m"
-            cryptsetup luksOpen .$1 $1
+                if [ "$PASSWORD1" = "$PASSWORD2" ]; then
+                    PASSWORD=$PASSWORD1
+                else
+                    echo "Passwords did not match!" | colorize RED
+                    echo
+                fi
+            done
 
-            echo -e "\e[33mCreating filesystem...\e[39m"
-            mkfs.ext2 /dev/mapper/$1
-            tune2fs -m 0 /dev/mapper/$1
+            echo
 
-            echo -e "\e[33mCreating mount point...\e[39m"
-            mkdir -p /home/$SUDO_USER/Private/$1
-            mount /dev/mapper/$1 /home/$SUDO_USER/Private/$1
+            echo -n "Size of container?: " | colorize WHITE
+            read SIZE
+            echo
 
-            echo -e "\e[33mFixing permissions...\e[39m"
-            chown $SUDO_USER:users /home/$SUDO_USER/Private/$1
-            chmod g-rwx /home/$SUDO_USER/Private/$1
-            chmod o-rwx /home/$SUDO_USER/Private/$1
+            echo "Use default options for encryption?" | bcolorize WHITE
+            echo -n "(Y/n): " | colorize WHITE
+            read answer
+            echo
 
-            echo -e "\e[33mUnmounting and re-runing self...\e[39m"
-            umount /home/$SUDO_USER/Private/$1
-            cryptsetup luksClose $1
+            case ${answer:0:1} in
+                n|N)
+                    while [ -z "$HASH" ]; do
+                        echo "Choose a PBKDF2 hash algorithm:" | bcolorize WHITE
+                        echo " 1. sha1" | lcolorize LIGHTGRAY
+                        echo " 2. sha256" | lcolorize LIGHTGRAY
+                        echo " 3. sha512" | lcolorize LIGHTGRAY
+                        echo " 4. ripemd160" | lcolorize LIGHTGRAY
+                        echo " 5. whirlpool" | lcolorize LIGHTGRAY
+                        echo
+                        echo -n "Hash?: " | colorize WHITE
+                        read answer
 
-            echo -e "\e[32m$1 successfully created!\e[39m"
-            exit 0
-        ;;
-        * )
-            echo -e "\e[31m~/.$1 does not exist, not creating it\e[39m"
+                        case ${answer} in
+                            sha1|1)
+                                HASH="sha1"
+                                ;;
+                            sha256|2)
+                                HASH="sha256"
+                                ;;
+                            sha512|3)
+                                HASH="sha512"
+                                ;;
+                            ripemd160|4)
+                                HASH="ripemd160"
+                                ;;
+                            whirlpool|5)
+                                HASH="whirlpool"
+                                ;;
+                            *)
+                                echo "Invalid hash!" | colorize RED
+                                echo
+                                ;;
+                        esac
+                    done
+
+                    echo
+
+                    while [ -z "$CIPHER" ]; do
+                        echo "Choose an encryption algorithm:" | bcolorize WHITE
+                        echo " 1. aes" | lcolorize LIGHTGRAY
+                        echo " 2. twofish" | lcolorize LIGHTGRAY
+                        echo " 3. serpent" | lcolorize LIGHTGRAY
+                        echo
+                        echo -n "Cipher?: " | colorize WHITE
+                        read answer
+
+                        case ${answer} in
+                            aes|1)
+                                CIPHER="aes"
+                                ;;
+                            twofish|2)
+                                CIPHER="twofish"
+                                ;;
+                            serpent|3)
+                                CIPHER="serpent"
+                                ;;
+                            *)
+                                echo "Invalid algorithm!" | colorize RED
+                                echo
+                                ;;
+                        esac
+                    done
+
+                    echo
+
+                    while [ -z "$BITS" ]; do
+                        echo "Choose a key size, note XTS cuts the actual bits in half:" | bcolorize WHITE
+                        echo " 1. 256" | lcolorize LIGHTGRAY
+                        echo " 2. 512" | lcolorize LIGHTGRAY
+                        echo
+                        echo -n "Bits?: " | colorize WHITE
+                        read answer
+
+                        case ${answer} in
+                            256|1)
+                                BITS="256"
+                                ;;
+                            512|2)
+                                BITS="512"
+                                ;;
+                            *)
+                                echo "Invalid key size!" | colorize RED
+                                echo
+                                ;;
+                        esac
+                    done
+                    ;;
+                *)
+                    HASH="sha1"
+                    CIPHER="aes"
+                    BITS="256"
+                    ;;
+            esac
+
+            echo
+
+            # Create private directory if it doesn't exist
+            if [ ! -d $PRIVATE_DIR ]; then
+                mkdir $PRIVATE_DIR
+                sudo chown $WHOAMI $PRIVATE_DIR
+                chmod 700 $PRIVATE_DIR
+            fi
+
+            # Make the container
+            truncate -s $SIZE $PRIVATE_DIR/$1
+            sudo chown $WHOAMI $PRIVATE_DIR/$1
+            chmod 600 $PRIVATE_DIR/$1
+
+            # Encrypt and open container
+            echo -n $PASSWORD | sudo cryptsetup --hash $HASH --cipher $CIPHER-xts-plain64 --key-size $BITS --key-file "-" luksFormat $PRIVATE_DIR/$1
+            echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $PRIVATE_DIR/$1 $1
+
+            # Make the filesystem
+            sudo mkfs.ext2 /dev/mapper/$1
+            sudo tune2fs -m 0 /dev/mapper/$1
+
+            mountContainer $1
+
+            # Fix permissions on the mounted container
+            sudo chown $WHOAMI $MOUNT_DIR/$1
+            chmod 700 $MOUNT_DIR/$1
+            ;;
+
+        *)
+            echo "$PRIVATE_DIR/$1 does not exist, not creating it" | bcolorize RED
             exit 1
-        ;;
+            ;;
     esac
-fi
+}
 
-if mount | grep /home/$SUDO_USER/Private/$1 > /dev/null; then
-    echo -e "\e[34mEncrypted container already unlocked, closing...\e[39m"
-    umount /home/$SUDO_USER/Private/$1
-    cryptsetup luksClose $1
-    echo -e "\e[32m$1 successfully closed!\e[39m"
-    exit 0
+
+if [ ! -n "$1" ]; then
+    echo "No encrypted container name provided" | colorize RED
+    exit 1
 else
-    if [ ! -d /home/$SUDO_USER/Private/$1 ]; then
-        echo -e "\e[33mMount point does not exist, creating it...\e[39m"
-        mkdir -p /home/$SUDO_USER/Private/$1
+    if mount | grep $MOUNT_DIR/$1 > /dev/null; then
+
+        sudo umount $MOUNT_DIR/$1
+        sudo rmdir $MOUNT_DIR/$1
+        sudo cryptsetup luksClose $1
+        echo "$1 successfully closed!" | bcolorize GREEN
+        exit
+    elif [ ! -f $PRIVATE_DIR/$1 ]; then
+        makeContainer $1
+        echo "$1 successfully opened!" | bcolorize GREEN
+        exit
+    else
+        unlockContainer $1
+        mountContainer $1
+
+        echo "$1 successfully opened!" | bcolorize GREEN
+        exit
     fi
-
-    echo -e "\e[34mUnlocking encrypted container...\e[39m"
-    cryptsetup luksOpen /home/$SUDO_USER/.$1 $1
-
-    echo -e "\e[34mMounting container...\e[39m"
-    mount -o noatime,nodev,nosuid /dev/mapper/$1 /home/$SUDO_USER/Private/$1
-
-    if [ $DISPLAY ]; then
-        echo -e "\e[34mI noticed you are in Xorg, starting thunar for you...\e[39m"
-        su $SUDO_USER -c "thunar /home/$SUDO_USER/Private/$1" &
-    fi
-
-    echo -e "\e[32m$1 successfully opened!\e[39m"
-    exit 0
 fi
+
+
+
