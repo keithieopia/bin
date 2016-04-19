@@ -9,7 +9,8 @@ pacman -Rns xfsprogs reiserfsprogs pcmciautils vi jfsutils mdadm lynx
 ## Install universal packages
 ##
 pacman -S sudo git bash-completion zip htop wget ufw unrar p7zip unzip sqlite \
-reflector pydf php php-gd php-sqlite dcfldd curl cronie colord colordiff rsync
+reflector pydf php php-gd php-sqlite dcfldd curl cronie colord colordiff rsync \
+aspell aspell-en most
 
 ##
 ## Enable services
@@ -112,23 +113,26 @@ systemctl restart ufw
 ##
 pacman -S acpi adwaita-icon-theme alsa-plugins alsa-utils aspell zenity cabextract \
 xorg-xkill xf86-input-keyboard xf86-input-synaptics libva-intel-driver libva-mesa-driver
-jre8-openjdk jdk8-openjdk jre8-openjdk-headless iw hspell haveged hicolor-icon-theme \
+jre8-openjdk jdk8-openjdk jre8-openjdk-headless iw hspell haveged \
 gimp geany geany-plugins xdg-user-dirs xarchiver wpa_actiond wpa_supplicant \
-vlc oblogout ntfs-3g mpg123 mesa openbox thunar sqliteman scrot sakura tumbler \
-pypanel ffmpegthumbnailer feh eog evince chromium xorg-xinit
+vlc oblogout ntfs-3g mpg123 mesa openbox pcmanfm sqliteman scrot sakura tumbler \
+pypanel ffmpegthumbnailer feh eog evince chromium xorg-xinit x11-ssh-askpass gksu \
+xorg-xbacklight obconf lxappearance lxappearence-obconf gnome-icon-theme \
+gnome-icon-theme-extras
 
 # Firefox
 pacman -S firefox flashplugin hunspell hunspell-en
 
 # Fonts: indic -> look of disapproval, symbola -> emoji
-pacman -S ttf-dejavu ttf-bitstream-vera ttf-droid ttf-indic-otf ttf-symbola
+pacman -S ttf-dejavu ttf-bitstream-vera ttf-droid artwiz-fonts ttf-indic-otf ttf-symbola
 
 # Wine
 pacman -S wine wine-mono wine_gecko winetricks lib32-alsa-lib lib32-alsa-plugins \
 lib32-mesa lib32-mesa-libgl lib32-mpg123
 
 packer -S systemd-readahead geany-themes-git dropbox obmenu-generator pysystray-git \
-pavumeter perl-linux-desktop-files tixati
+pavumeter perl-linux-desktop-files tixati gtk-theme-arc-git paper-icon-theme-git \
+aarchup
 
 
 ##
@@ -155,13 +159,19 @@ ln -s ~/dotfiles/mozilla/local-settings.js /usr/lib/firefox/defaults/pref/local-
 ##
 rm -rf ~/.cache
 mkdir ~/.cache
-echo "tmpfs   /home/timothy/.cache   tmpfs   noatime,nodev,nosuid,size=1G   0 0" >> /etc/fstab
+echo "tmpfs   /home/timothy/.cache   tmpfs   user,uid=1000,noatime,nodev,nosuid,size=1G   0 0" >> /etc/fstab
 mount ~/.cache
+sh ~/bin/homecache
+ln -s ~/.cache/flash ~/.adobe
+ln -s ~/.adobe ~/.macromedia
+ln -s ~/.cache/thumbnails ~/.thumbnails
+rm ~/.bash_history
+ln -s ~/.cache/bash_history ~/.bash_history
+ln -s ~/.cache/recently-used.xbel ~/.local/share/recently-used.xbel
 
 ##
-## Link similar directories together
+## Setup gksudo
 ##
-mkdir ~/.adobe
-ln -s ~/.adobe ~/.macromedia
-mkdir ~/.cache/thumbnails
-ln -s ~/.cache/thumbnails ~/.thumbnails
+cat >> /etc/sudoers << EOF
+Path askpass /usr/bin/gksudo
+EOF
