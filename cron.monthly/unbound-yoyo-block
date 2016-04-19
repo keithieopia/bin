@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl -o /etc/unbound/blocklist-yoyo.conf https://pgl.yoyo.org/adservers/serverlist.php?hostformat=unbound&showintro=0&startdate[day]=&startdate[month]=&startdate[year]=&mimetype=plaintext
