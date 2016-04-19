@@ -7,8 +7,6 @@
 ##
 ## Start SSH agent if not currently running
 ##
-
-
 SSH_ENV="$HOME/.ssh/env"
 
 function start_agent {
@@ -32,7 +30,12 @@ fi
 
 
 ##
+## Mount user .cache folder if not already done
+##
+. $HOME/bin/homecache
+
+
+##
 ## Start X on login if we're on TTY 1 (the default TTY)
 ##
-
 [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
