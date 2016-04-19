@@ -9,11 +9,11 @@ alias vi='nano'
 alias vim='nano'
 alias top='htop'
 alias more='less'
+alias less='most'
 alias diff='colordiff'
 alias df='pydf'
 
 # default options
-alias sudo='sudo env PATH=$PATH'
 alias du='du -ch'
 alias ls='ls --color=auto --group-directories-first'
 alias ll='ls -lah'
@@ -26,7 +26,6 @@ alias ps='ps auxf'
 alias pg='ps aux | grep'
 alias ping='ping -c 5'
 alias shred='shred -fuzvn 1'
-alias nano='nano -ELOSUWimwx -T 4 --speller="aspell -x -c"'
 alias wget='wget -c'
 
 # new commands
@@ -37,6 +36,8 @@ alias snano='sudo nano'
 alias ..="cd .."
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)'
+
+quietly () { "$@" &>/dev/null; }
 
 ##
 ## Network
@@ -89,6 +90,54 @@ ds () {
 
 
 ##
+## Arch Linux's pacman package manager
+##
+upgrade () {
+    echo "$HOSTNAME: Updating system..." | colorize BOLDBLUE
+    sudo pacman -Syu "$@"
+}
+
+update () {
+    echo "$HOSTNAME: Updating package lists..." | colorize BOLDBLUE
+    sudo pacman -Sy "$@"
+}
+
+purge () {
+    echo "$HOSTNAME: Removing package..." | colorize BOLDBLUE
+    sudo pacman -Rsnc "$@"
+}
+
+browse () {
+    pacman -Qs "$@"
+}
+
+consider () {
+    (pacman -Si ${*} || packer -Si ${*}) | $PAGER;
+}
+
+hunt () {
+    packer -Ss "${@}" | $PAGER
+}
+
+
+##
+## Groups
+##
+
+enlist () {
+    for group in ${@}; do
+        sudo gpasswd -a ${USER} ${group}
+    done
+}
+
+resign () {
+    for group in ${@}; do
+        sudo gpasswd -d ${USER} ${group}
+    done
+}
+
+
+##
 ## Security
 ##
 
@@ -111,7 +160,13 @@ wipe () {
 }
 
 # Securely delete all files in a directory
-alias shred_dir='find . -type f -exec shred -fuzvn 1 "{}" \;'
+alias shred-dir='find . -type f -exec shred -fuzvn 1 "{}" \;'
+
+histkill () {
+    shred -fuzvn "${HISTFILE}"
+    history -c
+    exit
+}
 
 # Zero a file
 zero () {
@@ -124,7 +179,6 @@ zero () {
 }
 
 
-#################################################################################################################################
 ##
 ## Fun Stuff
 ##
