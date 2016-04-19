@@ -5,14 +5,21 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-export EDITOR=nano
-export VISUAL=nano
+if [ "$DISPLAY" ]; then
+    export EDITOR=/usr/bin/geany
+    export SUDO_ASKPASS=/usr/bin/gksudo
+    export BROWSER="firefox"
+else
+    export EDITOR=/usr/bin/nano
+fi
+
+export VISUAL=$EDITOR
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export GREP_COLOR="1;33"
 
 export WINEARCH=win32
-export BROWSER="firefox -P Browsing"
 
 # update values of LINES and COLUMNS
 shopt -s checkwinsize
@@ -47,8 +54,12 @@ fi
 ##
 
 # Include user's private bin if it exists
-if [ -d ~/bin ] ; then
+if [ -d ~/bin ]; then
     PATH=~/bin:"${PATH}"
+fi
+
+if [ -d ~/.gem/ruby/2.3.0/bin ]; then
+    PATH=~/.gem/ruby/2.3.0/bin:"${PATH}"
 fi
 
 # Enable ccache for speedy compiling if possible
@@ -66,15 +77,8 @@ if type most >/dev/null 2>&1 ; then
   PAGER=most
   export PAGER
 else
-  # default pager program should be "less"
-  LESS_TERMCAP_mb=$'\033[01;31m'    # begin blinking
-  LESS_TERMCAP_md=$'\033[01;31m'    # begin bold
-  LESS_TERMCAP_me=$'\033[0m'        # end mode
-  LESS_TERMCAP_se=$'\033[0m'        # end standout-mode
-  LESS_TERMCAP_so=$'\033[01;44;33m' # begin standout-mode - info box
-  LESS_TERMCAP_ue=$'\033[0m'        # end underline
-  LESS_TERMCAP_us=$'\033[01;32m'    # begin underline
-  export LESS_TERMCAP_{mb,md,me,se,so,ue,us}
+  export LESS='-R'
+  export LESSOPEN='|~/.lessfilter %s'
 fi
 
 
@@ -100,6 +104,11 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+##
+## Colors
+## usage: echo "something" | colorize COLORNAME
+##
+source ~/bin/colorize
 
 ##
 ## PS1
