@@ -5,14 +5,15 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Determine if a program is installed, used in this script
+have() { type "$1" &> /dev/null; }
+
 if [ "$DISPLAY" ]; then
-    export EDITOR=/usr/bin/geany
-    export SUDO_ASKPASS=/usr/bin/gksudo
-    export BROWSER="firefox"
-else
-    export EDITOR=/usr/bin/nano
+    have gksudo && export SUDO_ASKPASS=/usr/bin/gksudo
+    export BROWSER="firefox "
 fi
 
+export EDITOR=/usr/bin/nano
 export VISUAL=$EDITOR
 
 export LANG=en_US.UTF-8
@@ -21,27 +22,27 @@ export GREP_COLOR="1;33"
 
 export WINEARCH=win32
 
-# update values of LINES and COLUMNS
-shopt -s checkwinsize
-
-# correct minor spelling errors when cd'ing
-shopt -s cdspell
-
-# No beep... WHY IS THIS NOT THE DEFAULT!?
-set bell-style visible
+set bell-style visible # No beep... WHY IS THIS NOT THE DEFAULT!?
 
 
 ##
 ## Command History Stuff
 ##
-export HISTSIZE=2000
-export HISTIGNORE=*history*:ls*:df*:cd*:pwd:su:clear:exit:gpg*:shred*
-export HISTCONTROL=ignoreboth
-export HISTTIMEFORMAT='%F %T '
-shopt -s histappend
+export HISTSIZE=30
+export HISTIGNORE="*history*:ls*:df*:cd*:pwd:su:clear:exit:rm*:shred*"
+export HISTCONTROL="ignoreboth"
+export HISTTIMEFORMAT="%F %T "
+shopt -s histappend histreedit histverify
+shopt -s extglob       # necessary for programmable completion
+shopt -s nocaseglob    # Case-insensitive globbing
+shopt -s progcomp      # Programmable completion is FUN
+shopt -s checkwinsize  # update values of LINES and COLUMNS
+shopt -s cdspell       # correct minor spelling errors when cd'ing
+shopt -s cmdhist
+shopt -s checkhash
+shopt -s no_empty_cmd_completion
 
 # bash history is only saved when close terminal, not after each command and this fixes it
-shopt -s histappend
 if [ -n "$PROMPT_COMMAND" ]; then
     PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
 else
@@ -72,13 +73,23 @@ fi
 ## PAGER / LESS
 ##
 
-if type most >/dev/null 2>&1 ; then
-  # does not need LESS_TERMCAP_*
-  PAGER=most
-  export PAGER
+if have less; then
+    export PAGER='less'
+    unset LESSCHARSET # Fix manpages looking funky
+    export LESS='--ignore-case --line-numbers --hilite-unread  -z-4 --hilite-search --LONG-PROMPT --no-init --quit-if-one-screen --quit-on-intr --RAW-CONTROL-CHARS'
+
+    # Colorized less
+    export LESS_TERMCAP_mb=$'\E[01;31m'
+    export LESS_TERMCAP_md=$'\E[01;31m'
+    export LESS_TERMCAP_me=$'\E[0m'
+    export LESS_TERMCAP_se=$'\E[0m'
+    export LESS_TERMCAP_so=$'\E[01;44;33m'
+    export LESS_TERMCAP_ue=$'\E[0m'
+    export LESS_TERMCAP_us=$'\E[01;32m'
+elif have most; then
+    export PAGER='most'
 else
-  export LESS='-R'
-  export LESSOPEN='|~/.lessfilter %s'
+    export PAGER='more'
 fi
 
 
@@ -115,7 +126,8 @@ source ~/bin/colorize
 ##
 
 # QOTD
-echo -e "\e[00;33m$(fortune -sa)\e[00m\n"
+have fortune && echo -e "$(fortune -sa)\n" | colorize PURPLE
+
 
 prompt_command () {
 
@@ -167,42 +179,96 @@ prompt_command () {
             ;;
     esac
 
-    # Root PS1
-    if [ "$(id -u)" == "0" ]; then
-        export PS1="$TITLEBAR$BLUE[ $RED$NEW_PWD$BLUE ] $WHITE#$NO_COLOR "
+    local PWDCOLOR=$BOLD_BLACK
+    local USRSYMBOL="\$"
 
-    # User PS1
-    else
-        # Set $__git_ps1
-        if [ -f /usr/share/git/completion/git-prompt.sh ]; then
-            source /usr/share/git/completion/git-prompt.sh
-        fi
-
-        # if we're in a Git repo, show current branch
-        if [ "\$(type -t __git_ps1)" ]; then
-            BRANCH="\$(__git_ps1 '[ %s ] ')"
-        fi
-
-        export PS1="$TITLEBAR$BLUE[ $BOLD_BLACK$NEW_PWD$BLUE ]$BRANCH$WHITE\$$NO_COLOR "
+    if is_root; then
+        local PWDCOLOR=$RED
+        local USRSYMBOL="#"
     fi
 
+    if is_ssh; then
+        local HOST="$BLUE[ $WHITE$\h $BLUE] "
+    fi
+
+    local GIT="$(prompt_git)"
+
+    export PS1="$TITLEBAR$HOST$BLUE[ $PWDCOLOR$NEW_PWD$GIT $BLUE]$WHITE$USRSYMBOL$NO_COLOR "
     export PS2='> '
     export PS4='+ '
 }
 PROMPT_COMMAND=prompt_command
 unset bash_prompt
 
+##
+## $PS1 prompt functions
+##
 
-# Format time to my liking
-format_time () {
-    if [ `date +%p` = "PM" ]; then
-        meridiem="pm"
+is_ssh () {
+    if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
+        return 0
     else
-        meridiem="am"
+        return 1
     fi
-    date +"%l:%M:%S$meridiem"|sed 's/ //g'
 }
 
+is_root () {
+    PRIV=1
+    if [ `/usr/bin/id -u` -eq 0 ]; then
+        PRIV=0
+    fi
+    return $PRIV
+}
+
+prompt_git() {
+    local SYMBOL=""
+
+    # check if the current directory is in a git repository
+    if [ $(git rev-parse --is-inside-work-tree &>/dev/null; printf "%s" $?) == 0 ]; then
+
+        # check if the current directory is in .git before running git checks
+        if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == "false" ]; then
+            local SYMBOL=""
+
+            # ensure index is up to date
+            git update-index --really-refresh  -q &>/dev/null
+
+            # check for uncommitted changes in the index
+            if ! $(git diff --quiet --ignore-submodules --cached); then
+                local SYMBOL="${SYMBOL}${GREEN}+"
+            fi
+
+            # check for unstaged changes
+            if ! $(git diff-files --quiet --ignore-submodules --); then
+                local SYMBOL="${SYMBOL}${RED}!"
+            fi
+
+            # check for untracked files
+            if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+                local SYMBOL="${SYMBOL}${RED}?"
+            fi
+
+            if [[ -z "$SYMBOL" ]]; then
+                local SYMBOL="${SYMBOL}${BLUE}*"
+            fi
+
+            echo " $BOLD_BLACK($SYMBOL$BOLD_BLACK)"
+        fi
+    fi
+}
+
+##
+## Nethack
+##
+if have nethack; then
+    if [ -f ~/.nethackrc ]; then
+        export NETHACKOPTIONS="@${HOME}/.nethackrc"
+    else
+        export NETHACKOPTIONS="!autopickup,number_pad:1,color" # Set some but not all of my options, if I don't have a dedicated file
+    fi
+fi
+
+# Run on exit
 trap_exit () {
     . "$HOME/.bash_logout"
 }
