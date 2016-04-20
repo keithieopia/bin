@@ -1,9 +1,8 @@
-# INTERROBANG
+# bin
+Useful shell scripts in my $PATH
 
-**~/bin** - *Useful shell scripts in my $PATH*
-
-Author: Timothy Keith, Copyright 2016  
-License: BSD
+**Author:** Timothy Keith, Copyright 2016  
+**License:** BSD
 
 
 ## Synopsis
