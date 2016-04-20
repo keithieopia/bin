@@ -119,7 +119,7 @@ gimp geany geany-plugins xdg-user-dirs xarchiver wpa_actiond wpa_supplicant \
 vlc oblogout ntfs-3g mpg123 mesa openbox pcmanfm sqliteman scrot sakura tumbler \
 pypanel ffmpegthumbnailer feh eog evince chromium xorg-xinit x11-ssh-askpass gksu \
 xorg-xbacklight obconf lxappearance lxappearence-obconf gnome-icon-theme \
-gnome-icon-theme-extras
+gnome-icon-theme-extras libnotify dunst
 
 # Firefox
 pacman -S firefox flashplugin hunspell hunspell-en
