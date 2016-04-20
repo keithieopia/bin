@@ -4,14 +4,10 @@ alias cp="cp -i"
 alias mv="mv -i"
 
 # better programs
-alias dd='dcfldd'
-alias vi='nano'
-alias vim='nano'
-alias top='htop'
-alias more='less'
-alias less='most'
-alias diff='colordiff'
-alias df='pydf'
+have dcfldd && alias dd='dcfldd'
+have htop && alias top='htop'
+have colordiff && alias diff='colordiff'
+have pydf && alias df='pydf'
 
 # default options
 alias du='du -ch'
@@ -25,8 +21,8 @@ alias egrep='egrep --color=auto'
 alias ps='ps auxf'
 alias pg='ps aux | grep'
 alias ping='ping -c 5'
-alias shred='shred -fuzvn 1'
-alias wget='wget -c'
+have shred && alias shred='shred -fuzvn 1'
+have wget && alias wget='wget -c'
 
 # new commands
 alias home='cd ~ && clear'
