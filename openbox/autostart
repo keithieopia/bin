@@ -12,8 +12,8 @@
 #  gnome-settings-daemon &
 #fi
 
-~/.fehbg
-xset -b
+xset -b # no beep
+nitrogen --restore &
 pypanel &
 # pasystray & # started automatically by XDG
 ~/bin/battmon &
