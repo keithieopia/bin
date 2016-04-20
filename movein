@@ -117,7 +117,7 @@ xorg-xkill xf86-input-keyboard xf86-input-synaptics libva-intel-driver libva-mes
 jre8-openjdk jdk8-openjdk jre8-openjdk-headless iw hspell haveged \
 gimp geany geany-plugins xdg-user-dirs xarchiver wpa_actiond wpa_supplicant \
 vlc oblogout ntfs-3g mpg123 mesa openbox pcmanfm sqliteman scrot sakura tumbler \
-pypanel ffmpegthumbnailer feh eog evince chromium xorg-xinit x11-ssh-askpass gksu \
+pypanel ffmpegthumbnailer nitrogen eog evince chromium xorg-xinit x11-ssh-askpass \
 xorg-xbacklight obconf lxappearance lxappearence-obconf gnome-icon-theme \
 gnome-icon-theme-extras libnotify dunst
 
