@@ -23,6 +23,7 @@ alias pg='ps aux | grep'
 alias ping='ping -c 5'
 have shred && alias shred='shred -fuzvn 1'
 have wget && alias wget='wget -c'
+have unclutter && alias unclutter='unclutter -idle 1 -root -grab -visible'
 
 # new commands
 alias home='cd ~ && clear'
