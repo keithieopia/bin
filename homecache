@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if mount | grep "$HOME/.cache" > /dev/null; then
+if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
     if [ ! -f "$HOME/.cache/.lock" ]; then
 
         mkdir "$HOME/.cache/thumbnails"
@@ -13,4 +13,7 @@ if mount | grep "$HOME/.cache" > /dev/null; then
         # Create lockfile used to test if .cache has been populated yet
         touch "$HOME/.cache/.lock"
     fi
+else
+    echo "~/.cache is not mounted as tmpfs, nothing to do..." | colorize RED
+    exit 1
 fi
