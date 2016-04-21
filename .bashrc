@@ -5,11 +5,37 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Determine if a program is installed, used in this script
-have() { type "$1" &> /dev/null; }
+# No beep... WHY IS THIS NOT THE DEFAULT!?
+set bell-style visible 
+
+##
+## Functions
+##
+
+# Alias and functions in this file
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# Colors ( usage: echo "something" | colorize COLORNAME )
+if [ -f ~/bin/colorize ]; then
+    . ~/bin/colorize
+fi
+
+
+##
+## If root, set a timeout for the bash session
+##
+if is_root; then
+    TMOUT=600
+fi
+
+
+##
+## Default programs
+##
 
 if [ "$DISPLAY" ]; then
-    have gksudo && export SUDO_ASKPASS=/usr/bin/gksudo
     export BROWSER="firefox "
 fi
 
@@ -22,25 +48,10 @@ export GREP_COLOR="1;33"
 
 export WINEARCH=win32
 
-set bell-style visible # No beep... WHY IS THIS NOT THE DEFAULT!?
-
 
 ##
-## Command History Stuff
+## History options
 ##
-export HISTSIZE=30
-export HISTIGNORE="*history*:ls*:df*:cd*:pwd:su:clear:exit:rm*:shred*"
-export HISTCONTROL="ignoreboth"
-export HISTTIMEFORMAT="%F %T "
-shopt -s histappend histreedit histverify
-shopt -s extglob       # necessary for programmable completion
-shopt -s nocaseglob    # Case-insensitive globbing
-shopt -s progcomp      # Programmable completion is FUN
-shopt -s checkwinsize  # update values of LINES and COLUMNS
-shopt -s cdspell       # correct minor spelling errors when cd'ing
-shopt -s cmdhist
-shopt -s checkhash
-shopt -s no_empty_cmd_completion
 
 # bash history is only saved when close terminal, not after each command and this fixes it
 if [ -n "$PROMPT_COMMAND" ]; then
@@ -49,6 +60,23 @@ else
     PROMPT_COMMAND='history -a'
 fi
 
+export HISTSIZE=30
+export HISTIGNORE="*history*:ls*:df*:cd*:pwd:su:clear:exit:rm*:shred*"
+export HISTCONTROL="ignoreboth"
+export HISTTIMEFORMAT="%F %T "
+shopt -s histappend histreedit histverify
+
+##
+## Default options
+##
+shopt -s extglob       # necessary for programmable completion
+shopt -s nocaseglob    # Case-insensitive globbing
+shopt -s progcomp      # Programmable completion is FUN
+shopt -s checkwinsize  # update values of LINES and COLUMNS
+shopt -s cdspell       # correct minor spelling errors when cd'ing
+shopt -s cmdhist       # collapse multi-line commands to one line
+shopt -s checkhash     # check cache before finding full path
+shopt -s no_empty_cmd_completion
 
 ##
 ## PATH
@@ -97,29 +125,12 @@ fi
 ## Command completion stuff
 ##
 
-shopt -s extglob # needed for bash completion (programmable completion)
-
-# Bash Completion
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
   source /usr/share/git/completion/git-completion.bash
 fi
 complete -cf sudo
 complete -cf man
 
-
-##
-## Alias
-##
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-##
-## Colors
-## usage: echo "something" | colorize COLORNAME
-##
-source ~/bin/colorize
 
 ##
 ## PS1
@@ -203,22 +214,6 @@ unset bash_prompt
 ##
 ## $PS1 prompt functions
 ##
-
-is_ssh () {
-    if [[ -n "$SSH_CLIENT"  ||  -n "$SSH2_CLIENT" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-is_root () {
-    PRIV=1
-    if [ `/usr/bin/id -u` -eq 0 ]; then
-        PRIV=0
-    fi
-    return $PRIV
-}
 
 prompt_git() {
     local SYMBOL=""
