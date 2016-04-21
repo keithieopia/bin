@@ -11,6 +11,11 @@ if [ "$EUID" -ne 0 ]; then
     exit
 fi
 
+if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
+    echo "~/.cache is not in tmpfs. This is insecure as Firefox stores it's cache in there. Gracefully dying for your protection!" | colorize RED
+    exit 1
+fi
+
 
 function lockFirefox() {
     umount "$PROFILE_DIR/cryptofox"
