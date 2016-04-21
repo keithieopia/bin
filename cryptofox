@@ -5,10 +5,9 @@ CONTAINER_DIR="/home/$WHOAMI/.private"
 PROFILE_DIR="/home/$WHOAMI/.mozilla/firefox"
 SIZE="100M"
 
-if [ "$EUID" -ne 0 ]; then
-    PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon "question" --text 'Enter sudo password:')"
-    echo "$PASSWORD" | sudo -S $0
-    exit
+if ! type zenity &> /dev/null; then
+    echo "Zenity not installed, Please install it first!" | colorize RED
+    exit 1
 fi
 
 if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
@@ -16,6 +15,11 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
     exit 1
 fi
 
+if [ "$EUID" -ne 0 ]; then
+    PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon "question" --text 'Enter sudo password:')"
+    echo "$PASSWORD" | sudo -S $0
+    exit
+fi
 
 function lockFirefox() {
     umount "$PROFILE_DIR/cryptofox"
