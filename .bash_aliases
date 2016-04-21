@@ -171,33 +171,6 @@ randpass () {
     fi
 }
 
-# Secure file deletion
-wipe () {
-    cryptsetup -d /dev/urandom -c aes-xts-plain create delete $1
-    shred -vzn 0 /dev/mapper/delete
-    sync && sleep 4
-    cryptsetup remove delete
-}
-
-# Securely delete all files in a directory
-alias shred-dir='find . -type f -exec shred -fuzvn 1 "{}" \;'
-
-histkill () {
-    shred -fuzvn "${HISTFILE}"
-    history -c
-    exit
-}
-
-# Zero a file
-zero () {
-    case "$1" in
-        "") echo "Usage: zero <file>"
-            return -1;
-    esac
-    filesize=`wc -c  "$1" | awk '{print $1}'`
-    dd if=/dev/zero of=$1 count=$filesize bs=1
-}
-
 
 ##
 ## Fun Stuff
