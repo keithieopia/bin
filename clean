@@ -1,23 +1,129 @@
 #!/bin/bash
 
-echo "Cleaning Backup Files..."
-rm -rfv *.bak
-rm -rfv "*~"
-rm -rfv "."*~
+. ~/bin/colorize
 
-echo "Cleaning Thumbnails..."
-rm -rfv ~/.thumbnails/*
+DISKDESTROYER='dcfldd' # nice alternative to dd, if you don't have it just replace
+SHREDDER='shred -fuzv -n 1'
 
-echo "Removing Chromium cache..."
-rm -rfv ~/.cache/chromium/*
 
-echo "Removing Firefox cache..."
-rm -rfv ~/.cache/mozilla/firefox/*
+if [ -z ${HISTFILE} ]; then
+    HISTFILE="$HOME/.bash_history"
+fi
 
-echo "Removing Flash Player cache..."
-rm -rfv ~/.adobe/Flash_Player/*
 
-echo "Cleaning Trash..."
-rm -rfv ~/.local/share/Trash/*
+case "${1,,}"
+in
+    "backup")
+        echo "Cleaning Backup Files..." | colorize WHITE
+        find . -type f -name '*.bak' -exec $SHREDDER "{}" \;
+        find . -type f -name '*~' -exec $SHREDDER "{}" \;
+        find . -type f -name '.*~' -exec $SHREDDER "{}" \;
+        ;;
+        
+    "bash")
+        echo "Shredding bash history..." | colorize WHITE
+        $SHREDDER "${HISTFILE}"
+        history -c
+        ;;
+        
+    "browser"|"browsers")
+        $0 "chromium"
+        $0 "firefox"
+        ;;
 
-echo
+    "chromium")
+        echo "Removing Chromium cache..." | colorize WHITE
+        find "$HOME/.cache/chromium" -type f -name '*' -exec $SHREDDER "{}" \;
+        ;;
+        
+    "crap")
+        if [ -d "$HOME/.cache/chromium" ]; then
+            $0 "chromium"
+        fi
+
+        if [ -d "$HOME/.cache/mozilla/firefox" ]; then
+            $0 "firefox"
+        fi
+        
+        if [ -d "$HOME/.adobe" ] || [ -d "$HOME/.macromedia" ]; then
+            $0 "flash"
+        fi
+
+        if [ -f "$HOME/.local/share/recently-used.xbel" ]; then
+            echo "Cleaning GNOME's recently used list..." | colorize WHITE
+            $SHREDDER "$HOME/.local/share/recently-used.xbel"
+        fi
+
+        $0 "thumbs"
+        $0 "trash"
+        $0 "history"
+
+        echo "Crap successfully removed!" | colorize GREEN
+        ;;
+    
+    "dir")
+        echo "Shredding entire directory..." | colorize WHITE
+        find . -type f -exec $SHREDDER "{}" \;
+        ;;
+        
+    "firefox")
+        echo "Removing Firefox cache..." | colorize WHITE
+        find "$HOME/.cache/mozilla/firefox" -type f -name "*" -exec $SHREDDER "{}" \;
+        ;;
+        
+    "flash")
+        echo "Removing Flash Player cache..." | colorize WHITE
+        
+        if [ -d "$HOME/.adobe" ]; then
+            find "$HOME/.adobe" -type f -name "*" -exec $SHREDDER "{}" \;
+        fi
+        
+        if [ -d "$HOME/.macromedia" ]; then
+            find "$HOME/.macromedia" -type f -name "*" -exec $SHREDDER "{}" \;
+        fi
+        ;;
+        
+    "slack") 
+        if [ "$(id -u)" != "0" ]; then
+            if [ -z "$SUDO_COMMAND" ]; then
+                echo -e "\e[33mThis script must be run as root, recalling self with sudo...\e[39m"
+                sudo $0 $*
+                exit 0
+            else
+                echo -e "\e[31mThis script must be run as root\e[39m"
+                exit 1
+            fi
+        fi
+        
+        echo 'Shredding slack space...' | colorize WHITE
+        $DISKDESTROYER if=/dev/urandom of=.fill bs=4092
+        
+        echo 'Shredding complete, removing slack file...' | colorize WHITE
+        
+        sync
+        rm .fill
+        sync
+        
+        echo 'Slack space successfully shredded!' | colorize GREEN
+        ;;
+    
+    "thumbs")
+        echo "Cleaning Thumbnails..." | colorize WHITE
+        find "$HOME/.thumbnails" -type f -name '*' -exec $SHREDDER "{}" \;
+        ;;
+        
+    "trash")
+        echo "Cleaning Trash..." | colorize WHITE
+        find "$HOME/.local/share/Trash" -type f -name "*" -exec $SHREDDER "{}" \;
+        ;;
+
+    *)
+        if [ -f $1 ]; then
+            echo "Shredding file..." | colorize WHITE
+            $SHREDDER $1
+        else
+            echo "No such command or file!" | colorize RED
+            exit 1
+        fi
+        ;;
+esac
