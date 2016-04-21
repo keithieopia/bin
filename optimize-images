@@ -10,12 +10,18 @@ do
 
     base=${file%.*}
     ext=${file##*.}
-    lowercase=$base.${ext,,};
+    lowercase=$base.${ext,,}
+    dashed=${lowercase// /-}
 
     if [ "$lowercase" != "$file" ]; then
         echo "Converting file's extension to lowercase" | colorize BLUE
         mv "$file" "$lowercase"
         file=$lowercase
+    fi
+    
+    if 
+        echo "Converting spaces in filename to dashes" | colorize BLUE
+        mv "$file" "$lowercase"
     fi
 
     case $file in
