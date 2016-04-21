@@ -30,6 +30,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+# start gpg-agent
+gpg-connect-agent /bye
+export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+
 # Blank the monitor after 10mins and turn it off after 30mins
 xset s 600 600 1800
 
