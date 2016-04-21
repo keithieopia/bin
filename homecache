@@ -5,10 +5,6 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
 
         mkdir "$HOME/.cache/thumbnails"
         mkdir "$HOME/.cache/flash"
-        mkdir "$HOME/.cache/nano"
-
-        touch "$HOME/.cache/bash_history"
-        touch "$HOME/.cache/recently-used.xbel"
 
         # Create lockfile used to test if .cache has been populated yet
         touch "$HOME/.cache/.lock"

@@ -166,9 +166,6 @@ sh ~/bin/homecache
 ln -s ~/.cache/flash ~/.adobe
 ln -s ~/.adobe ~/.macromedia
 ln -s ~/.cache/thumbnails ~/.thumbnails
-rm ~/.bash_history
-ln -s ~/.cache/bash_history ~/.bash_history
-ln -s ~/.cache/recently-used.xbel ~/.local/share/recently-used.xbel
 
 ##
 ## Setup gksudo
