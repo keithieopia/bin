@@ -39,6 +39,14 @@ and securely close it after Firefox exits.
 
 Depends: _zenity, gksu, firefox, cryptsetup_
 
+### `extract`
+Extract archives automatically based on file extension
+
+Not written by me, but commonly found in .bashrc files without attribution. 
+Assumed to be in public domain, contact me if not the case.
+
+Depends: _p7zip, unrar, unzip_
+
 
 ### `homecache`  
 Create folders and files expected to be in ~/.cache normally
