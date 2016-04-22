@@ -5,18 +5,20 @@ CONTAINER_DIR="/home/$WHOAMI/.private"
 PROFILE_DIR="/home/$WHOAMI/.mozilla/firefox"
 SIZE="100M"
 
+source ~/bin/colorize
+
 if ! type zenity &> /dev/null; then
     echo "Zenity not installed, Please install it first!" | colorize RED
     exit 1
 fi
 
-if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
+if ! mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
     echo "~/.cache is not in tmpfs. This is insecure as Firefox stores it's cache in there. Gracefully dying for your protection!" | colorize RED
     exit 1
 fi
 
 if [ "$EUID" -ne 0 ]; then
-    PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon "question" --text 'Enter sudo password:')"
+    PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon 'question' --text 'Enter sudo password:')"
     echo "$PASSWORD" | sudo -S $0
     exit
 fi
@@ -107,7 +109,7 @@ elif [ ! -f "$CONTAINER_DIR/cryptofox" ]; then
         exit 1
     fi
 else
-    PASSWORD=""$(zenity --entry --entry-hide-text --title 'Decrypt Password' --window-icon "question" --text 'Password for decryption:')""
+    PASSWORD=""$(zenity --entry --entry-hide-text --title 'Decrypt Password' --window-icon 'question' --text 'Password for decryption:')""
 
     echo -n $PASSWORD | cryptsetup --key-file "-" luksOpen "$CONTAINER_DIR/cryptofox" cryptofox || {
         zenity --error --text="Could not decrypt profile!"
