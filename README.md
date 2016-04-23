@@ -15,6 +15,12 @@ system down if the battery gets too low.
 
 Depends: _acpi, libnotify_
 
+### `bofh`
+Generate a random BOFH excuse
+
+Picks a random Bastard Operator from Hell calendar excuse and prints it
+
+Depends: _PHP (command-line, no web server needed!)_
 
 ### `clean` 
 Securely erase files, directories, and slack space
@@ -37,17 +43,6 @@ Sample usage:
 Depends: _dcfldd (optionally, edit script vars)_
 
 
-### `colorize`
-Color piped output from scripts
-
-Used in most of these scripts in this repo and in the dotfiles repo.
-
-Sample usage:  
-`echo "This is Bold Red" | bcolorize RED`  
-`echo "This is green!" | colorize GREEN`  
-`echo "This is a lighter shade of Blue" | lcolorize BLUE`
-
-
 ### `cryptofox`  
 Create and launch an encrypted Firefox profile
 
@@ -55,14 +50,6 @@ Create an encrypted profile based on an existing Firefox profile, then launch it
 and securely close it after Firefox exits.
 
 Depends: _zenity, gksu, firefox, cryptsetup_
-
-### `extract`
-Extract archives automatically based on file extension
-
-Not written by me, but commonly found in .bashrc files without attribution. 
-Assumed to be in public domain, contact me if not the case.
-
-Depends: _p7zip, unrar, unzip_
 
 
 ### `homecache`  
@@ -122,14 +109,6 @@ Runs as a screensaver with xautolock on my system
 See Also: _dotfiles/openbox/autostart_
 
 Depends: _i3lock, scrot, imagemagick_
-
-
-### `see-you-space-cowboy`
-Prints a rainbow homage to Cowboy Bebop  
-
-Runs after exiting a bash session on my system
-
-See Also: _dotfiles/.bash_logout_
 
 
 ### `shred-slack`
