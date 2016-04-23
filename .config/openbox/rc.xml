@@ -239,17 +239,17 @@
     <!-- Keybindings for volume -->
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
-        <command>amixer -D pulse set Master 5%+ unmute</command>
+        <command>~/bin/volume +</command>
       </action>
     </keybind>
     <keybind key="XF86AudioLowerVolume">
       <action name="Execute">
-        <command>amixer -D pulse set Master 5%- unmute</command>
+        <command>~/bin/volume -</command>
       </action>
     </keybind>
     <keybind key="XF86AudioMute">
       <action name="Execute">
-        <command>amixer -D pulse set Master toggle</command>
+        <command>~/bin/volume toggle</command>
       </action>
     </keybind>
     <!-- Keybindings for screen brightness -->
