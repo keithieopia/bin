@@ -9,8 +9,8 @@ pacman -Rns xfsprogs reiserfsprogs pcmciautils vi jfsutils mdadm lynx
 ## Install universal packages
 ##
 pacman -S sudo git bash-completion zip htop wget ufw unrar p7zip unzip sqlite \
-reflector pydf php php-gd php-sqlite dcfldd curl cronie colord colordiff rsync \
-aspell aspell-en most nethack
+reflector pydf nginx php php-fpm php-gd php-sqlite php-dcfldd curl cronie colord \
+colordiff rsync aspell aspell-en most nethack
 
 ##
 ## Enable services
@@ -44,29 +44,43 @@ git clone https://github.com/keithieopia/dotfiles.git
 ## Enable personal file configs
 ##
 rm /etc/issue
-ln -s ~/dotfiles/issue /etc/issue
+ln -s ~/dotfiles/#SYSTEM/etc/issue /etc/issue
+ln -s ~/dotfiles/#SYSTEM/etc/issue.net /etc/issue.net
+
 rm ~/.bash_logout
 ln -s ~/dotfiles/.bash_logout ~/.bash_logout
 rm ~/.bash_profile
 ln -s ~/dotfiles/.bash_profile ~/.bash_profile
 rm ~/.bashrc
 ln -s ~/dotfiles/.bashrc ~/.bashrc
-ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
 ln -s ~/dotfiles/.gitconfig ~/.gitconfig
 ln -s ~/dotfiles/.nanorc ~/.nanorc
-rm /etc/cron.monthly
-ln -s ~/dotfiles/cron.monthly /etc/cron.monthly
+ln -s ~/dotfiles/.ssh/config ~/.ssh/config
 ln -s ~/dotfiles/.nethackrc ~/.nethackrc
+ln -s ~/dotfiles/.wgetrc ~/.wgetrc
+
+##
+## Setup webserver
+##
+ln -s ~/dotfiles/#SYSTEM/etc/nginx/php.conf /etc/nginx/php.conf
+ln -s ~/dotfiles/#SYSTEM/etc/nginx/mime.types /etc/nginx/mime.types
+ln -s ~/dotfiles/#SYSTEM/etc/nginx/fastcgi.conf /etc/nginx/fastcgi.conf
+ln -s ~/dotfiles/#SYSTEM/etc/nginx/fastcgi_params /etc/nginx/fastcgi_params
+ln -s ~/dotfiles/#SYSTEM/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+systemctl enable nginx php-fpm
+ufw allow 80/tcp
 
 ##
 ## Setup Unbound
 ##
 pacman -S unbound openresolv
+rm /etc/cron.monthly
+ln -s ~/dotfiles/#SYSTEM/etc/cron.monthly /etc/cron.monthly
 rm /etc/openresolv.conf
-ln -s ~/dotfiles/openresolv.conf /etc/openresolv.conf
+ln -s ~/dotfiles/#SYSTEM/etc/openresolv.conf /etc/openresolv.conf
 resolvconf -u
-ln -s ~/dotfiles/unbound/unbound.conf /etc/unbound/unbound.conf
-ln -s ~/dotfiles/unbound/blocklist-mine.conf /etc/unbound/blocklist-mine.conf
+ln -s ~/dotfiles/#SYSTEM/etc/unbound/unbound.conf /etc/unbound/unbound.conf
+ln -s ~/dotfiles/#SYSTEM/etc/unbound/blocklist-mine.conf /etc/unbound/blocklist-mine.conf
 unbound-control-setup
 sh /etc/cron.monthly/unbound-root-hints
 sh /etc/cron.monthly/unbound-someonewhocares-block
@@ -117,15 +131,18 @@ xorg-xkill xf86-input-keyboard xf86-input-synaptics libva-intel-driver libva-mes
 jre8-openjdk jdk8-openjdk jre8-openjdk-headless iw hspell haveged \
 gimp geany geany-plugins xdg-user-dirs xarchiver wpa_actiond wpa_supplicant \
 vlc oblogout ntfs-3g mpg123 mesa openbox pcmanfm sqliteman scrot sakura tumbler \
-pypanel ffmpegthumbnailer nitrogen eog evince chromium xorg-xinit x11-ssh-askpass \
+pypanel ffmpegthumbnailer nitrogen eog evince xorg-xinit x11-ssh-askpass \
 xorg-xbacklight obconf lxappearance lxappearence-obconf gnome-icon-theme \
 gnome-icon-theme-extras libnotify dunst
 
-# Firefox
-pacman -S firefox flashplugin hunspell hunspell-en
+# Browsers
+pacman -S firefox flashplugin hunspell hunspell-en chromium 
 
 # Fonts: indic -> look of disapproval, symbola -> emoji
 pacman -S ttf-dejavu ttf-bitstream-vera ttf-droid artwiz-fonts ttf-indic-otf ttf-symbola
+
+# VDPAU: Flashplayer & VLC
+pacman -S libvdpau-va-gl libva-intel-driver
 
 # Wine
 pacman -S wine wine-mono wine_gecko winetricks lib32-alsa-lib lib32-alsa-plugins \
@@ -133,7 +150,7 @@ lib32-mesa lib32-mesa-libgl lib32-mpg123
 
 packer -S systemd-readahead geany-themes-git dropbox obmenu-generator pysystray-git \
 pavumeter perl-linux-desktop-files tixati gtk-theme-arc-git paper-icon-theme-git \
-aarchup
+aarchup chromium-pepper-flash npapi-vlc-git
 
 
 ##
@@ -149,11 +166,13 @@ netctl-auto@wlp1s0 netctl-ifplugd@enp1s0
 mkdir ~/.config
 ln -s ~/dotfiles/.pypanelrc ~/.pypanelrc
 ln -s ~/dotfiles/.xinitrc ~/.xinitrc
-ln -s ~/dotfiles/openbox ~/.config/openbox
-ln -s ~/dotfiles/user-dirs.dirs ~/.config/user-dirs.dirs
-ln -s ~/dotfiles/dunst ~/.config/dunst
-ln -s ~/dotfiles/mozilla/mozilla.cfg /usr/lib/firefox/mozilla.cfg
-ln -s ~/dotfiles/mozilla/local-settings.js /usr/lib/firefox/defaults/pref/local-settings.js
+ln -s ~/dotfiles/.config/openbox ~/.config/openbox
+ln -s ~/dotfiles/.config/user-dirs.dirs ~/.config/user-dirs.dirs
+ln -s ~/dotfiles/.config/dunst ~/.config/dunst
+ln -s ~/dotfiles/.config/obmenu-generator ~/.config/obmenu-generator
+ln -s ~/dotfiles/#SYSTEM/usr/lib/firefox/mozilla.cfg /usr/lib/firefox/mozilla.cfg
+ln -s ~/dotfiles/#SYSTEM/usr/lib/firefox/defaults/pref/local-settings.js /usr/lib/firefox/defaults/pref/local-settings.js
+
 
 ##
 ## Setup RAM disk for ~/.cache
