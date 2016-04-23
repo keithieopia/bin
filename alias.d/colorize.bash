@@ -1,7 +1,8 @@
-## 
-## Color piped output from scripts
-## Usage: echo "This is green!" | colorize GREEN
-##
+# colorize(): Color piped input easily!
+# Usage: echo "This is green!" | colorize GREEN
+#
+# Copyright (c) 2016 Timothy Keith
+# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
 
 # shades
 WHITE="97"
@@ -22,44 +23,32 @@ LIGHTRED="91"
 LIGHTGREEN="92"
 LIGHTYELLOW="93"
 LIGHTBLUE="94"
-PINK="95"
+LIGHTPURPLE="95"
 LIGHTCYAN="96"
 
 ESC="\033["
 
-
-# Regular colors
-colorize(){
-    color=\$${1:-NORMAL}
-
-    echo -ne "${ESC}0;`eval echo $color`m"
-    cat
-    echo -ne "${ESC}0m"
-}
-
-# Light colors
-lcolorize(){
-    color=\$${1:-NORMAL}
-
-    echo -ne "${ESC}2;`eval echo ${color}`m"
-    cat
-    echo -ne "${ESC}0m"
-}
-
-# Bold colors
-bcolorize(){
-    color=\$${1:-NORMAL}
-
-    echo -ne "${ESC}1;`eval echo ${color}`m"
-    cat
-    echo -ne "${ESC}0m"
-}
-
-# Underlined Colors
-ucolorize(){
-    color=\$${1:-NORMAL}
-
-    echo -ne "${ESC}4;`eval echo ${color}`m"
+colorize() {
+    case $1 in
+        "BOLD")
+            SET="1"
+            COLOR=\$${2:-NORMAL}
+            ;;
+        "DIM")
+            SET="2"
+            COLOR=\$${2:-NORMAL}
+            ;;
+        "UNDERLINE")
+            SET="4"
+            COLOR=\$${2:-NORMAL}
+            ;;
+        *)
+            SET="0"
+            COLOR=\$${1:-NORMAL}
+            ;;
+    esac
+        
+    echo -ne "${ESC}${SET};`eval echo ${COLOR}`m"
     cat
     echo -ne "${ESC}0m"
 }
