@@ -1,4 +1,11 @@
 [user]
-	email = timothykeith@gmail.com
-	name = Timothy Keith
-	signingkey = 9A581C87
+    email = timothykeith@gmail.com
+    name = Timothy Keith
+    signingkey = 9A581C87
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = auto
+    interactive = auto
