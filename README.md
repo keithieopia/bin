@@ -115,11 +115,12 @@ Depends: _i3lock, scrot, imagemagick_
 Changes the speaker volume and sends a notification
 
 Sample usage:  
-`volume +` - Increase volume _(will auto unmute if muted)_  
-`volume -` - Decrease volume _(will auto unmute if muted)_  
+`volume +` | `volume up` - Increase volume _(will auto unmute if muted)_  
+`volume -` | `volume down` - Decrease volume _(will auto unmute if muted)_  
+`volume max` - Increase volume to it's max level _(will auto unmute if muted)_  
 `volume mute` - Mute volume  
 `volume unmute` - Unmute volume  
-`volume max` - Increase volume to it's max level _(will auto unmute if muted)_  
+`volume toggle` - toggles mute/unmute depending on the current setting  
 
 Depends: _libpulse_
 
