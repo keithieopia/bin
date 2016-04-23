@@ -136,9 +136,6 @@
     # automatically after a crash.
     startup_notification = false
 
-    # dmenu path.
-    dmenu = /usr/bin/dmenu -p dunst:
-
     # Browser for opening urls in context menu.
     browser = /usr/bin/firefox -new-tab
 
@@ -246,4 +243,3 @@
 #    summary = *twitter.com*
 #    urgency = normal
 #
-# vim: ft=cfg

@@ -19,4 +19,6 @@ pypanel &
 ~/bin/battmon &
 pcmanfm -d &
 aarchup -l 180 &
+dropbox &
+zim &
 xautolock -detectsleep -time 3 -locker "/home/timothy/bin/screenlock" -notify 30 -notifier "notify-send -u critical -t 10000 -- 'Locking screen in 30 seconds'" &
