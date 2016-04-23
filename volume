@@ -1,0 +1,33 @@
+#!/bin/bash
+# Speaker volume control wrapper
+
+# Copyright (c) 2016 Timothy Keith
+# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
+
+INTERVAL=5
+
+case $1 in
+    "+"|"up")
+        amixer -q sset Master ${INTERVAL}+ unmute
+        action=increased
+        ;;
+    "-"|"down")
+        amixer -q sset Master ${INTERVAL}- unmute
+        action=lowered
+        ;;
+    "max")
+        amixer -q sset Master 100% unmute
+        action=maxed
+        ;;
+    "mute")
+        amixer -q sset Master mute
+        action=muted
+        ;;
+    "unmute")
+        amixer -q sset Master unmute
+        action=unmuted
+        ;;
+esac
+
+vol=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
+notify-send -u low "Volume ${action}!" "Volume is now set to ${vol}"

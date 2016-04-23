@@ -82,7 +82,7 @@ Optimize images for internet use
 
 Reduces image size and fixes file extension
 
-Depends: _colorize, optipng, gifsicle, jpegoptim _
+Depends: _colorize, optipng, gifsicle, jpegoptim_
 
 
 ### `playalert`  
@@ -111,10 +111,17 @@ See Also: _dotfiles/openbox/autostart_
 Depends: _i3lock, scrot, imagemagick_
 
 
-### `shred-slack`
-Clears slack space by creating a huge file
+### `volume` [OPTION]
+Changes the speaker volume and sends a notification
 
-Depends: _dcfldd_
+Sample usage:  
+`volume +` - Increase volume _(will auto unmute if muted)_  
+`volume -` - Decrease volume _(will auto unmute if muted)_  
+`volume mute` - Mute volume  
+`volume unmute` - Unmute volume  
+`volume max` - Increase volume to it's max level _(will auto unmute if muted)_  
+
+Depends: _libpulse_
 
 
 ## Configuration
