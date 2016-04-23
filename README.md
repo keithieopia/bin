@@ -85,10 +85,20 @@ Reduces image size and fixes file extension
 Depends: _colorize, optipng, gifsicle, jpegoptim_
 
 
-### `playalert`  
+### `playalert` [OPTION]
 Plays a tune, expanding functionality in the future...
 
 Called when a OSD notification is sent on my system
+
+Sample usage:  
+`volume alert` - Play to get attention  
+`volume critpower` - Play on very low power    
+`volume error` - Play for errors  
+`volume info` - Play for informational notices  
+`volume logout` - Play on logout  
+`volume lowpower` - Play for low power notifications  
+`volume startup` - Startup sound  
+`volume volume` - Play on volume changes  
 
 See Also: _dotfiles/dunst/dunstrc_
 
