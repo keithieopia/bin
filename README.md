@@ -149,9 +149,22 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/b
 
 
 ## Author
-Copyright &copy; 2016 Timothy Keith
+Copyright &copy; 2016 Timothy Keith, except where otherwise noted
 
 License BSD: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/bin/master/COPYING)
 
 _This is free software: you are free to change and redistribute it._
 _There is NO WARRANTY, to the extent permitted by law._
+
+## Fair Use
+The media files found in `sounds/` are non-free and the copyrights belong to 
+their respective owners listed below. 
+
+This material has been made available under what is believed to constitute as _"fair 
+use"_. If you wish to use the copyrighted material for purposes of your own that go 
+beyond _"fair use"_, you must obtain permission from the copyright owner.
+
+ * `sounds/psx.ogg` - _The Sony PlayStation startup sound_: Copyright by Sony 
+ Interactive Entertainment  
+ * `sound/*.ogg` - _Command & Conquer: Red Alert various sounds_: Copyright by 
+ Virgin Interactive, later released as freeware.
