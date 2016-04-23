@@ -199,7 +199,7 @@ prompt_command () {
     fi
 
     if is_ssh; then
-        local HOST="$BLUE[ $WHITE$\h $BLUE] "
+        local HOST="$BLUE[ $WHITE\h $BLUE] "
     fi
 
     local GIT="$(prompt_git)"
