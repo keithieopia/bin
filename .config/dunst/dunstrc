@@ -174,20 +174,38 @@
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#888888"
     foreground = "#424242"
-    timeout = 10
+    timeout = 5
 
 [urgency_normal]
     background = "#568081"
     foreground = "#424242"
-    timeout = 20
-
+    timeout = 10
+    
 [urgency_critical]
     background = "#B14D4C"
     foreground = "#424242"
     timeout = 0
 
-
-[sound]
+[volume]
+    appname = volume 
+    script = /home/timothy/bin/playalert volume
+    
+[battery_critical]
+    appname = battery
+    urgency = critical
+    script = /home/timothy/bin/playalert critpower
+    
+[battery_normal]
+    appname = battery
+    urgency = normal
+    script = /home/timothy/bin/playalert lowpower
+    
+[default_critical]
+    summary = "*'
+    urgency = critical
+    script = /home/timothy/bin/playalert alert
+    
+[default]
     summary = "*"
     script = /home/timothy/bin/playalert
 
