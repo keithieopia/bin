@@ -11,5 +11,4 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
     fi
 else
     echo "~/.cache is not mounted as tmpfs, nothing to do..." | colorize RED
-    exit 1
 fi
