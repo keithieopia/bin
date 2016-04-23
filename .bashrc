@@ -102,7 +102,7 @@ fi
 ##
 
 if have less; then
-    export PAGER='less'
+    export PAGER='less -XR'
     unset LESSCHARSET # Fix manpages looking funky
     export LESS='--ignore-case --line-numbers --hilite-unread  -z-4 --hilite-search --LONG-PROMPT --no-init --quit-if-one-screen --quit-on-intr --RAW-CONTROL-CHARS'
 
