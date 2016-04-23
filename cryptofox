@@ -1,4 +1,8 @@
 #!/bin/bash
+# Encrypted Firefox Profile
+
+# Copyright (c) 2016 Timothy Keith
+# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
 
 WHOAMI=${SUDO_USER:-$(whoami)}
 CONTAINER_DIR="/home/$WHOAMI/.private"

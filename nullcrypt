@@ -1,4 +1,8 @@
 #!/bin/bash
+# Encrypted Container Wrapper
+
+# Copyright (c) 2016 Timothy Keith
+# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
 
 PRIVATE_DIR="$HOME/.private"
 MOUNT_DIR="/mnt"
