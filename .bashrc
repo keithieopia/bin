@@ -141,40 +141,12 @@ have fortune && echo -e "$(fortune -sa)\n" | colorize PURPLE
 
 
 prompt_command () {
-
-    # regular colors
-    local BLACK="\[\033[0;30m\]"
+    local WHITE="\[\033[0;37m\]"
+    local BLACK="\[\033[1;30m\]"
     local RED="\[\033[0;31m\]"
     local GREEN="\[\033[0;32m\]"
-    local YELLOW="\[\033[0;33m\]"
     local BLUE="\[\033[0;34m\]"
-    local MAGENTA="\[\033[0;35m\]"
-    local CYAN="\[\033[0;36m\]"
-    local WHITE="\[\033[0;37m\]"
-
-    # emphasized (bolded) colors
-    local BOLD_BLACK="\[\033[1;30m\]"
-    local BOLD_RED="\[\033[1;31m\]"
-    local BOLD_GREEN="\[\033[1;32m\]"
-    local BOLD_YELLOW="\[\033[1;33m\]"
-    local BOLD_BLUE="\[\033[1;34m\]"
-    local BOLD_MAGENTA="\[\033[1;35m\]"
-    local BOLD_CYAN="\[\033[1;36m\]"
-    local BOLD_WHITE="\[\033[1;37m\]"
-
-    # background colors
-    local BG_BLACK="\[\033[40m\]"
-    local BG_RED="\[\033[41m\]"
-    local BG_GREEN="\[\033[42m\]"
-    local BG_YELLOW="\[\033[43m\]"
-    local BG_BLUE="\[\033[44m\]"
-    local BG_MAGENTA="\[\033[45m\]"
-    local BG_CYAN="\[\033[46m\]"
-    local BGW_HITE="\[\033[47m\]"
-
-    # other
-    local RESET="\[\017\]"
-    local NO_COLOR="\[\033[0m\]"
+    local RESET="\[\033[0m\]"
 
     # PWD
     PROMPT_DIRTRIM=3
@@ -204,7 +176,7 @@ prompt_command () {
 
     local GIT="$(prompt_git)"
 
-    export PS1="$TITLEBAR$HOST$BLUE[ $PWDCOLOR$NEW_PWD$GIT $BLUE]$WHITE$USRSYMBOL$NO_COLOR "
+    export PS1="$TITLEBAR$HOST$BLUE[ $PWDCOLOR$NEW_PWD$GIT $BLUE]$WHITE$USRSYMBOL$RESET "
     export PS2='> '
     export PS4='+ '
 }
@@ -251,7 +223,7 @@ prompt_git() {
                 local SYMBOL="${SYMBOL}${BLUE}*"
             fi
 
-            echo " $BOLD_BLACK($SYMBOL$BOLD_BLACK)"
+            echo " $BOLD_BLACK($SYMBOL$BLACK)"
         fi
     fi
 }
