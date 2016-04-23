@@ -1,31 +1,3 @@
-INCLUDE /home/timothy/.reminders-holiday
-
-# Rememberance
-REM 25 July SPECIAL COLOR 0 0 255 Kerri's Mom's Anniversary
-REM 3 May SPECIAL COLOR 51 0 0 255 Kerri's Grandmom's Birthday
-REM 17 April SPECIAL COLOR 51 0 0 255 Kerri's Grandmom's Death
-REM 10 June SPECIAL COLOR 51 0 0 255 Kerri's Dad's Birthday
-REM 10 May SPECIAL COLOR 51 0 0 255 Kerri's Dad's Death
-
-# Anniversary
-REM 16 April SPECIAL COLOR 255 105 180 Our [ord(year(trigdate())-2011)] Anniversary
-REM 22 March SPECIAL COLOR 255 105 180 Parent's Anniversary
-REM 25 July SPECIAL COLOR 255 105 180 Ann-Marie's Anniversary
-
-# Birthdays
-REM 14 August SPECIAL COLOR 0 0 255 Dad's [ord(year(trigdate())-1974)] Birthday
-REM 15 June SPECIAL COLOR 0 0 255 Maggie's Birthday
-REM 9 October SPECIAL COLOR 0 0 255 Kerri's [ord(year(trigdate())-1976)] Birthday
-REM 23 July SPECIAL COLOR 0 0 255 Mom's Birthday
-REM 15 May SPECIAL COLOR 0 0 255 Grandma's Birthday
-REM 16 December SPECIAL COLOR 0 0 255 My [ord(year(trigdate())-1986)] Birthday
-
-# Bills
-REM Mon Tue Wed Thu Fri Sat 15 Apr SPECIAL COLOR 34 139 34 Income tax due
-REM 1 SPECIAL COLOR 34 139 34 Rent Due
-REM 6 SPECIAL COLOR 34 139 34 Sprint Due
-REM 9 SPECIAL COLOR 34 139 34 BoA Credit Card Due
-REM 21 SPECIAL COLOR 34 139 34 M&T Credit Card Due
-REM 23 SPECIAL COLOR 34 139 34 Comcast Due
-REM 23 SPECIAL COLOR 34 139 34 BGE Due
-REM 25 SPECIAL COLOR 34 139 34 ESFCU Credit Card Due
+INCLUDE dotfiles/remind/bills
+INCLUDE dotfiles/remind/personal
+INCLUDE dotfiles/remind/holidays
