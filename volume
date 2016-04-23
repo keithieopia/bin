@@ -14,7 +14,7 @@ case $1 in
         ;;
     "-"|"down")
         #amixer -q sset Master ${INTERVAL}- unmute
-        amixer -D pulse set Master ${INTERVAL}%+ unmute
+        amixer -D pulse set Master ${INTERVAL}%- unmute
         action=lowered
         ;;
     "max")
@@ -43,4 +43,4 @@ case $1 in
 esac
 
 vol=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
-notify-send -u low "Volume ${action}!" "Volume is now set to ${vol}"
+notify-send -u low -a volume "Volume ${action}!" "Volume is now set to ${vol}"
