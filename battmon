@@ -11,15 +11,15 @@ do
         battery_level=`acpi -b | awk '{print $4}' | sed 's/\(.*\)../\1/'`
 
         if [ $battery_level -le $kill_level ]; then
-            notify-send -u critical "Battery Dead!" \
+            notify-send -u critical -a battery "Battery Dead!" \
             "System will use remaining power to shutdown safely"
             sleep 10
             systemctl poweroff
         elif [ $battery_level -le $critical_level ]; then
-            notify-send -u critical "Battery level is very low!" \
+            notify-send -u critical -a battery "Battery level is very low!" \
             "Please plug into AC adapter. Only $battery_level% remains"
         elif [ $battery_level -le $warn_level ]; then
-            notify-send -u normal "Battery level is low!" \
+            notify-send -u normal -a battery "Battery level is low!" \
             "Only $battery_level% remains"
         fi
     fi
