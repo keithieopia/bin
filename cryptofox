@@ -5,17 +5,17 @@ CONTAINER_DIR="/home/$WHOAMI/.private"
 PROFILE_DIR="/home/$WHOAMI/.mozilla/firefox"
 SIZE="100M"
 
-source ~/bin/colorize
+source /home/$WHOAMI/bin/colorize
 
 if ! type zenity &> /dev/null; then
     echo "Zenity not installed, Please install it first!" | colorize RED
     exit 1
 fi
 
-if ! mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
-    echo "~/.cache is not in tmpfs. This is insecure as Firefox stores it's cache in there. Gracefully dying for your protection!" | colorize RED
-    exit 1
-fi
+#if ! mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
+#    echo "~/.cache is not in tmpfs. This is insecure as Firefox stores it's cache in there. Gracefully dying for your protection!" | colorize RED
+#    exit 1
+#fi
 
 if [ "$EUID" -ne 0 ]; then
     PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon 'question' --text 'Enter sudo password:')"
