@@ -42,3 +42,5 @@ randpass () {
 
 # Look super busy
 bullshit () { cat /dev/urandom | hexdump -C | grep --color=auto "ca fe"; }
+
+mp32ogg () { ffmpeg -i "$1" -c:a libvorbis -q:a 4 "${1%\.*}.ogg"; }
