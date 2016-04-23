@@ -211,6 +211,10 @@ prompt_command () {
 PROMPT_COMMAND=prompt_command
 unset bash_prompt
 
+# After each command, append to the history file and reread it
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+
 ##
 ## $PS1 prompt functions
 ##
