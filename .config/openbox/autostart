@@ -15,6 +15,7 @@
 xset -b # no beep
 nitrogen --restore &
 pypanel &
+~/bin/dzlaunch &
 # pasystray & # started automatically by XDG
 ~/bin/battmon &
 pcmanfm -d &
