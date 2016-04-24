@@ -8,7 +8,7 @@ pacman -Rns xfsprogs reiserfsprogs pcmciautils vi jfsutils mdadm lynx
 ##
 ## Install universal packages
 ##
-pacman -S sudo git bash-completion zip htop wget ufw unrar p7zip unzip sqlite \
+pacman -S sudo git bash-completion zip htop wget ufw unrar p7zip zip unzip sqlite \
 reflector pydf nginx php php-fpm php-gd php-sqlite php-dcfldd curl cronie colord \
 colordiff rsync aspell aspell-en most nethack
 
@@ -131,9 +131,9 @@ xorg-xkill xf86-input-keyboard xf86-input-synaptics libva-intel-driver libva-mes
 jre8-openjdk jdk8-openjdk jre8-openjdk-headless iw hspell haveged \
 gimp geany geany-plugins xdg-user-dirs xarchiver wpa_actiond wpa_supplicant \
 vlc oblogout ntfs-3g mpg123 mesa openbox pcmanfm sqliteman scrot sakura tumbler \
-pypanel ffmpegthumbnailer nitrogen eog evince xorg-xinit x11-ssh-askpass \
+pypanel ffmpegthumbnailer nitrogen viewnior evince xorg-xinit x11-ssh-askpass \
 xorg-xbacklight obconf lxappearance lxappearence-obconf gnome-icon-theme \
-gnome-icon-theme-extras libnotify dunst
+gnome-icon-theme-extras libnotify dunst ghex keepass vnstat
 
 # Browsers
 pacman -S firefox flashplugin hunspell hunspell-en chromium 
@@ -152,12 +152,15 @@ packer -S systemd-readahead geany-themes-git dropbox obmenu-generator pysystray-
 pavumeter perl-linux-desktop-files tixati gtk-theme-arc-git paper-icon-theme-git \
 aarchup chromium-pepper-flash npapi-vlc-git
 
+# dzen2
+pacman -S dzen xdotool
+
 
 ##
 ## Enable laptop packages
 ##
 sudo systemctl enable systemd-readahead-collect systemd-readahead-replay haveged \
-netctl-auto@wlp1s0 netctl-ifplugd@enp1s0
+netctl-auto@wlp1s0 netctl-ifplugd@enp1s0 vnstat.service
 
 
 ##
@@ -172,6 +175,7 @@ ln -s ~/dotfiles/.config/dunst ~/.config/dunst
 ln -s ~/dotfiles/.config/obmenu-generator ~/.config/obmenu-generator
 ln -s ~/dotfiles/#SYSTEM/usr/lib/firefox/mozilla.cfg /usr/lib/firefox/mozilla.cfg
 ln -s ~/dotfiles/#SYSTEM/usr/lib/firefox/defaults/pref/local-settings.js /usr/lib/firefox/defaults/pref/local-settings.js
+ln -s ~/dotfiles/#SYSTEM/etc/vnstat.conf
 
 
 ##
