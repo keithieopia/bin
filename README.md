@@ -52,6 +52,12 @@ and securely close it after Firefox exits.
 Depends: _zenity, gksu, firefox, cryptsetup_
 
 
+### `dzlaunch`
+Start dzen2 panel at bottom of screen
+
+Depends: _dzen, ~/bin/volume, libpulse, xdotool_
+
+
 ### `homecache`  
 Create folders and files expected to be in ~/.cache normally
 

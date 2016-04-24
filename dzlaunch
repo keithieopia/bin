@@ -1,0 +1,88 @@
+#!/bin/bash
+ 
+C_FG="#808080"
+C_BG="#1A1A1A"
+C_SEP="#000000"
+C_TITLE="#ADD8E6"
+C_BUTTON="#FFFFFF"
+
+RED="#A52A2A"
+YELLOW="#FFA500"
+GREEN="#008000"
+
+IFACE="wlp1s0"
+
+FONT="-*-snap-*-r-normal-*-*-120-*-*-*-*-iso8859-*"
+HEIGHT="20"
+WIDTH=$(xrandr --current | head -1 | awk '{print $8}')
+POS_Y=$(xrandr --current | head -1 | awk '{print $10}')
+SEP="^fg($C_SEP)//^fg()"
+
+##
+## Battery
+##
+
+BATTERY=$(acpi -b | awk '{print $4}' | sed 's/\(.*\)./\1/')
+
+if [ "$(acpi -a | grep -o off)" == "off" ]; then
+    if [ $BATTERY -le 25 ]; then
+        C_BATT="$YELLOW"
+    elif [ $BATTERY -le 10 ]; then
+        C_BATT="$RED"
+    else
+        C_BATT="$GREEN"
+    fi
+else
+    C_BATT="$C_FG"
+fi
+
+
+##
+## Volume
+##
+
+VOLUME=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
+
+if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
+    C_VOL="$RED"
+else
+    C_VOL="$C_FG"
+fi
+
+
+##
+## Network
+##
+
+# Net since last run
+#NET_RX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $6}')
+#NET_TX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $8}')
+
+# Current Net
+NET_RX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $2}')
+NET_TX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $4}')
+
+
+UPTIME=$(uptime | awk '{print $1}')
+
+echo -e "^p(_LEFT)\
+^ca(1, xdotool key Super_L+F1)\
+^fg($C_BUTTON)[^fg()web^fg($C_BUTTON)]\
+^ca()\
+\
+^ca(1, xdotool key Super_L+F2)\
+^fg($C_BUTTON)[^fg()work^fg($C_BUTTON)]\
+^ca()\
+\
+^p(_CENTER)^p(-200)$SEP\
+\
+^fg($C_TITLE) Net: ^fg()${NET_RX}d ${NET_TX}u $SEP\
+\
+^fg($C_TITLE) Batt: ^fg($C_BATT)${BATTERY}% $SEP\
+\
+^ca(1, ~/bin/volume toggle) \
+^fg($C_TITLE) Vol: ^fg($C_VOL)${VOLUME} $SEP\
+^ca()\
+\
+^p(_RIGHT)^p(-110)^fg($C_BUTTON)[ ^fg()${UPTIME} ^fg($C_BUTTON)]\
+" | dzen2 -h $HEIGHT -w $WIDTH -y $POS_Y -fg $C_FG -bg $C_BG -fn $FONT -p
