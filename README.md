@@ -28,6 +28,7 @@ blindly use my settings unless you know what that entails. Here be dragons!
  * [PyPanel](http://pypanel.sourceforge.net/): .pypanelrc
  * [Remind](https://www.roaringpenguin.com/products/remind): .reminders, remind/
  * [Unbound](https://unbound.net/): #SYSTEM/etc/resolvconf.conf, #SYSTEM/etc/cron.monthly/, #SYSTEM/etc/unbound/
+ * [vnStat](http://humdi.net/vnstat/): #SYSTEM/etc/vnstat.conf
  * [wget](https://www.gnu.org/software/wget/): .wgetrc
  * [xdg-user-dirs](https://www.freedesktop.org/wiki/Software/xdg-user-dirs/): .config/user-dirs.dirs
  * [Xorg server](http://www.x.org/wiki/): .xinitrc
