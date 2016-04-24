@@ -11,19 +11,19 @@ VERSION         = 2.4           # Config file version
 #------------------------------------------------------------------------------
 # Colors: Format is hex triplet - 0xrrggbb
 #------------------------------------------------------------------------------
-BG_COLOR        = "0xfaebd7"    # Panel background and tinting color
-TASK_COLOR      = "0xffffff"    # Normal task name color
-DESKTOP_COLOR   = "0xffffff"    # Desktop name color
+BG_COLOR        = "0x1A1A1A"    # Panel background and tinting color
+TASK_COLOR      = "0xADD8E6"    # Normal task name color
+DESKTOP_COLOR   = "0xADD8E6"    # Desktop name color
 CLOCK_COLOR     = "0xffffff"    # Clock text color
 
-FOCUSED_COLOR   = "0x000000"    # Focused task name color
+FOCUSED_COLOR   = "0xADD8E6"    # Focused task name color
 SHADED_COLOR    = "0x808080"    # Shaded task name color
 MINIMIZED_COLOR = "0x808080"    # Minimized task name color
-LINE_COLOR      = "0x606060"    # Vertical line color
+LINE_COLOR      = "0x000000"    # Vertical line color
 
 # Text Shadow Colors
 TASK_SHADOW_COLOR      = "0x000000"
-FOCUSED_SHADOW_COLOR   = "0x000000"
+FOCUSED_SHADOW_COLOR   = "0x808080"
 SHADED_SHADOW_COLOR    = "0x000000"
 MINIMIZED_SHADOW_COLOR = "0x000000"
 DESKTOP_SHADOW_COLOR   = "0x000000"
@@ -35,18 +35,18 @@ CLOCK_SHADOW_COLOR     = "0x000000"
 P_LOCATION      = 0             # Panel placement: 0 = top, 1 = bottom
 P_WIDTH         = 0             # Panel width: 0 = Use full screen width
 P_START         = 0             # Starting X coordinate of the panel
-P_SPACER        = 10             # Spacing between panel objects
-P_HEIGHT        = 24            # Panel height
+P_SPACER        = 5             # Spacing between panel objects
+P_HEIGHT        = 20            # Panel height
 
 #------------------------------------------------------------------------------
 # Icon Size Options: Measured in pixels
 #------------------------------------------------------------------------------
 I_HEIGHT        = 16            # Panel application icon height
 I_WIDTH         = 16            # Panel application icon Width
-APPL_I_HEIGHT   = 22            # Application launcher icon height
-APPL_I_WIDTH    = 22            # Application launcher icon width
-TRAY_I_HEIGHT   = 22            # System tray icon height (usually 16 or 24)
-TRAY_I_WIDTH    = 22            # System tray icon width  (usually 16 or 24)
+APPL_I_HEIGHT   = 20            # Application launcher icon height
+APPL_I_WIDTH    = 20            # Application launcher icon width
+TRAY_I_HEIGHT   = 20            # System tray icon height (usually 16 or 24)
+TRAY_I_WIDTH    = 20            # System tray icon width  (usually 16 or 24)
                                 # If TRAY_I_WIDTH is set to 0, then the
                                 # width specified by the tray app will be used
 
@@ -126,7 +126,7 @@ LAUNCH_LIST     = [
 # Background Alpha/Shade Level: 0 (Fully Translucent) -> 255 (Fully Opaque)
 # BG_COLOR is used for tinting
 #------------------------------------------------------------------------------
-SHADE           = 64
+SHADE           = 255
 
 #------------------------------------------------------------------------------
 # Misc. Options: 1 = Enabled/Yes, 0 = Disabled/No
@@ -136,7 +136,7 @@ APPICONS        = 1             # Show application icons
 AUTOHIDE        = 0             # Autohide uses the CLOCK_DELAY timer above
 SHADOWS         = 1             # Show text shadows
 SHOWLINES       = 0             # Show object seperation lines
-SHOWBORDER      = 1             # Show a border around the panel
+SHOWBORDER      = 0             # Show a border around the panel
 
 #------------------------------------------------------------------------------
 # Desktop Names: Configure the names of your desktops
