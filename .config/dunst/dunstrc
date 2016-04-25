@@ -188,6 +188,9 @@
 
 [volume]
     appname = volume 
+    background = "#888888"
+    foreground = "#424242"
+    timeout = 3
     script = /home/timothy/bin/playalert volume
     
 [battery_critical]
