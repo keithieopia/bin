@@ -1,4 +1,6 @@
 bash_prompt () {
+    local EXIT_STATUS=$?
+    
     local WHITE="\[\033[0;37m\]"
     local BLACK="\[\033[1;30m\]"
     local RED="\[\033[0;31m\]"
@@ -33,9 +35,19 @@ bash_prompt () {
         local HOST="$BLUE[ $WHITE\h $BLUE] "
     fi
 
+    
+    if [ $EXIT_STATUS != 0 ]; then 
+        EXIT_CODE="$RED✖"
+    else
+        EXIT_CODE="$GREEN✔"
+    fi
+    EXIT_CODE="$BLUE[$EXIT_CODE$BLUE]"
+
+
+
     local GIT="$(prompt_git)"
 
-    export PS1="$TITLEBAR$HOST$BLUE[ $PWDCOLOR$NEW_PWD$GIT $BLUE]$WHITE$USRSYMBOL$RESET "
+    export PS1="$TITLEBAR$EXIT_CODE$HOST$BLUE[ $PWDCOLOR$NEW_PWD$GIT $BLUE]$WHITE$USRSYMBOL$RESET "
     export PS2='> '
     export PS4='+ '
 }
