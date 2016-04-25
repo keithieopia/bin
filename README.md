@@ -1,11 +1,12 @@
 # bin
-Useful shell scripts in my $PATH
-
-**Author:** Timothy Keith, Copyright 2016  
-**License:** BSD
+*Useful shell scripts in my $PATH*
 
 
 ## Synopsis
+These are various shell scripts I use on a regular basis. You may find some of 
+them useful
+
+## Usage
 
 ### `battmon`
 Sends OSD notifications for low battery levels
@@ -66,12 +67,6 @@ with syslinks pointing to .cache for things that should be private/temporary lik
 thumbnails.
 
 See Also: _movein, dotfiles/.bash_profile_
-
-
-### `movein` 
-Commands to run on a new install
-
-_a work in progress, probably won't work yet..._
 
 
 ### `nullcrypt` [NAME]
@@ -157,7 +152,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/b
 ## Author
 Copyright &copy; 2016 Timothy Keith, except where otherwise noted
 
-License BSD: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/bin/master/COPYING)
+License: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/bin/master/LICENSE)
 
 _This is free software: you are free to change and redistribute it._
 _There is NO WARRANTY, to the extent permitted by law._
