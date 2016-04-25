@@ -1,60 +1,115 @@
 #!/bin/bash
 
-IFS=$'\n';
+usage () {
+cat <<HELP 
+Optimize images for the web by reduces image size and fixing file names
 
-for file in `find . -type f`
-do
+Usage: $(basename "$0") [DIRECTORY]
 
-    echo "Looking at $file..." | colorize BOLDWHITE
 
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+colorize () {
+    TITLE="0;97"
+    ERROR="0;31"
+    SUCCESS="0;32"
+    WARN="0;33"
+    ESC="\033["
+
+    COLOR=\$${1:-NORMAL}
+        
+    echo -ne "${ESC}`eval echo ${COLOR}`m"
+    cat
+    echo -ne "${ESC}0m"
+}
+
+fix_filename () {
+    file=$1
     base=${file%.*}
     ext=${file##*.}
     lowercase=$base.${ext,,}
     dashed=${lowercase// /-}
 
     if [ "$lowercase" != "$file" ]; then
-        echo "Converting file's extension to lowercase" | colorize BLUE
         mv "$file" "$lowercase"
-        file=$lowercase
+        file="$lowercase"
+        echo "Converted file's extension to lowercase" | colorize SUCCESS
     fi
     
-    if 
-        echo "Converting spaces in filename to dashes" | colorize BLUE
-        mv "$file" "$lowercase"
+    if [ "$file" != "$dashed" ]; then
+        mv "$file" "$dashed"
+        file="$dashed"
+        echo "Converted spaces in filename to dashes" | colorize SUCCESS
     fi
+}
+
+have() { type "$1" &> /dev/null; }
+if ! have jpegoptim; then
+    echo "$0 requires 'jpegoptim' to be installed!" | colorize ERROR
+    exit 1
+fi
+
+if ! have gifsicle; then 
+    echo "$0 requires 'gifsicle' to be installed!" | colorize ERROR
+    exit 1
+fi
+
+if ! have optipng; then 
+    echo "$0 requires 'optipng' to be installed!" | colorize ERROR
+    exit 1
+fi
+
+if [ "$1" == "-h" ]; then
+    usage
+    exit
+fi
+
+IFS=$'\n';
+
+for file in `find . -type f`
+do
+    echo "Looking at $file..." | colorize TITLE
 
     case $file in
         *.png)
-            echo "Optimizing as PNG: $file..." | colorize BLUE
+            fix_filename $file
+            echo "Optimizing as PNG: $file..." | colorize TITLE
             optipng -o7  -strip all "$file"
             ;;
 
         *.jpg|*.jpeg)
-            echo "Optimizing as JPEG: $file..." | colorize BLUE
+            fix_filename $file
+            echo "Optimizing as JPEG: $file..." | colorize TITLE
             jpegoptim --strip-all "$file"
             cp "$file" "$base-backup.bak"
             jpegoptim -m80 "$file"
             echo "Since image was optimized using lossy compression, you should " \
                  "make sure the quality isn't terrible. A backup has been automatically " \
-                 "made to this end." | colorize YELLOW
+                 "made to this end." | colorize WARN
             ;;
 
         *.gif)
-            echo "Optimizing as GIF: $file..." | colorize BLUE
+            fix_filename $file
+            echo "Optimizing as GIF: $file..." | colorize TITLE
 
-            if [[ ! identify -format "%[fx:n>1]\n" "$file" | grep -q 1 ]]; then
+            if [ ! identify -format "%[fx:n>1]\n" "$file" | grep -q 1 ]; then
                 echo "GIF isn't animated! Consider converting it to a PNG as " \
-                     "optimized PNGs are almost allows smaller than GIFs" | colorize YELLOW
+                     "optimized PNGs are almost allows smaller than GIFs" | colorize WARN
             fi
 
             gifsicle -03 --no-extensions < "$file" > $file
             ;;
         *)
-            echo "Not a recognized image!" | colorize RED
+            echo "Not a recognized image!" | colorize ERROR
             ;;
     esac
 
-    echo -e "\n\n"
+    echo "--------------------------------------------------" | colorize WHITE
 done
 
 exit

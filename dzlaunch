@@ -1,5 +1,5 @@
 #!/bin/bash
- 
+
 # Colors
 C_FG="#808080"
 C_BG="#1A1A1A"
@@ -33,13 +33,62 @@ FONT="snap"
 # Height of bar
 HEIGHT="20"
 
-# Width of bar (same as screen resolution)
-WIDTH=$(xrandr --current | head -1 | awk '{print $8}')
+# Width of bar
+WIDTH="max"
 
-# Vertical position of bar (bottom of screen)
-POS_Y=$(xrandr --current | head -1 | awk '{print $10}')
+# Vertical position of bar
+POSITION="bottom"
 
-##### DO NOT EDIT BELOW #####
+##### DO NOT EDIT BELOW ########################################################
+
+if [ "$1" == "-h" ]; then
+cat <<HELP 
+Start dzen2 panel with useful system info, similar to conky
+
+Note: 
+   Edit the variables at the top of $(basename "$0") to customize 
+   
+   
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+exit
+fi
+
+have() { type "$1" &> /dev/null; }
+if ! have dzen2; then
+    echo "$0 requires 'dzen' to be installed!"
+    exit 1
+fi
+if ! have xrandr; then
+    echo "$0 requires 'xorg-xrandr' to be installed!"
+    exit 1
+fi
+if ! have xdotool; then
+    echo "$0 requires 'xdotool' to be installed!"
+    exit 1
+fi
+if ! have acpi; then
+    echo "$0 requires 'acpi' to be installed!"
+    exit 1
+fi
+if ! have amixer; then
+    echo "$0 requires 'alsa-utils' to be installed!"
+    exit 1
+fi
+
+[ "$WIDTH" == "max" ] && WIDTH=$(xrandr --current | head -1 | awk '{print $8}')
+
+if [ "$POSITION" == "top" ]; then
+    POS_Y="0"
+elif [ "$POSITION" == "bottom" ]; then
+    POS_Y="$(xrandr --current | head -1 | awk '{print $10}')"
+else
+    POS_Y="$POSITION"
+fi
+
 FONT="-*-$FONT-*-r-normal-*-*-120-*-*-*-*-iso8859-*"
 SEPARATOR="^fg($C_SEPARATOR)$SEPARATOR^fg()"
 DZ_ARGS="-h $HEIGHT -w $WIDTH -y $POS_Y -fg $C_FG -bg $C_BG -fn $FONT"
@@ -169,7 +218,7 @@ get_diskspace () {
         
         [ $USED -ge 90 ] && C_DISK="$C_RED" || C_DISK="$C_FG"
     
-        echo -n "^ca(1, xdg-open $NAME)${NAME}: ^fg($C_DISK)$USED%^ca()"
+        echo -n "^ca(1, xdg-open $NAME)${NAME}: ^fg($C_DISK)$USED%^fg()^ca()"
         
         [ $COUNT -eq $NUMFS ] && SPACE="" || SPACE=" "
         echo -n "$SPACE"

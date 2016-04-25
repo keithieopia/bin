@@ -1,5 +1,28 @@
 #!/bin/bash
 
+usage () {
+cat <<HELP 
+Plays a tune depending on a option, useful for 'dunst'
+
+usage: $(basename "$0") [OPTION]
+
+   alert     : Play to get attention  
+   critpower : Play on very low power    
+   error     : Play for errors  
+   info      : Play for informational notices  
+   logout    : Play on logout  
+   lowpower  : Play for low power notifications  
+   startup   : Startup sound  
+   volume    : Play on volume changes  
+ 
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
 case "$1" in
     "alert")     SOUND="buzz.ogg"           ;;
     "critpower") SOUND="power-off.ogg"      ;;
@@ -9,7 +32,12 @@ case "$1" in
     "lowpower")  SOUND="power-low.ogg"      ;;
     "startup")   SOUND="psx.ogg"            ;;
     "volume")    SOUND="heal.ogg"           ;;
+    "-h")        usage; exit                ;;
     *)           SOUND="pop.ogg"            ;;
 esac
 
-paplay "$HOME/bin/sounds/$SOUND"
+have() { type "$1" &> /dev/null; }
+have paplay && paplay "$HOME/bin/sounds/$SOUND" || {
+    echo "$0 requires 'libpulse' to be installed!"
+    exit 1
+}

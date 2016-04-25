@@ -1,25 +1,83 @@
 #!/bin/bash
 
+usage () {
+cat <<HELP 
+Send OSD notifications on low battery levels
+
+usage: $(basename "$0") [-i num] [-w num] [-c num] [-k num]
+   -i : refresh interval in seconds (Default: 300)
+   -w : warn percent (Default: 20)
+   -c : critical percent (Default: 10)
+   -s : shutdown percent (Default: 5)
+
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+have() { type "$1" &> /dev/null; }
+if have acpi; then
+    ACPI=$(which acpi)
+else
+    echo "$0 requires 'acpi' to be installed!"
+    exit 1
+fi
+
+if have notify-send; then 
+    NOTIFY="notify-send -a battery"
+else
+    echo "$0 requires 'libnotify' to be installed!"
+    exit 1
+fi
+
 interval=300
 warn_level=20
 critical_level=10
-kill_level=5
+shutdown_level=5
+
+while [ "$1" != "" ]; do
+case $1 in
+    -i )    shift
+            interval=$1
+            ;;
+    -w )    shift
+            warn_level=$1
+            ;;
+    -c )    shift
+            critical_level=$1
+            ;;
+    -s )    shift
+            shutdown_level=$1
+            ;;
+    -h )    usage
+            exit
+            ;;
+    * )     usage
+            exit 1
+            ;;
+    esac
+    shift
+done
+
 
 while true
 do
-    if [ "$(acpi -a | grep -o off)" == "off" ]; then
-        battery_level=`acpi -b | awk '{print $4}' | sed -r 's/[,%]+//'`
+    if [ "$($ACPI -a | grep -o off)" == "off" ]; then
+        battery_level=$($ACPI -b | awk '{print $4}' | sed -r 's/[,%]+//')
 
-        if [ $battery_level -le $kill_level ]; then
-            notify-send -u critical -a battery "Battery Dead!" \
+        if [ $battery_level -le $shutdown_level ]; then
+            $NOTIFY -u critical "Battery Dead!" \
             "System will use remaining power to shutdown safely"
             sleep 10
             systemctl poweroff
         elif [ $battery_level -le $critical_level ]; then
-            notify-send -u normal -a battery "Battery level is very low!" \
+            $NOTIFY -u normal "Battery level is very low!" \
             "Please plug into AC adapter. Only $battery_level% remains"
         elif [ $battery_level -le $warn_level ]; then
-            notify-send -u normal -a battery "Battery level is low!" \
+            $NOTIFY -u normal -a "Battery level is low!" \
             "Only $battery_level% remains"
         fi
     fi

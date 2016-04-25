@@ -1,35 +1,115 @@
 #!/bin/bash
-# Encrypted Firefox Profile
 
-# Copyright (c) 2016 Timothy Keith
-# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
+usage () {
+cat <<HELP 
+Create and launch an encrypted Firefox profile
+
+Usage: $(basename "$0") [-s num] [-c DIR] [-p DIR]
+   -s : Encrypted container size, in megabytes (Default: 100)
+   -c : Container directory, without trailing slash 
+        (Default: /home/[USER]/.private)
+   -p : Firefox profile directory
+        (Default: /home/[USER]/.mozilla/firefox)      
+
+Note: 
+   $(basename "$0") has built-in sane defaults, only
+   advanced users should set the above flags
+
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+have() { type "$1" &> /dev/null; }
+if ! have cryptsetup; then
+    echo "$0 requires 'cryptsetup' to be installed!"
+    exit 1
+fi
+if ! have zenity; then
+    echo "$0 requires 'zenity' to be installed!"
+    exit 1
+fi
+if ! have sudo; then
+    echo "$0 requires 'sudo' to be installed!"
+    exit 1
+fi
+if ! have firefox; then
+    # queue the snark...
+    echo "$0 is rather useless without Firefox. You may wish to install it..."
+    exit 1
+fi
+
 
 WHOAMI=${SUDO_USER:-$(whoami)}
 CONTAINER_DIR="/home/$WHOAMI/.private"
 PROFILE_DIR="/home/$WHOAMI/.mozilla/firefox"
 SIZE="100M"
 
-source /home/$WHOAMI/bin/colorize
+while [ "$1" != "" ]; do
+case $1 in
+    -s )    shift
+            SIZE="${1}M"
+            ;;
+    -p )    shift
+            PROFILE_DIR="$1"
+            ;;
+    -c )    shift
+            CONTAINER_DIR="$1"
+            ;;
+    -h )    usage
+            exit
+            ;;
+    * )     usage
+            exit 1
+            ;;
+    esac
+    shift
+done
 
-if ! type zenity &> /dev/null; then
-    echo "Zenity not installed, Please install it first!" | colorize RED
-    exit 1
-fi
-
-#if ! mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
-#    echo "~/.cache is not in tmpfs. This is insecure as Firefox stores it's cache in there. Gracefully dying for your protection!" | colorize RED
-#    exit 1
-#fi
 
 if [ "$EUID" -ne 0 ]; then
-    PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon 'question' --text 'Enter sudo password:')"
-    echo "$PASSWORD" | sudo -S $0
+    while [ -z "$SUDO" ]; do
+        PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon 'question' --text 'Enter sudo password:')"
+        
+        if [ ! $PASSWORD ]; then
+            zenity --error --text="Canceling $(basename $0)"
+            exit 1
+        elif [ -z $PASSWORD ]; then
+            zenity --error --text="No sudo password provided!"
+        else
+            SUDO=$PASSWORD
+        fi
+    done
+
+    echo "$SUDO" | sudo -S $0
     exit
 fi
 
 function lockFirefox() {
     umount "$PROFILE_DIR/cryptofox"
     rmdir "$PROFILE_DIR/cryptofox"
+    
+    
+    DELETE_DIRS=("/home/$WHOAMI/.cache/mozilla/firefox/cryptofox"
+                 "/home/$WHOAMI/.macromedia/Flash_Player"
+                 "/home/$WHOAMI/.adobe/Flash_Player")
+    
+    for dir in "${DELETE_DIRS[@]}"; do
+        if [ -d $dir ]; then
+            if have shred; then
+                echo "Securely removing $dir..."
+                SHRED="shred -fuz -n 1"
+                find "$dir" -type f -exec $SHRED "{}" \;
+            else
+                echo "Insecurely removing $dir..."
+            fi
+            rm -r "$dir"
+        fi
+    done
+    
     cryptsetup luksClose cryptofox
 
     if [ $? -eq 0 ]; then

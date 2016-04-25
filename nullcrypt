@@ -1,22 +1,62 @@
 #!/bin/bash
-# Encrypted Container Wrapper
 
-# Copyright (c) 2016 Timothy Keith
-# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
+usage () {
+cat <<HELP 
+Creates and opens encrypted containers
 
-PRIVATE_DIR="$HOME/.private"
-MOUNT_DIR="/mnt"
-WHOAMI=${SUDO_USER:-$(whoami)}
+Usage: $(basename "$0") [-p DIR] [-m DIR] CONTAINER
+   -c : Container directory, without trailing slash 
+        (Default: /home/[USER]/.private)
+   -m : Mount point, without trailing slash
+        (Default: /mnt)      
 
-source /home/$WHOAMI/bin/colorize
+Note: 
+   $(basename "$0") has built-in sane defaults, only
+   advanced users should set the above flags
+
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+colorize () {
+    TITLE="1;97"
+    ERROR="0;31"
+    SUCCESS="0;32"
+    WARN="0;33"
+    PROMPT="0;37"
+    OPTION="2;37"
+    ESC="\033["
+
+    COLOR=\$${1:-NORMAL}
+        
+    echo -ne "${ESC}`eval echo ${COLOR}`m"
+    cat
+    echo -ne "${ESC}0m"
+}
+
+
+have() { type "$1" &> /dev/null; }
+if ! have cryptsetup; then
+    echo "$0 requires 'cryptsetup' to be installed!" | colorize ERROR
+    exit 1
+fi
+if ! have sudo; then
+    echo "$0 requires 'sudo' to be installed!" | colorize ERROR
+    exit 1
+fi
+
 
 function unlockContainer() {
-    echo -n "Password?: " | colorize GRAY
+    echo -n "Password?: " | colorize PROMPT
     read -s PASSWORD
     echo
 
-    echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $PRIVATE_DIR/$1 $1 || {
-        echo "Could not open encrypted container!" | colorize BOLD RED
+    echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $CONTAINER_DIR/$1 $1 || {
+        echo "Could not open encrypted container!" | colorize ERROR
         exit 1
     }
 }
@@ -31,8 +71,8 @@ function mountContainer() {
 }
 
 function makeContainer() {
-    echo "Container '$1' doesn't exist; create it?" | colorize BOLD WHITE
-    echo -n "(y/N): " | colorize WHITE
+    echo "Container '$1' doesn't exist; create it?" | colorize TITLE
+    echo -n "(y/N): " | colorize PROMPT
     read answer
     echo
 
@@ -42,44 +82,44 @@ function makeContainer() {
             # Ask for new password
             #
             while [ -z "$PASSWORD" ]; do
-                echo -n "Password?: " | colorize WHITE
+                echo -n "Password?: " | colorize PROMPT
                 read -s PASSWORD1
                 echo
 
-                echo -n "Confirm password?: " | colorize WHITE
+                echo -n "Confirm password?: " | colorize PROMPT
                 read -s PASSWORD2
                 echo
 
                 if [ "$PASSWORD1" = "$PASSWORD2" ]; then
                     PASSWORD=$PASSWORD1
                 else
-                    echo "Passwords did not match!" | colorize RED
+                    echo "Passwords did not match!" | colorize ERROR
                     echo
                 fi
             done
 
             echo
 
-            echo -n "Size of container?: " | colorize WHITE
+            echo -n "Size of container?: " | colorize PROMPT
             read SIZE
             echo
 
-            echo "Use default options for encryption?" | colorize BOLD WHITE
-            echo -n "(Y/n): " | colorize WHITE
+            echo "Use default options for encryption?" | colorize TITLE
+            echo -n "(Y/n): " | colorize PROMPT
             read answer
             echo
 
             case ${answer:0:1} in
                 n|N)
                     while [ -z "$HASH" ]; do
-                        echo "Choose a PBKDF2 hash algorithm:" | colorize BOLD WHITE
-                        echo " 1. sha1" | colorize LIGHT LIGHTGRAY
-                        echo " 2. sha256" | colorize LIGHT LIGHTGRAY
-                        echo " 3. sha512" | colorize LIGHT LIGHTGRAY
-                        echo " 4. ripemd160" | colorize LIGHT LIGHTGRAY
-                        echo " 5. whirlpool" | colorize LIGHT LIGHTGRAY
+                        echo "Choose a PBKDF2 hash algorithm:" | colorize TITLE
+                        echo " 1. sha1" | colorize OPTION
+                        echo " 2. sha256" | colorize OPTION
+                        echo " 3. sha512" | colorize OPTION
+                        echo " 4. ripemd160" | colorize OPTION
+                        echo " 5. whirlpool" | colorize OPTION
                         echo
-                        echo -n "Hash?: " | colorize WHITE
+                        echo -n "Hash?: " | colorize PROMPT
                         read answer
 
                         case ${answer} in
@@ -99,7 +139,7 @@ function makeContainer() {
                                 HASH="whirlpool"
                                 ;;
                             *)
-                                echo "Invalid hash!" | colorize RED
+                                echo "Invalid hash!" | colorize WARN
                                 echo
                                 ;;
                         esac
@@ -108,12 +148,12 @@ function makeContainer() {
                     echo
 
                     while [ -z "$CIPHER" ]; do
-                        echo "Choose an encryption algorithm:" | colorize BOLD WHITE
-                        echo " 1. aes" | colorize LIGHT LIGHTGRAY
-                        echo " 2. twofish" | colorize LIGHT LIGHTGRAY
-                        echo " 3. serpent" | colorize LIGHT LIGHTGRAY
+                        echo "Choose an encryption algorithm:" | colorize TITLE
+                        echo " 1. aes" | colorize OPTION
+                        echo " 2. twofish" | colorize OPTION
+                        echo " 3. serpent" | colorize OPTION
                         echo
-                        echo -n "Cipher?: " | colorize WHITE
+                        echo -n "Cipher?: " | colorize PROMPT
                         read answer
 
                         case ${answer} in
@@ -127,7 +167,7 @@ function makeContainer() {
                                 CIPHER="serpent"
                                 ;;
                             *)
-                                echo "Invalid algorithm!" | colorize RED
+                                echo "Invalid algorithm!" | colorize WARN
                                 echo
                                 ;;
                         esac
@@ -136,11 +176,11 @@ function makeContainer() {
                     echo
 
                     while [ -z "$BITS" ]; do
-                        echo "Choose a key size, note XTS cuts the actual bits in half:" | colorize BOLD WHITE
-                        echo " 1. 256" | colorize LIGHT LIGHTGRAY
-                        echo " 2. 512" | colorize LIGHT LIGHTGRAY
+                        echo "Choose a key size, note XTS cuts the actual bits in half:" | colorize TITLE
+                        echo " 1. 256" | colorize OPTION
+                        echo " 2. 512" | colorize OPTION
                         echo
-                        echo -n "Bits?: " | colorize WHITE
+                        echo -n "Bits?: " | colorize PROMPT
                         read answer
 
                         case ${answer} in
@@ -151,7 +191,7 @@ function makeContainer() {
                                 BITS="512"
                                 ;;
                             *)
-                                echo "Invalid key size!" | colorize RED
+                                echo "Invalid key size!" | colorize WARN
                                 echo
                                 ;;
                         esac
@@ -167,20 +207,20 @@ function makeContainer() {
             echo
 
             # Create private directory if it doesn't exist
-            if [ ! -d $PRIVATE_DIR ]; then
-                mkdir $PRIVATE_DIR
-                sudo chown $WHOAMI $PRIVATE_DIR
-                chmod 700 $PRIVATE_DIR
+            if [ ! -d $CONTAINER_DIR ]; then
+                mkdir $CONTAINER_DIR
+                sudo chown $WHOAMI $CONTAINER_DIR
+                chmod 700 $CONTAINER_DIR
             fi
 
             # Make the container
-            truncate -s $SIZE $PRIVATE_DIR/$1
-            sudo chown $WHOAMI $PRIVATE_DIR/$1
-            chmod 600 $PRIVATE_DIR/$1
+            truncate -s $SIZE $CONTAINER_DIR/$1
+            sudo chown $WHOAMI $CONTAINER_DIR/$1
+            chmod 600 $CONTAINER_DIR/$1
 
             # Encrypt and open container
-            echo -n $PASSWORD | sudo cryptsetup --hash $HASH --cipher $CIPHER-xts-plain64 --key-size $BITS --key-file "-" luksFormat $PRIVATE_DIR/$1
-            echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $PRIVATE_DIR/$1 $1
+            echo -n $PASSWORD | sudo cryptsetup --hash $HASH --cipher $CIPHER-xts-plain64 --key-size $BITS --key-file "-" luksFormat $CONTAINER_DIR/$1
+            echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $CONTAINER_DIR/$1 $1
 
             # Make the filesystem
             sudo mkfs.ext2 /dev/mapper/$1
@@ -194,36 +234,59 @@ function makeContainer() {
             ;;
 
         *)
-            echo "$PRIVATE_DIR/$1 does not exist, not creating it" | colorize BOLD RED
+            echo "$CONTAINER_DIR/$1 does not exist, not creating it" | colorize ERROR
             exit 1
             ;;
     esac
 }
 
 
+
+
+CONTAINER_DIR="$HOME/.private"
+MOUNT_DIR="/mnt"
+WHOAMI=${SUDO_USER:-$(whoami)}
+
+while [ "$1" != "" ]; do
+case $1 in
+    -c )
+        shift
+        CONTAINER_DIR=$1
+        ;;
+    -m )
+        shift
+        MOUNT_DIR=$1
+        ;;
+    -h )
+        usage
+        exit
+        ;;
+    * )
+        if mount | grep $MOUNT_DIR/$1 > /dev/null; then
+
+            sudo umount $MOUNT_DIR/$1
+            sudo rmdir $MOUNT_DIR/$1
+            sudo cryptsetup luksClose $1
+            echo "$1 successfully closed!" | colorize SUCCESS
+            exit
+        elif [ ! -f $CONTAINER_DIR/$1 ]; then
+            makeContainer $1
+            echo "$1 successfully opened!" | colorize SUCCESS
+            exit
+        else
+            unlockContainer $1
+            mountContainer $1
+
+            echo "$1 successfully opened!" | colorize SUCCESS
+            exit
+        fi
+        ;;
+    esac
+    shift
+done
+
 if [ ! -n "$1" ]; then
-    echo "No encrypted container name provided" | colorize RED
+    usage
     exit 1
-else
-    if mount | grep $MOUNT_DIR/$1 > /dev/null; then
-
-        sudo umount $MOUNT_DIR/$1
-        sudo rmdir $MOUNT_DIR/$1
-        sudo cryptsetup luksClose $1
-        echo "$1 successfully closed!" | colorize BOLD GREEN
-        exit
-    elif [ ! -f $PRIVATE_DIR/$1 ]; then
-        makeContainer $1
-        echo "$1 successfully opened!" | colorize BOLD GREEN
-        exit
-    else
-        unlockContainer $1
-        mountContainer $1
-
-        echo "$1 successfully opened!" | colorize BOLD GREEN
-        exit
-    fi
-fi
-
-
+fi 
 

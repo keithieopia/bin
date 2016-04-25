@@ -1,46 +1,76 @@
 #!/bin/bash
-# Speaker volume control wrapper
 
-# Copyright (c) 2016 Timothy Keith
-# The BSD 2-Clause License (BSD) https://opensource.org/licenses/BSD-2-Clause
+usage () {
+cat <<HELP 
+Changes the speaker volume and sends an OSD notification
+
+usage: $(basename "$0") [OPTION]
+   up     : Increase volume (will auto unmute if muted)
+   down   : Decrease volume (will auto unmute if muted)  
+   max    : ncrease volume to it's max level (will auto unmute if muted)
+   mute   : Mute volume
+   unmute : Unmute volume
+   toggle : Toggles mute/unmute depending on the current setting
+ 
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+have() { type "$1" &> /dev/null; }
+have amixer && AMIXER="amixer -D pulse" || {
+    echo "$0 requires 'alsa-utils' to be installed!"
+    exit 1
+}
+have notify-send && NOTIFY="notify-send -a volume" || {
+    echo "$0 requires 'libnotify' to be installed!"
+    exit 1
+}
+
 
 INTERVAL=5
 
 case $1 in
     "+"|"up")
-        #amixer -q sset Master ${INTERVAL}+ unmute
-        amixer -D pulse set Master ${INTERVAL}%+ unmute > /dev/null
+        $AMIXER set Master ${INTERVAL}%+ unmute > /dev/null
         action=increased
         ;;
     "-"|"down")
-        #amixer -q sset Master ${INTERVAL}- unmute
-        amixer -D pulse set Master ${INTERVAL}%- unmute > /dev/null
+        $AMIXER set Master ${INTERVAL}%- unmute > /dev/null
         action=lowered
         ;;
     "max")
-        #amixer -q sset Master 100% unmute
-        amixer -D pulse set Master 100%+ unmute > /dev/null
+        $AMIXER set Master 100%+ unmute > /dev/null
         action=maxed
         ;;
     "mute")
-        #amixer -q sset Master mute
-        amixer -D pulse set Master mute > /dev/null
+        $AMIXER set Master mute > /dev/null
         action=muted
         ;;
     "unmute")
-        #amixer -q sset Master unmute
-        amixer -D pulse set Master unmute > /dev/null
+        $AMIXER set Master unmute > /dev/null
         action=unmuted
         ;;
     "toggle")
-        amixer -D pulse set Master toggle > /dev/null
-        if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
+        $AMIXER set Master toggle > /dev/null
+        if `$AMIXER get Master | tail -1 | grep off > /dev/null`; then
             action=muted
         else
             action=unmuted
         fi
         ;;
+    "-h")
+        usage
+        exit
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
 esac
 
-vol=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
-notify-send -u low -a volume "Volume ${action}!" "Volume is now set to ${vol}"
+vol=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <($AMIXER sget Master) | head -1)
+$NOTIFY -u low "Volume ${action}!" "Volume is now set to ${vol}"

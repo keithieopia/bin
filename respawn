@@ -1,17 +1,42 @@
 #!/bin/bash
 
-echo -e "\e[34m"
-echo "This script will indefinitely restart $1 after it exits, to prevent"
-echo "this on the next exit, send a SIGUSR1 or simply run /tmp/respawn/respawnkill"
-echo "All output from the program will be captured to /tmp/respawn/*.log"
-echo -e "\e[39m"
+usage () {
+cat <<HELP 
+Indefinitely restart a program after it exits
+
+Usage: $(basename "$0") [APP]
+
+To Kill:
+   Run '/tmp/respawn/respawnkill' or send a SIGUSR1 to kill this 
+   daemon once started.
+
+Logging:
+   All output from the given program will be captured in /tmp/respawn/*.log
+   Each time the program restarts, a new dated log file is created
+
+
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+}
+
+if [ -z "$1" ]; then 
+    usage
+    exit 1
+elif [ "$1" == "-h" ]; then
+    usage
+    exit
+fi
+
 
 cleanup() {
     TIMESTAMP=`date "+%Y-%m-%d-%H:%M:%S"`
     echo -e "\e[34m[$TIMESTAMP] \e[33mProgram has exited, but SIGUSR1 received so not restarting...\e[39m"
 
-    echo -e "\e[34mClearing logs and kill script...\e[39m"
-    rm -rf /tmp/respawn/*
+    echo -e "\e[34mRemoving kill script...\e[39m"
+    rm /tmp/respawn/respawnkill
     exit 0
 }
 
