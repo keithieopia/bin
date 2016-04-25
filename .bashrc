@@ -8,22 +8,24 @@
 # Determine if a program is installed, used in below aliases
 have() { type "$1" &> /dev/null; }
 
+ALIAS_DIR="/home/timothy/dotfiles/alias.d"
+
 # Load extras
 load_dotfiles() {
     declare -a files=(
-        $HOME/dotfiles/alias.d/exports.bash
-        $HOME/dotfiles/alias.d/defaults.bash
-        $HOME/dotfiles/alias.d/arch.bash
-        $HOME/dotfiles/alias.d/colorize.bash
-        $HOME/dotfiles/alias.d/archive.bash
-        $HOME/dotfiles/alias.d/net.bash
-        $HOME/dotfiles/alias.d/prompt.bash
-        $HOME/dotfiles/alias.d/dir.bash
-        $HOME/dotfiles/alias.d/strings.bash
-        $HOME/dotfiles/alias.d/text.bash
-        $HOME/dotfiles/alias.d/exports.bash
-        $HOME/dotfiles/alias.d/completion.bash
-        $HOME/dotfiles/alias.d/misc.bash
+        $ALIAS_DIR/exports.bash
+        $ALIAS_DIR/defaults.bash
+        $ALIAS_DIR/arch.bash
+        $ALIAS_DIR/colorize.bash
+        $ALIAS_DIR/archive.bash
+        $ALIAS_DIR/net.bash
+        $ALIAS_DIR/prompt.bash
+        $ALIAS_DIR/dir.bash
+        $ALIAS_DIR/strings.bash
+        $ALIAS_DIR/text.bash
+        $ALIAS_DIR/exports.bash
+        $ALIAS_DIR/completion.bash
+        $ALIAS_DIR/misc.bash
     )
 
     # if these files are readable, source them
