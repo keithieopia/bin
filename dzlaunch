@@ -1,88 +1,204 @@
 #!/bin/bash
  
+# Colors
 C_FG="#808080"
 C_BG="#1A1A1A"
-C_SEP="#000000"
+C_SEPARATOR="#000000"
 C_TITLE="#ADD8E6"
-C_BUTTON="#FFFFFF"
+C_BRACKETS="#FFFFFF"
+C_RED="#A52A2A"
+C_YELLOW="#FFA500"
+C_GREEN="#008000"
 
-RED="#A52A2A"
-YELLOW="#FFA500"
-GREEN="#008000"
+# Separator character
+SEPARATOR="|"
 
-IFACE="wlp1s0"
+# Network Interface
+NET_IFACE="wlp1s0"
 
-FONT="-*-snap-*-r-normal-*-*-120-*-*-*-*-iso8859-*"
+NET_CLICK="vnstati -nh -s -hs -i $IFACE -o '/tmp/vnstat.png'; xdg-open '/tmp/vnstat.png'"
+VOL_CLICK="~/bin/volume toggle"
+CPU_CLICK="sakura -x top"
+MEM_CLICK="sakura -x top"
+
+# File systems to monitor
+FILESYS=("/dev/mapper/storage-root" "/dev/mapper/storage-home")
+
+# Workspace names
+WORKSPACES=("web" "work")
+
+# Font
+FONT="snap"
+
+# Height of bar
 HEIGHT="20"
+
+# Width of bar (same as screen resolution)
 WIDTH=$(xrandr --current | head -1 | awk '{print $8}')
+
+# Vertical position of bar (bottom of screen)
 POS_Y=$(xrandr --current | head -1 | awk '{print $10}')
-SEP="^fg($C_SEP)//^fg()"
 
-##
-## Battery
-##
+##### DO NOT EDIT BELOW #####
+FONT="-*-$FONT-*-r-normal-*-*-120-*-*-*-*-iso8859-*"
+SEPARATOR="^fg($C_SEPARATOR)$SEPARATOR^fg()"
+DZ_ARGS="-h $HEIGHT -w $WIDTH -y $POS_Y -fg $C_FG -bg $C_BG -fn $FONT"
 
-BATTERY=$(acpi -b | awk '{print $4}' | sed 's/\(.*\)./\1/')
+xdotool set_num_desktops ${#WORKSPACES[@]}
+    
+# Formatting functions
+in_brackets () {
+    echo "^fg($C_BRACKETS)[^fg()$1^fg($C_BRACKETS)]^fg()"
+}
 
-if [ "$(acpi -a | grep -o off)" == "off" ]; then
-    if [ $BATTERY -le 25 ]; then
-        C_BATT="$YELLOW"
-    elif [ $BATTERY -le 10 ]; then
-        C_BATT="$RED"
+# Generate Information
+get_uptime () {
+    UPTIME=$(uptime | awk '{print $1}' | sed 's/\(.*\).../\1/')
+    
+    echo -n "$(in_brackets $UPTIME)"
+}
+
+get_workspaces () {
+    NUM_WORKSPACE=$(xdotool get_num_desktops)
+    CUR_WORKSPACE=$(xdotool get_desktop)
+    
+    #echo -n "^ca(1, xdotool key Super_L+F1)$(in_brackets web)^ca()"
+    #echo -n "^ca(1, xdotool key Super_L+F2)$(in_brackets work)^ca()"
+
+
+    COUNT=0
+    
+    for workspace in "${WORKSPACES[@]}"; do
+        [ $CUR_WORKSPACE -eq $COUNT ] && C_WORKSPACE="$C_TITLE" || C_WORKSPACE="$C_FG"
+    
+        workspace="^fg($C_WORKSPACE)$workspace^fg()"
+        
+        echo -n "^ca(1, xdotool set_desktop $COUNT)"
+        echo -n "$(in_brackets $workspace)"
+        echo -n "^ca()"
+        ((COUNT++))
+    done
+}
+
+get_battery () {
+    BATTERY=$(acpi -b | awk '{print $4}' | sed -r 's/[,%]+//')
+
+    if [ "$(acpi -a | grep -o off)" == "off" ]; then
+        if [ $BATTERY -le 25 ]; then
+            C_BATT="$C_YELLOW"
+        elif [ $BATTERY -le 10 ]; then
+            C_BATT="$C_RED"
+        else
+            C_BATT="$C_GREEN"
+        fi
     else
-        C_BATT="$GREEN"
+        C_BATT="$C_FG"
     fi
-else
-    C_BATT="$C_FG"
-fi
+    
+    echo -n "^fg($C_TITLE)Batt: ^fg($C_BATT)${BATTERY}%^fg()"
+}
+
+get_volume () {
+    VOLUME=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
+
+    if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
+        C_VOL="$C_RED"
+    else
+        C_VOL="$C_FG"
+    fi
+
+    echo "^fg($C_TITLE)Vol: ^fg($C_VOL)${VOLUME}^fg()"
+}
+
+get_net () {
+    IFSTAT="$(ifstat $NET_IFACE | grep $NET_IFACE)"
+    NET_RX=$(echo $IFSTAT | awk '{print $2}')
+    NET_TX=$(echo $IFSTAT | awk '{print $4}')
+    #NET_RX_TOTAL=$(echo $IFSTAT | awk '{print $6}')
+    #NET_TX_TOTAL=$(echo $IFSTAT | awk '{print $8}')
+
+    echo "^fg($C_TITLE)Net: ^fg()${NET_RX}d ${NET_TX}u"
+}
+
+get_mem () {
+    USED="$(free | grep Mem | awk '{ printf("%.0f", $3/$2 * 100.0) }')"
+
+    [ $USED -ge 95 ] && C_MEM="$C_RED" || C_MEM="$C_FG"
+
+    echo -n "^ca(1, $MEM_CLICK)^fg($C_TITLE)Mem: ^fg($C_MEM)$USED%^fg()^ca()"
+}
+
+get_cpu () {
+    VMSTAT="$(vmstat | tail -1)"
+    SYS="$(echo $VMSTAT | awk '{ print $14 }')"
+    USR="$(echo $VMSTAT | awk '{ print $13 }')"
+
+    if [ $USR -ge 75 ]; then
+        C_USR="$C_YELLOW"
+    elif [ $USR -ge 90 ]; then
+        C_USR="$C_RED"
+    else
+        C_USR="$C_FG"
+    fi
+
+    if [ $SYS -ge 75 ]; then
+        C_SYS="$C_YELLOW"
+    elif [ $SYS -ge 90 ]; then
+        C_SYS="$C_RED"
+    else
+        C_SYS="$C_FG"
+    fi
+
+    echo -n "^ca(1, $CPU_CLICK)"
+    echo -n "^fg($C_TITLE)CPU:^fg() "
+    echo -n "u: ^fg($C_USR)${USR}%^fg() "
+    echo -n "s: ^fg($C_SYS)${SYS}%^fg()"
+    echo -n "^ca()"
+}
+
+get_diskspace () {
+    echo -n "^fg($C_TITLE)FS: ^fg()"
+    
+    COUNT=1
+    NUMFS=${#FILESYS[@]}
+    
+    for fs in "${FILESYS[@]}"; do
+        DF=$(/usr/bin/df | grep "$fs")
+        USED="$( echo "$DF" | awk '{ print $5 }' | sed -r 's/[%]+//' )"
+        NAME="$( echo "$DF" | awk '{ print $6 }' )"
+        
+        [ $USED -ge 90 ] && C_DISK="$C_RED" || C_DISK="$C_FG"
+    
+        echo -n "^ca(1, xdg-open $NAME)${NAME}: ^fg($C_DISK)$USED%^ca()"
+        
+        [ $COUNT -eq $NUMFS ] && SPACE="" || SPACE=" "
+        echo -n "$SPACE"
+        ((COUNT++))
+    done
+}
 
 
-##
-## Volume
-##
+while true; do
+    echo -n "^p(_LEFT)$(get_workspaces)"    
 
-VOLUME=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
+    echo -n "^p(_CENTER)^p(-450)"
 
-if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
-    C_VOL="$RED"
-else
-    C_VOL="$C_FG"
-fi
+    echo -n "$(get_diskspace)"
+    echo -n " $SEPARATOR "
+    echo -n "$(get_cpu)"
+    echo -n " $SEPARATOR "
+    echo -n "$(get_mem)"
+    echo -n " $SEPARATOR "
+    echo -n "^ca(1, $NET_CLICK)$(get_net)^ca()"
+    echo -n " $SEPARATOR "
+    echo -n "^ca(1, $VOL_CLICK)$(get_volume)^ca()"
+    echo -n " $SEPARATOR "
+    echo -n "$(get_battery)"
 
+    echo -n "^p(_RIGHT)^p(-100)$(get_uptime)"
+    
+    echo # Send newline
+    sleep 1
+done | dzen2 $DZ_ARGS
 
-##
-## Network
-##
-
-# Net since last run
-#NET_RX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $6}')
-#NET_TX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $8}')
-
-# Current Net
-NET_RX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $2}')
-NET_TX=$(ifstat $IFACE | tail -2 | head -1 | awk '{print $4}')
-
-
-UPTIME=$(uptime | awk '{print $1}')
-
-echo -e "^p(_LEFT)\
-^ca(1, xdotool key Super_L+F1)\
-^fg($C_BUTTON)[^fg()web^fg($C_BUTTON)]\
-^ca()\
-\
-^ca(1, xdotool key Super_L+F2)\
-^fg($C_BUTTON)[^fg()work^fg($C_BUTTON)]\
-^ca()\
-\
-^p(_CENTER)^p(-200)$SEP\
-\
-^fg($C_TITLE) Net: ^fg()${NET_RX}d ${NET_TX}u $SEP\
-\
-^fg($C_TITLE) Batt: ^fg($C_BATT)${BATTERY}% $SEP\
-\
-^ca(1, ~/bin/volume toggle) \
-^fg($C_TITLE) Vol: ^fg($C_VOL)${VOLUME} $SEP\
-^ca()\
-\
-^p(_RIGHT)^p(-110)^fg($C_BUTTON)[ ^fg()${UPTIME} ^fg($C_BUTTON)]\
-" | dzen2 -h $HEIGHT -w $WIDTH -y $POS_Y -fg $C_FG -bg $C_BG -fn $FONT -p
+exit 0
