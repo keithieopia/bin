@@ -2,6 +2,7 @@ bash_prompt () {
     local WHITE="\[\033[0;37m\]"
     local BLACK="\[\033[1;30m\]"
     local RED="\[\033[0;31m\]"
+    local YELLOW="\[\033[0;33m\]"
     local GREEN="\[\033[0;32m\]"
     local BLUE="\[\033[0;34m\]"
     local RESET="\[\033[0m\]"
@@ -56,23 +57,29 @@ prompt_git() {
             # ensure index is up to date
             git update-index --really-refresh  -q &>/dev/null
 
-            # check for uncommitted changes in the index
+            # c
+            if `git status | grep ahead > /dev/null`; then
+                local SYMBOL="${SYMBOL}${YELLOW}↺"
+            fi
+            
+            #  uncommitted changes
             if ! $(git diff --quiet --ignore-submodules --cached); then
-                local SYMBOL="${SYMBOL}${GREEN}+"
+                local SYMBOL="${SYMBOL}${YELLOW}+"
             fi
 
-            # check for unstaged changes
+            # unstaged changes
             if ! $(git diff-files --quiet --ignore-submodules --); then
                 local SYMBOL="${SYMBOL}${RED}!"
             fi
 
-            # check for untracked files
+            # untracked files
             if [ -n "$(git ls-files --others --exclude-standard)" ]; then
                 local SYMBOL="${SYMBOL}${RED}?"
             fi
-
+        
+            #
             if [[ -z "$SYMBOL" ]]; then
-                local SYMBOL="${SYMBOL}${BLUE}*"
+                local SYMBOL="${SYMBOL}${GREEN}✓"
             fi
 
             echo " $BLACK($SYMBOL$BLACK)$RESET"
