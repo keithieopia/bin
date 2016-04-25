@@ -75,7 +75,7 @@ prompt_git() {
                 local SYMBOL="${SYMBOL}${BLUE}*"
             fi
 
-            echo " $BOLD_BLACK($SYMBOL$BLACK)"
+            echo " $BLACK($SYMBOL$BLACK)$RESET"
         fi
     fi
 }
