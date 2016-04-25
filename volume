@@ -9,31 +9,31 @@ INTERVAL=5
 case $1 in
     "+"|"up")
         #amixer -q sset Master ${INTERVAL}+ unmute
-        amixer -D pulse set Master ${INTERVAL}%+ unmute
+        amixer -D pulse set Master ${INTERVAL}%+ unmute > /dev/null
         action=increased
         ;;
     "-"|"down")
         #amixer -q sset Master ${INTERVAL}- unmute
-        amixer -D pulse set Master ${INTERVAL}%- unmute
+        amixer -D pulse set Master ${INTERVAL}%- unmute > /dev/null
         action=lowered
         ;;
     "max")
         #amixer -q sset Master 100% unmute
-        amixer -D pulse set Master 100%+ unmute
+        amixer -D pulse set Master 100%+ unmute > /dev/null
         action=maxed
         ;;
     "mute")
         #amixer -q sset Master mute
-        amixer -D pulse set Master mute
+        amixer -D pulse set Master mute > /dev/null
         action=muted
         ;;
     "unmute")
         #amixer -q sset Master unmute
-        amixer -D pulse set Master unmute
+        amixer -D pulse set Master unmute > /dev/null
         action=unmuted
         ;;
     "toggle")
-        amixer -D pulse set Master toggle
+        amixer -D pulse set Master toggle > /dev/null
         if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
             action=muted
         else
