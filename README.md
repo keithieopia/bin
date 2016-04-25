@@ -2,8 +2,6 @@
 
 *There's no place like $HOME*
 
-**Author:** Timothy Keith, Copyright 2016  
-**License:** BSD
 
 ## Synopsis
 These are various config files I use for my Linux environment and related programs. 
@@ -42,7 +40,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/d
 ## Author
 Copyright &copy; 2016 Timothy Keith
 
-License BSD: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/dotfiles/master/COPYING)
+License: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/dotfiles/master/LICENSE)
 
 _This is free software: you are free to change and redistribute it._
 _There is NO WARRANTY, to the extent permitted by law._
