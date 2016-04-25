@@ -40,7 +40,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/d
 ## Author
 Copyright &copy; 2016 Timothy Keith
 
-License: The BSD 2-Clause License, see [COPYING](https://raw.githubusercontent.com/keithieopia/dotfiles/master/LICENSE)
+License: The BSD 2-Clause License, see [LICENSE](https://raw.githubusercontent.com/keithieopia/dotfiles/master/LICENSE)
 
 _This is free software: you are free to change and redistribute it._
 _There is NO WARRANTY, to the extent permitted by law._
