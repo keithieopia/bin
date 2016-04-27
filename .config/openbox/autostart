@@ -15,10 +15,10 @@
 xset -b # no beep
 nitrogen --restore &
 pypanel &
-~/bin/dzlaunch &
-# pasystray & # started automatically by XDG
+~/bin/lemonlaunch &
 ~/bin/battmon &
 pcmanfm -d &
+urxvtd -o -q &
 aarchup -l 360 & # notify every 6 hours
 dropbox &
 zim &
