@@ -119,7 +119,7 @@ ICON_LIST       = {
 LAUNCH_LIST     = [
                    ("firefox", "/usr/share/icons/Paper/24x24/apps/firefox.png"),
                    ("pcmanfm", "/usr/share/icons/Paper/24x24/apps/system-file-manager.png"),
-                   ("sakura", "/usr/share/icons/Paper/24x24/apps/terminal.png"),
+                   ("urxvtc", "/usr/share/icons/Paper/24x24/apps/terminal.png"),
           ]
 
 #------------------------------------------------------------------------------
@@ -155,7 +155,7 @@ DESKTOP_NAMES   = ["Yin", "Yang"]
 # in the diagram above.  Each of the following objects can be enabled by
 # assigning it a section number or disabled by assigning it 0:
 #------------------------------------------------------------------------------
-DESKTOP         = 1             # Desktop name section
+DESKTOP         = 0             # Desktop name section
 TASKS           = 3             # Task names section
 TRAY            = 4             # System tray section
 CLOCK           = 5             # Clock section
