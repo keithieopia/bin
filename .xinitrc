@@ -34,6 +34,10 @@ fi
 gpg-connect-agent /bye
 export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
 
+# Load artwiz fonts
+xset +fp /usr/share/fonts/artwiz-fonts/
+xset fp rehash
+
 # Blank the monitor after 10mins and turn it off after 30mins
 xset s 600 600 1800
 
