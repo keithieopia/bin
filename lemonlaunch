@@ -17,18 +17,17 @@ SEPARATOR="|"
 NET_IFACE="wlp1s0"
 
 NET_CLICK="vnstati -nh -s -hs -i $IFACE -o '/tmp/vnstat.png'; xdg-open '/tmp/vnstat.png'"
-VOL_CLICK="~/bin/volume toggle"
+VOL_RCLICK="~/bin/volume toggle"
+VOL_LCLICK="pavucontrol -t 3"
 CPU_CLICK="sakura -x top"
 MEM_CLICK="sakura -x top"
 
 # File systems to monitor
 FILESYS=("/dev/mapper/storage-root" "/dev/mapper/storage-home")
 
-# Workspace names
-WORKSPACES=("web" "work")
-
 # Font
-FONT="snap"
+FONT_FACE="snap"
+FONT_SIZE="10"
 
 # Height of bar
 HEIGHT="20"
@@ -58,51 +57,42 @@ exit
 fi
 
 have() { type "$1" &> /dev/null; }
-if ! have dzen2; then
-    echo "$0 requires 'dzen' to be installed!"
-    exit 1
-fi
-if ! have xrandr; then
-    echo "$0 requires 'xorg-xrandr' to be installed!"
+if ! have lemonbar; then
+    echo "$0 requires 'lemonbar' to be installed!"
     exit 1
 fi
 if ! have xdotool; then
     echo "$0 requires 'xdotool' to be installed!"
     exit 1
 fi
-if ! have acpi; then
-    echo "$0 requires 'acpi' to be installed!"
-    exit 1
-fi
 if ! have amixer; then
     echo "$0 requires 'alsa-utils' to be installed!"
     exit 1
 fi
-
-[ "$WIDTH" == "max" ] && WIDTH=$(xrandr --current | head -1 | awk '{print $8}')
-
-if [ "$POSITION" == "top" ]; then
-    POS_Y="0"
-elif [ "$POSITION" == "bottom" ]; then
-    POS_Y="$(xrandr --current | head -1 | awk '{print $10}')"
-else
-    POS_Y="$POSITION"
+if ! have xprop; then
+    echo "$0 requires 'xorg-xprop' to be installed!"
+    exit 1
 fi
 
-FONT="-*-$FONT-*-r-normal-*-*-120-*-*-*-*-iso8859-*"
-SEPARATOR="^fg($C_SEPARATOR)$SEPARATOR^fg()"
-DZ_ARGS="-h $HEIGHT -w $WIDTH -y $POS_Y -fg $C_FG -bg $C_BG -fn $FONT"
+FONT="-*-$FONT_FACE-*-r-*-*-$FONT_SIZE-*-*-*-*-*-*-*"
+LEMONBAR_ARGS="-f $FONT -F $C_FG -B $C_BG -b -p"
 
-xdotool set_num_desktops ${#WORKSPACES[@]}
-    
-# Formatting functions
+# Used to monitor file changes and reload, similar to how conky works
+HASH=$(md5sum "$0" | cut -c 1-32)
+   
+# Formatting
+SEPARATOR="%{F$C_SEPARATOR}$SEPARATOR%{F$C_FG}"
+
 in_brackets () {
-    echo "^fg($C_BRACKETS)[^fg()$1^fg($C_BRACKETS)]^fg()"
+    echo -n "%{F$C_BRACKETS}["
+    echo -n "%{F$C_FG}$1"
+    echo -n "%{F$C_BRACKETS}]"
 }
+
 
 # Generate Information
 get_uptime () {
-    UPTIME=$(uptime | awk '{print $1}' | sed 's/\(.*\).../\1/')
+    UPTIME=$(uptime | awk '{print $1}')
     
     echo -n "$(in_brackets $UPTIME)"
 }
@@ -110,63 +100,72 @@ get_uptime () {
 get_workspaces () {
     NUM_WORKSPACE=$(xdotool get_num_desktops)
     CUR_WORKSPACE=$(xdotool get_desktop)
-    
-    #echo -n "^ca(1, xdotool key Super_L+F1)$(in_brackets web)^ca()"
-    #echo -n "^ca(1, xdotool key Super_L+F2)$(in_brackets work)^ca()"
+    NAMES=$(xprop -root _NET_DESKTOP_NAMES | sed -e 's/_NET_DESKTOP_NAMES(UTF8_STRING) = //g' | tr -d '\",')
 
 
-    COUNT=0
+    for (( c=1; c<=$NUM_WORKSPACE; c++ )); do
+        [ $CUR_WORKSPACE -eq $(($c-1)) ] && C_WORKSPACE="$C_TITLE" || C_WORKSPACE="$C_FG"
     
-    for workspace in "${WORKSPACES[@]}"; do
-        [ $CUR_WORKSPACE -eq $COUNT ] && C_WORKSPACE="$C_TITLE" || C_WORKSPACE="$C_FG"
+        NAME=$(echo $NAMES | awk -v c=$c '{print $c}')
     
-        workspace="^fg($C_WORKSPACE)$workspace^fg()"
+    
+        workspace="%{F$C_WORKSPACE}$NAME"
         
-        echo -n "^ca(1, xdotool set_desktop $COUNT)"
+        echo -n "%{A:xdotool set_desktop $(($c-1)):}"
         echo -n "$(in_brackets $workspace)"
-        echo -n "^ca()"
-        ((COUNT++))
+        echo -n "%{A}"
     done
 }
 
 get_battery () {
-    BATTERY=$(acpi -b | awk '{print $4}' | sed -r 's/[,%]+//')
-
-    if [ "$(acpi -a | grep -o off)" == "off" ]; then
-        if [ $BATTERY -le 25 ]; then
-            C_BATT="$C_YELLOW"
-        elif [ $BATTERY -le 10 ]; then
-            C_BATT="$C_RED"
-        else
-            C_BATT="$C_GREEN"
-        fi
-    else
-        C_BATT="$C_FG"
-    fi
+    BATTERY="$(cat /sys/class/power_supply/BAT1/capacity)"
+    STATUS="$(cat /sys/class/power_supply/BAT1/status)"
     
-    echo -n "^fg($C_TITLE)Batt: ^fg($C_BATT)${BATTERY}%^fg()"
+    if [ $BATTERY -le 25 ]; then
+        C_BATT="$C_YELLOW"
+    elif [ $BATTERY -le 10 ]; then
+        C_BATT="$C_RED"
+    else
+        C_BATT="$C_GREEN"
+    fi
+
+    echo -n "%{F$C_TITLE}Batt: "
+
+    if [ "$STATUS" == "Charging" ]; then
+        echo -n "%{F$C_BATT}$BATTERY%%"
+        echo -n "%{F$C_FG}+"
+    elif [ "$STATUS" == "Discharging" ]; then
+        echo -n "%{F$C_BATT}$BATTERY%%"
+        echo -n "%{F$C_FG}-"
+    else
+        echo -n "%{F$C_FG}$BATTERY%%"
+    fi
 }
 
 get_volume () {
-    VOLUME=$(awk '/%/ {gsub(/[\[\]]/,""); print $5}' <(amixer sget Master) | head -1)
+    VOLUME=$(awk '/%/ {gsub(/[\[%\]]/,""); print $5}' <(amixer sget Master) | head -1)
 
     if `amixer -D pulse get Master | tail -1 | grep off > /dev/null`; then
         C_VOL="$C_RED"
     else
         C_VOL="$C_FG"
     fi
-
-    echo "^fg($C_TITLE)Vol: ^fg($C_VOL)${VOLUME}^fg()"
+    
+    echo -n "%{A:$VOL_LCLICK:}%{A3:$VOL_RCLICK:}"
+    echo -n "%{F$C_TITLE}Vol: "
+    echo -n "%{F$C_VOL}$VOLUME%%"
+    echo -n "%{A3}%{A}"
 }
 
 get_net () {
     IFSTAT="$(ifstat $NET_IFACE | grep $NET_IFACE)"
     NET_RX=$(echo $IFSTAT | awk '{print $2}')
     NET_TX=$(echo $IFSTAT | awk '{print $4}')
-    #NET_RX_TOTAL=$(echo $IFSTAT | awk '{print $6}')
-    #NET_TX_TOTAL=$(echo $IFSTAT | awk '{print $8}')
 
-    echo "^fg($C_TITLE)Net: ^fg()${NET_RX}d ${NET_TX}u"
+    echo -n "%{A:$NET_CLICK:}"
+    echo -n "%{F$C_TITLE}Net: "
+    echo -n "%{F$C_FG}${NET_RX}d ${NET_TX}u"
+    echo -n "%{A}"
 }
 
 get_mem () {
@@ -174,7 +173,10 @@ get_mem () {
 
     [ $USED -ge 95 ] && C_MEM="$C_RED" || C_MEM="$C_FG"
 
-    echo -n "^ca(1, $MEM_CLICK)^fg($C_TITLE)Mem: ^fg($C_MEM)$USED%^fg()^ca()"
+    echo -n "%{A:$MEM_CLICK:}"
+    echo -n "%{F$C_TITLE}Mem: "
+    echo -n "%{F$C_MEM}$USED%%"
+    echo -n "%{A}"
 }
 
 get_cpu () {
@@ -198,15 +200,15 @@ get_cpu () {
         C_SYS="$C_FG"
     fi
 
-    echo -n "^ca(1, $CPU_CLICK)"
-    echo -n "^fg($C_TITLE)CPU:^fg() "
-    echo -n "u: ^fg($C_USR)${USR}%^fg() "
-    echo -n "s: ^fg($C_SYS)${SYS}%^fg()"
-    echo -n "^ca()"
+    echo -n "%{A:$CPU_CLICK:}"
+    echo -n "%{F$C_TITLE}CPU: "
+    echo -n "%{F$C_FG}u: %{F$C_USR}$USR%% "
+    echo -n "%{F$C_FG}s: %{F$C_SYS}$SYS%%"
+    echo -n "%{A}"
 }
 
 get_diskspace () {
-    echo -n "^fg($C_TITLE)FS: ^fg()"
+    echo -n "%{F$C_TITLE}FS: "
     
     COUNT=1
     NUMFS=${#FILESYS[@]}
@@ -218,7 +220,10 @@ get_diskspace () {
         
         [ $USED -ge 90 ] && C_DISK="$C_RED" || C_DISK="$C_FG"
     
-        echo -n "^ca(1, xdg-open $NAME)${NAME}: ^fg($C_DISK)$USED%^fg()^ca()"
+        echo -n "%{A:xdg-open $NAME:}"
+        echo -n "%{F$C_FG}$NAME: "
+        echo -n "%{F$C_DISK}$USED%%"
+        echo -n "%{A}"
         
         [ $COUNT -eq $NUMFS ] && SPACE="" || SPACE=" "
         echo -n "$SPACE"
@@ -228,9 +233,10 @@ get_diskspace () {
 
 
 while true; do
-    echo -n "^p(_LEFT)$(get_workspaces)"    
 
-    echo -n "^p(_CENTER)^p(-450)"
+    echo -n "$(get_workspaces)"    
+
+    echo -n "%{c}"
 
     echo -n "$(get_diskspace)"
     echo -n " $SEPARATOR "
@@ -238,16 +244,25 @@ while true; do
     echo -n " $SEPARATOR "
     echo -n "$(get_mem)"
     echo -n " $SEPARATOR "
-    echo -n "^ca(1, $NET_CLICK)$(get_net)^ca()"
+    echo -n "$(get_net)"
     echo -n " $SEPARATOR "
-    echo -n "^ca(1, $VOL_CLICK)$(get_volume)^ca()"
+    echo -n "$(get_volume)"
     echo -n " $SEPARATOR "
     echo -n "$(get_battery)"
 
-    echo -n "^p(_RIGHT)^p(-100)$(get_uptime)"
-    
-    echo # Send newline
-    sleep 1
-done | dzen2 $DZ_ARGS
+    echo -n "%{r}$(get_uptime)"
+        
+    # Reload self on change
+    if [[ $(md5sum "$0" | cut -c 1-32) == "$HASH" ]]; then
+        echo # Send newline
+        sleep 1
+    else
+        killall lemonbar
+        exec $0 &
+        exit
+    fi
+    #echo 
+    #sleep 1
+done | lemonbar $LEMONBAR_ARGS | sh
 
 exit 0
