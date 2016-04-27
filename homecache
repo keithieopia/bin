@@ -9,7 +9,7 @@ Usage: $(basename "$0")
 
 
 https://github.com/keithieopia/bin/
-    
+
 Copyright (c) 2016 Timothy Keith
 Licensed under the BSD 2-clause license.
 HELP
@@ -21,7 +21,7 @@ colorize () {
     ESC="\033["
 
     COLOR=\$${1:-NORMAL}
-        
+
     echo -ne "${ESC}`eval echo ${COLOR}`m"
     cat
     echo -ne "${ESC}0m"
@@ -49,13 +49,11 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
 
         # Create lockfile used to test if .cache has been populated yet
         touch "$HOME/.cache/.lock"
-        [ $DEBUG == "1" ] && echo "~/.cache setup!" | colorize SUCCESS
+        [[ $DEBUG == "1" ]] && echo "~/.cache setup!" | colorize SUCCESS
     exit
     else
-        [ $DEBUG == "1" ] && echo "~/.cache already setup, nothing to do..." | colorize WARN
-        exit
+        [[ $DEBUG == "1" ]] && echo "~/.cache already setup, nothing to do..." | colorize WARN
     fi
 else
-    [ $DEBUG == "1" ] && echo "~/.cache is not mounted as tmpfs, nothing to do..." | colorize WARN
-    exit 
+    [[ $DEBUG == "1" ]] && echo "~/.cache is not mounted as tmpfs, nothing to do..." | colorize WARN
 fi
