@@ -30,7 +30,7 @@ our $SCHEMA = [
 
     #          COMMAND                 LABEL                ICON
     {item => ['xdg-open .',        'File Manager',      'file-manager']},
-    {item => ['sakura',            'Terminal',          'terminal']},
+    {item => [$CONFIG->{terminal}, 'Terminal',          'terminal']},
     {item => ['xdg-open http://',  'Web Browser',       'web-browser']},
 
     {sep => undef},
