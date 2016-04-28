@@ -9,7 +9,7 @@ URxvt*scrollWithBuffer: true
 ! scroll back to the bottom on keypress
 URxvt*scrollTtyKeypress: true
 
-URxvt.font: -*-terminus-*-*-*-*-12-*-*-*-*-*-*-*
+URxvt.font: -*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
 
 URxvt.perl-ext-common: default,matcher,selection-to-clipboard
 
