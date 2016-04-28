@@ -79,7 +79,7 @@ do
         *.png)
             fix_filename $file
             echo "Optimizing as PNG: $file..." | colorize TITLE
-            optipng -o7  -strip all "$file"
+            optipng -o7 -strip all "$file"
             ;;
 
         *.jpg|*.jpeg)
