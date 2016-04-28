@@ -24,11 +24,6 @@ them useful
 * `screenlock` - Locks the screen with a neat pixelated effect
 * `volume` - Changes the speaker volume and sends an OSD notification
 
-### PHP scripts:
-_These are CLI scripts, no web server is needed!_
-
-* `bofh` - Generate a random BOFH excuse
-
 
 ## Usage
 All shell scripts include a help command that can be invoked by passing the `-h`
