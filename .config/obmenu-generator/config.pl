@@ -82,8 +82,11 @@ our $CONFIG = {
                              icon_dirs_second        => undef,
                              keep_unknown_categories => 1,
                              skip_entry              => [
-                                                         {key => 'Name', re => qr/(?:Qt V4L2|Avahi|Zenmap \(as root\)|Root Terminal|Qt4|LibreOffice Base|LibreOffice Draw|LibreOffice Math|Volume Meter|PulseAudio System Tray)/i},
-                                                         {key => 'Exec', re => qr/^xterm/},
+                                                          {
+                                                            key => "Name",
+                                                            re  => qr/(?:Qt V4L2|Avahi|Zenmap \(as root\)|Root Terminal|Qt4|LibreOffice Base|LibreOffice Draw|LibreOffice Math|Volume Meter|PulseAudio System Tray)/i,
+                                                          },
+                                                          { key => "Exec", re => qr/^xterm/ },
                                                         ],
                              skip_filename_re        => undef,
                              skip_svg_icons          => 0,
@@ -96,5 +99,5 @@ our $CONFIG = {
   "missing_icon"        => "gtk-missing-image",
   "name_keys"           => ["Name"],
   "terminal"            => "urxvtc",
-  "VERSION"             => 0.66,
+  "VERSION"             => 0.67,
 }
