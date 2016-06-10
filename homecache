@@ -50,7 +50,6 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
         # Create lockfile used to test if .cache has been populated yet
         touch "$HOME/.cache/.lock"
         [[ $DEBUG == "1" ]] && echo "~/.cache setup!" | colorize SUCCESS
-    exit
     else
         [[ $DEBUG == "1" ]] && echo "~/.cache already setup, nothing to do..." | colorize WARN
     fi
