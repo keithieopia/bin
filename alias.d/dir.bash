@@ -2,6 +2,8 @@
 ## Directory Functions
 ##
 
+alias copy='rsync -ah --progress'
+
 # list only dirs
 alias lsd='ls -l | grep "^d"'   #list only directories
 
