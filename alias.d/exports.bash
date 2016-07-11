@@ -60,3 +60,7 @@ elif have most; then
 else
     export PAGER='more'
 fi
+
+
+# SSH terminal fix
+alias ssh="TERM=linux ssh"
