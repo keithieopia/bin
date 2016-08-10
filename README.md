@@ -13,9 +13,11 @@ them useful
 * `clean` - Erases files, directories, browser cache, junk files, history files, 
    and slack space
 * `cryptofox` - Create and launch an encrypted Firefox profile
-* `dzlaunch` - Start dzen2 panel with useful system info, similar to conky
+* `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `homecache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
+* `lemonlaunch` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel with 
+   useful system info, similar to conky
 * `nullcrypt` - Creates and opens encrypted containers
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names
