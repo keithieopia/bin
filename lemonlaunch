@@ -132,13 +132,13 @@ get_battery () {
     echo -n "%{F$C_TITLE}Batt: "
 
     if [ "$STATUS" == "Charging" ]; then
-        echo -n "%{F$C_BATT}$BATTERY%%"
+        echo -n "%{F$C_BATT}$BATTERY%"
         echo -n "%{F$C_FG}+"
     elif [ "$STATUS" == "Discharging" ]; then
-        echo -n "%{F$C_BATT}$BATTERY%%"
+        echo -n "%{F$C_BATT}$BATTERY%"
         echo -n "%{F$C_FG}-"
     else
-        echo -n "%{F$C_FG}$BATTERY%%"
+        echo -n "%{F$C_FG}$BATTERY%"
     fi
 }
 
@@ -175,7 +175,7 @@ get_mem () {
 
     echo -n "%{A:$MEM_CLICK:}"
     echo -n "%{F$C_TITLE}Mem: "
-    echo -n "%{F$C_MEM}$USED%%"
+    echo -n "%{F$C_MEM}$USED%"
     echo -n "%{A}"
 }
 
@@ -202,8 +202,8 @@ get_cpu () {
 
     echo -n "%{A:$CPU_CLICK:}"
     echo -n "%{F$C_TITLE}CPU: "
-    echo -n "%{F$C_FG}u: %{F$C_USR}$USR%% "
-    echo -n "%{F$C_FG}s: %{F$C_SYS}$SYS%%"
+    echo -n "%{F$C_FG}u: %{F$C_USR}$USR% "
+    echo -n "%{F$C_FG}s: %{F$C_SYS}$SYS%"
     echo -n "%{A}"
 }
 
@@ -222,7 +222,7 @@ get_diskspace () {
     
         echo -n "%{A:xdg-open $NAME:}"
         echo -n "%{F$C_FG}$NAME: "
-        echo -n "%{F$C_DISK}$USED%%"
+        echo -n "%{F$C_DISK}$USED%"
         echo -n "%{A}"
         
         [ $COUNT -eq $NUMFS ] && SPACE="" || SPACE=" "
@@ -261,8 +261,7 @@ while true; do
         exec $0 &
         exit
     fi
-    #echo 
-    #sleep 1
+
 done | lemonbar $LEMONBAR_ARGS | sh
 
 exit 0
