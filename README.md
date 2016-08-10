@@ -15,12 +15,14 @@ them useful
 * `cryptofox` - Create and launch an encrypted Firefox profile
 * `disco` - Randomly colored lights in the terminal. For a more wholesome 
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) 
-   simultaneously. *Not mine; it was released into the public domain*
+   simultaneously. 
+   *Not mine; it was released into the public domain*
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `homecache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
 * `lemonlaunch` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel with 
    useful system info, similar to conky
+* `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
 * `nullcrypt` - Creates and opens encrypted containers
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names

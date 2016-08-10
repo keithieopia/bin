@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then 
+    echo -e "\e[31mYou must specify an image to mount!\e[39m"
+    exit 1
+else 
+    if [ ! -f "$*" ]; then
+        echo -e "\e[31mThat image does not exist!\e[39m"
+        exit 1
+    fi
+fi
+
+if [ "$(id -u)" != "0" ]; then
+    if [ -z "$SUDO_COMMAND" ]; then
+        echo -e "\e[33mThis script must be run as root, recalling self with sudo...\e[39m"
+        sudo $0 $*
+        exit 0
+    else
+        echo -e "\e[31mThis script must be run as root\e[39m"
+        exit 1
+    fi
+fi
+
+if [ -d "/mnt/cdrom" ]; then
+    if mount | grep /mnt/cdrom > /dev/null; then
+        echo -e "\e[33mA CD-ROM has already been mounted...\e[39m"
+        exit 1
+    fi
+else
+    mkdir -p /mnt/cdrom
+fi
+
+mount -o loop -t iso9660 $* /mnt/cdrom
+cd /mnt/cdrom
+ls -l
