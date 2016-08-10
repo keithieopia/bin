@@ -13,6 +13,9 @@ them useful
 * `clean` - Erases files, directories, browser cache, junk files, history files, 
    and slack space
 * `cryptofox` - Create and launch an encrypted Firefox profile
+* `disco` - Randomly colored lights in the terminal. For a more wholesome 
+   experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) 
+   simultaneously. *Not mine; it was released into the public domain*
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `homecache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
