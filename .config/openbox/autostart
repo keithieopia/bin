@@ -21,7 +21,7 @@ pcmanfm -d &
 urxvtd -o -q &
 aarchup -l 360 & # notify every 6 hours
 dropbox &
-zim &
+zim --plugin trayicon &
 xautolock -detectsleep -time 3 -locker "/home/timothy/bin/screenlock" -notify 30 -notifier "notify-send -u critical -t 10000 -- 'Locking screen in 30 seconds'" &
 #~/bin/playalert startup &
 
