@@ -7,5 +7,5 @@
     diff = auto
     status = auto
     branch = auto
-    ui = auto
     interactive = auto
+	ui = true
