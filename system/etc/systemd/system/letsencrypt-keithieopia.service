@@ -1,7 +1,0 @@
-[Unit]
-Description=Let's Encrypt renewal
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/letsencrypt certonly --agree-tos --renew-by-default --rsa-key-size 4096 --email timothykeith@gmail.com --webroot -w /srv/http/keithieopia/ -d keithieopia.com -d www.keithieopia.com -d piwik.keithieopia.com
-ExecStartPost=/usr/sbin/systemctl restart nginx.service
