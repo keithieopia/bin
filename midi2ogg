@@ -1,4 +1,13 @@
 #!/bin/bash
+
+# Found on Arch Linux wiki: 
+#    How to convert MIDI to OGG
+#    https://wiki.archlinux.org/index.php/FluidSynth#How_to_convert_MIDI_to_OGG
+#
+# License: 
+#    GNU Free Documentation License
+#    https://www.gnu.org/copyleft/fdl.html
+
 maxjobs=$(grep processor /proc/cpuinfo | wc -l)
 midi2ogg() {
     name=$(echo $@ | sed -r s/[.][mM][iI][dD][iI]?$//g | sed s/^[.][/]//g)
