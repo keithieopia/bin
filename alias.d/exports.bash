@@ -61,6 +61,10 @@ else
     export PAGER='more'
 fi
 
-
 # SSH terminal fix
 alias ssh="TERM=linux ssh"
+
+
+if have ccache; then
+    export PATH="/usr/lib/ccache/bin/:$PATH"
+fi
