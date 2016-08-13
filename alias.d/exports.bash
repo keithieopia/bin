@@ -64,7 +64,13 @@ fi
 # SSH terminal fix
 alias ssh="TERM=linux ssh"
 
-
+# ccache pre-processor for C/C++
 if have ccache; then
     export PATH="/usr/lib/ccache/bin/:$PATH"
+fi
+
+
+# secret vars (api keys)
+if [ -f ~/.bash_secrets ]; then
+    source ~/.bash_secrets
 fi
