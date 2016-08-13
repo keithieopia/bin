@@ -29,20 +29,12 @@ FILESYS=("/dev/mapper/storage-root" "/dev/mapper/storage-home")
 FONT_FACE="snap"
 FONT_SIZE="10"
 
-# Height of bar
-HEIGHT="20"
-
-# Width of bar
-WIDTH="max"
-
-# Vertical position of bar
-POSITION="bottom"
 
 ##### DO NOT EDIT BELOW ########################################################
 
 if [ "$1" == "-h" ]; then
 cat <<HELP 
-Start dzen2 panel with useful system info, similar to conky
+Start lemonbar panel with useful system info, similar to conky
 
 Note: 
    Edit the variables at the top of $(basename "$0") to customize 
