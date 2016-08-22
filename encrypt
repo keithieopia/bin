@@ -36,12 +36,12 @@ else
         
         FILE="$*"
     
-        if [ ${FILE: -8} == ".txz.enc" ]; then
+        if [[ ${FILE: -8} == ".txz.enc" ]]; then
             echo -e "\033[1;32mDecrypting directory...\033[0m" 
             
             gpg --decrypt $FILE | tar -xJf -
             
-        elif [ ${FILE: -4} == ".enc" ]; then
+        elif [[ ${FILE: -4} == ".enc" ]]; then
             echo -e "\033[1;32mDecrypting file...\033[0m" 
         
             NAME=$(basename $FILE .enc)
