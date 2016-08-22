@@ -1,5 +1,15 @@
 #include "dotfiles/Xresources.d/raven-dark"
 
+!===============================================!
+!   Xorg Defaults                               !
+!===============================================!
+Xcursor.theme: Gruppled White
+
+
+!===============================================!
+!  URxvt                                        !
+!===============================================!
+
 ! do not scroll with output
 URxvt*scrollTtyOutput: false
 
@@ -9,15 +19,15 @@ URxvt*scrollWithBuffer: true
 ! scroll back to the bottom on keypress
 URxvt*scrollTtyKeypress: true
 
-URxvt.font: -*-terminus-*-*-*-*-14-*-*-*-*-*-*-*
+URxvt.font: xft:iosevka:size=10
 
-URxvt.perl-ext-common: default,matcher,selection-to-clipboard
+URxvt.scrollBar: false
 
 ! Clickable URLs
+URxvt.perl-ext-common: default,matcher,selection-to-clipboard
 URxvt.url-launcher: /usr/bin/xdg-open
 URxvt.matcher.button: 1
 
-URxvt.scrollColor: #2B2B2B
-URxvt.troughColor: #030303
-
-Xcursor.theme: Gruppled White
+! Transparency
+urxvt*depth: 32
+urxvt*background: rgba:0000/0000/0200/c800
