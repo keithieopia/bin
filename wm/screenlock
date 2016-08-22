@@ -34,5 +34,19 @@ if ! have convert; then
 fi
 
 scrot /tmp/screenlock.png
-convert /tmp/screenlock.png -scale 5% -scale 2000% /tmp/screenlock.png
+
+# Neat pixilated blur
+#convert /tmp/screenlock.png -scale 5% -scale 2000% /tmp/screenlock.png        
+
+# slow blur
+#convert /tmp/screenlock.png -blur 0x8 /tmp/screenlock.png
+
+# Faster blur
+convert /tmp/screenlock.png -filter Gaussian -resize 50% -define filter:sigma=2.5 -resize 200% /tmp/screenlock.png 
+
+# Hackers can't break in if you use Deputy Barney Fife Protection
+composite -gravity center -gravity south ~/bin/wm/lockscreen/barney-fife.png /tmp/screenlock.png /tmp/screenlock.png
+
+paplay ~/bin/sounds/battle-control.ogg &
+
 i3lock -f -e -i /tmp/screenlock.png
