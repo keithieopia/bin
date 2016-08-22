@@ -1,0 +1,12 @@
+#!/bin/bash
+
+INTERFACE="wlp1s0"
+
+if ip link show $INTERFACE | grep -q 'state UP'; then
+
+    SIGNAL_STR=$(awk 'NR==3 {print $3+0}' /proc/net/wireless)
+    
+    echo -n "$SIGNAL_STR%"
+else
+    echo -e "down"
+fi

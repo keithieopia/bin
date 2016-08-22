@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mpstat | tail -1 | awk '{print $7"%"}'

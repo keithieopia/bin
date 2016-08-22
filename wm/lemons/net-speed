@@ -1,0 +1,49 @@
+#!/bin/bash
+
+INTERFACE="wlp1s0"
+
+human_bytes () {
+    bytes=$1
+    kilobytes=$((bytes >> 10))
+    megabytes=$((bytes >> 20))
+    gigabytes=$((bytes >> 30))
+
+    if [ $gigabytes -gt 1 ]; then
+        echo "$gigabytes" "GB"
+    elif [ $megabytes -gt 1 ]; then
+        echo "$megabytes" "MB"
+    elif [ $kilobytes -gt 1 ]; then
+        echo "$kilobytes" "KB"
+    else
+        echo "$bytes" "B"
+    fi
+}
+
+
+if [[ $(cat /sys/class/net/$INTERFACE/operstate) == "up" ]]; then
+    cur_timestamp=$(date +%s)
+    cur_rx=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
+    cur_tx=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
+
+    if [ -f /tmp/.net_$INTERFACE ]; then
+        old_timestamp=$(awk '{print $1}' < "/tmp/.net_$INTERFACE")
+        old_rx=$(awk '{print $2}' < "/tmp/.net_$INTERFACE")
+        old_tx=$(awk '{print $3}' < "/tmp/.net_$INTERFACE")
+
+        ((secs = cur_timestamp - old_timestamp))
+
+        if [[ $secs != 0 ]]; then
+            (( rx = (($cur_rx - $old_rx)) / secs))
+            (( tx = (($cur_tx - $old_tx)) / secs))
+        else
+            rx=0
+            tx=0
+        fi
+
+        echo -n "$(human_bytes $rx) / $(human_bytes $tx)"
+    else
+        echo -n "0 B / 0 B"
+    fi
+
+    echo "$cur_timestamp $cur_rx $cur_tx" > /tmp/.net_$INTERFACE
+fi

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+FREE=$(free -m | sed -n '2p' | awk '{print $7}')
+TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
+USED="$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)"
+
+echo "$USED" | awk '{printf("%.2f%", $1)}'

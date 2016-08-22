@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Simplistic overall CPU usage: 100 - idle = %
+
+mpstat | tail -1 | awk '{print (100 - $13)"%"}'

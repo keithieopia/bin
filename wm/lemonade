@@ -1,0 +1,141 @@
+#!/bin/bash
+
+# Colors
+WHITE="#FCFDFA"
+GREEN="#27AE60"
+ORANGE="#F29B12"
+YELLOW="#F0C30F"
+RED="#C0392B"
+BLUE="#2A80B8"
+TEAL="#15A88B"
+PURPLE="#8E44AD"
+BLACK="#252525"
+
+BACKGROUND="$(bspc config normal_border_color)"
+
+# Dimensions
+RES_WIDTH=$(xdpyinfo | awk -F'[ x]+' '/dimensions:/{print $3}')
+RES_HEIGHT=$(xdpyinfo | awk -F'[ x]+' '/dimensions:/{print $4}')
+
+HEIGHT="40"
+WIDTH=$RES_WIDTH
+
+FONT="DroidSansMono:size=10"
+FONTAWESOME="FontAwesome:size=10"
+
+# Formatting Functions
+lemon () {
+    echo -n "%{B$1}"
+    echo -n " $(icon $2) "
+
+    # remove leading spaces and pad
+    echo -n "$3" | sed -e 's/^[[:space:]]*//' | sed -e :a -e 's/^.\{1,5\}$/& /;ta'
+
+    echo -n " %{B$BACKGROUND}"
+}
+
+icon () {
+    case $1 in
+        "clock")    echo -e -n "\uf017" ;;
+        "signal")   echo -e -n "\uf012" ;;
+        "upload")   echo -e -n "\uf093" ;;
+        "download") echo -e -n "\uf019" ;;
+        "battery")  echo -e -n "\uf1e6" ;;
+        "volume")   echo -e -n "\uf028" ;;
+        "calendar") echo -e -n "\uf073" ;;
+        "drive")    echo -e -n "\uf0a0" ;;
+
+        # Lame CPU alternative, since FontAwesome's team is 
+        # ignoring users and fork requests to implement this:
+        # https://github.com/FortAwesome/Font-Awesome/issues/1840
+        "cpu")      echo -e -n "\uf085" ;; 
+        
+        # Lame RAM alternative, same B.S. as above:
+        # https://github.com/FortAwesome/Font-Awesome/issues/3239
+        "ram")      echo -e -n "\uf1c0" ;; 
+    esac
+}
+
+
+
+##### DO NOT EDIT BELOW ########################################################
+
+if [ "$1" == "-h" ]; then
+cat <<HELP 
+Start lemonbar panel with useful system info, similar to conky
+
+Note: 
+   Edit the variables at the top of $(basename "$0") to customize 
+   
+   
+https://github.com/keithieopia/bin/
+    
+Copyright (c) 2016 Timothy Keith
+Licensed under the BSD 2-clause license.
+HELP
+exit
+fi
+
+have() { type "$1" &> /dev/null; }
+if ! have lemonbar; then
+    echo "$0 requires 'lemonbar' to be installed!"
+    exit 1
+fi
+if ! have xdotool; then
+    echo "$0 requires 'xdotool' to be installed!"
+    exit 1
+fi
+if ! have amixer; then
+    echo "$0 requires 'alsa-utils' to be installed!"
+    exit 1
+fi
+if ! have xprop; then
+    echo "$0 requires 'xorg-xprop' to be installed!"
+    exit 1
+fi
+
+
+LEMONBAR_ARGS="-g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
+
+# Used to monitor file changes and reload, similar to how conky works
+HASH=$(md5sum "$0" | cut -c 1-32)
+   
+
+while true; do
+
+    echo -n "%{l}"
+    lemon $BACKGROUND "" "$(~/bin/wm/lemons/desktops)"
+
+    echo -n "%{r}"
+ 
+    lemon $ORANGE "cpu" "$(~/bin/wm/lemons/cpu)"
+    lemon $ORANGE "ram" "$(~/bin/wm/lemons/ram)"
+    lemon $ORANGE "drive" "$(~/bin/wm/lemons/io)"
+
+    SPEED=$(~/bin/wm/lemons/net-speed) 
+    lemon $PURPLE "download" "$(echo $SPEED | awk '{print $1$2}')"
+    lemon $PURPLE "upload" "$(echo $SPEED | awk '{print $4$5}')"
+    lemon $PURPLE "signal" "$(~/bin/wm/lemons/net-signal)"
+
+    lemon $BLUE "volume" "$(~/bin/wm/lemons/volume)"
+
+    lemon $RED "battery" "$(~/bin/wm/lemons/batt)"
+
+    # Use 'tr' to remove the day's space padding 
+    lemon $GREEN "calendar" "$(date +"%a, %b") $(date +"%e" | tr -d ' ')"
+    lemon $GREEN "clock" "$(date +"%l:%M %P")"
+
+
+    # Reload self on change
+    if [[ $(md5sum "$0" | cut -c 1-32) == "$HASH" ]]; then
+        echo # Send newline
+        sleep 1
+    else
+        killall lemonbar
+        exec $0 &
+        exit
+    fi
+
+done | lemonbar $LEMONBAR_ARGS | sh
+
+exit 0
