@@ -13,6 +13,7 @@ alias snano='sudo nano'
 alias pg='ps aux | grep'
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)'
+alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 
 # Run a command quietly
 quietly () { "$@" &>/dev/null; }

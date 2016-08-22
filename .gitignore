@@ -1,3 +1,4 @@
 .config/obmenu-generator/*.db
 install/*
 ~/.bash_secrets
+system/etc/grub.d/40_custom
