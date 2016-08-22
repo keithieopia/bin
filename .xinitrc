@@ -30,11 +30,40 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
     unset f
 fi
 
-# Load artwiz fonts
-xset +fp /usr/share/fonts/artwiz-fonts/
-xset fp rehash
-
 # Blank the monitor after 10mins and turn it off after 30mins
 xset s 600 600 1800
 
-exec openbox-session
+# no friggen beep
+xset -b
+
+# set cursor so it's not an X
+xsetroot -cursor_name left_ptr &
+
+#
+# Autostart Apps
+#
+
+compton &
+~/.fehbg &
+unclutter &
+urxvtd -q -f -o &
+pcmanfm -d &
+
+#
+# play a startup sound if it's not late
+#
+H=$(date +%H)
+if (( 8 <= 10#$H && 10#$H < 21 )); then 
+    amixer -D pulse set Master 50%
+    paplay "$HOME/bin/sounds/psx.ogg" &
+else
+    amixer -D pulse set Master 0%
+fi
+
+
+#
+# Window Manager
+#
+
+#exec openbox-session
+exec bspwm > .xinit.log 2>&1
