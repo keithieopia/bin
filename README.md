@@ -20,7 +20,7 @@ them useful
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `homecache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
-* `lemonlaunch` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel with 
+* `wm/lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel with 
    useful system info, similar to conky
 * `midi2ogg` - Convert all the MIDI files in the current directory to OGG.   
    *Not mine; found on [ArchWiki](https://wiki.archlinux.org/index.php/FluidSynth#How_to_convert_MIDI_to_OGG) and licensed under the [GNU FDL](https://www.gnu.org/copyleft/fdl.html)*
@@ -31,7 +31,7 @@ them useful
 * `playalert` - Plays a tune, called when a OSD notification is sent on my system
 * `respawn` - Indefinitely restart a program after it exits
 * `screenlock` - Locks the screen with a neat pixelated effect
-* `volume` - Changes the speaker volume and sends an OSD notification
+
 
 
 ## Usage
