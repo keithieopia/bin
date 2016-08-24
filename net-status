@@ -18,32 +18,19 @@ STATUS=$(ip route show match 0/0)
 if [ ! -z "$STATUS" ]; then
 
     read GATEWAYIP IFACE LOCALIP <<< $(echo $STATUS | awk '{print $3" "$5" "$7}')
+    GATEWAYMAC=$(ip neigh | grep $GATEWAYIP | awk '{print $5}')
 
-    echo "INTERFACE:  $IFACE"
-    echo "GATEWAY IP: $GATEWAYIP"
-    echo "LOCAL IP:   $LOCALIP"
+    echo "INTERFACE:   $IFACE"
+    echo "GATEWAY IP:  $GATEWAYIP"
+    echo "GATEWAY MAC: $GATEWAYMAC"
+    echo "LOCAL IP:    $LOCALIP"
 
     if [ -z $(curl -fsS http://google.com > /dev/null) ]; then
         PUBLICIP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
-        echo "PUBLIC IP:  $PUBLICIP"
+        echo "PUBLIC IP:   $PUBLICIP"
 
-# This makes an annoying "acert" file in the dir
-# I don't have time to debug this right now
-#
-#        if [ -z $(curl -fsS https://www.google.com > /dev/null) ]; then
-#            echo 
-#            echo "Online" | colorize SUCCESS
-#            exit 0
-#        else
-#            echo
-#            echo "Proxy Detected / Captive Portal" | colorize WARN
-#            exit 1
-#        fi
-#
-# Remove below line once above is installed
         echo "Online" | colorize SUCCESS
-
     else
         echo
         echo "Local Only" | colorize WARN
