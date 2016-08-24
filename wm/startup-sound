@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Sets the volume or mutes it depending on how late it is and plays a startup sound
+
+H=$(date +%H)
+if (( 8 <= 10#$H && 10#$H < 21 )); then 
+    amixer -D pulse set Master 50%
+    paplay "$HOME/bin/wm/sounds/psx.ogg" &
+else
+    amixer -D pulse set Master 0%
+fi
