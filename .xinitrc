@@ -30,40 +30,25 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
     unset f
 fi
 
-# Blank the monitor after 10mins and turn it off after 30mins
-xset s 600 600 1800
+# Xorg stuff:
+xset s 600 600 1800            # monitor powersaving
+xset -b                        # no friggen beep
+xsetroot -cursor_name left_ptr # set cursor so it's not an X
 
-# no friggen beep
-xset -b
-
-# set cursor so it's not an X
-xsetroot -cursor_name left_ptr &
-
-#
-# Autostart Apps
-#
-
+# Autostart apps:
+~/bin/wm/startup-sound &
 compton &
 ~/.fehbg &
 unclutter &
 urxvtd -q -f -o &
 pcmanfm -d &
+~/bin/wm/lemonade &
 
-#
-# play a startup sound if it's not late
-#
-H=$(date +%H)
-if (( 8 <= 10#$H && 10#$H < 21 )); then 
-    amixer -D pulse set Master 50%
-    paplay "$HOME/bin/sounds/psx.ogg" &
-else
-    amixer -D pulse set Master 0%
-fi
+# Autostart network specific apps:
+~/bin/wm/autostart-net &
+sudo ~/bin/wm/autostart-net-trusted &
 
-
-#
-# Window Manager
-#
-
-#exec openbox-session
+# bspwm specific stuff:
+sxhkd &
+~/bin/wm/floating-desktop &
 exec bspwm > .xinit.log 2>&1

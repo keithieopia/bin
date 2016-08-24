@@ -27,8 +27,3 @@ bspc rule -a lemonbar layer=above manage=on border=off
 
 # padding for lemonbar
 bspc config bottom_padding 20
-
-# autostart
-sxhkd &
-~/bin/wm/floating-desktop &
-~/bin/wm/lemonade &
