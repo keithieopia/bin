@@ -67,8 +67,12 @@ fi
 ## PS1
 ##
 
-# QOTD
-have fortune && echo -e "$(fortune -sa)\n" | colorize PURPLE
+# Display QOTD if we're not on TTY1 
+# TTY1 is setup by .bash_profile to autostart Xorg, running fortune first slows the 
+# startup and we can't even see it
+if have fortune && $(w | grep -q tty1); then
+    echo -e "$(fortune -sa)\n" | colorize PURPLE
+fi
 
 # Set $PS1 (func in ~/dotfiles/alias.d/prompt.bash)
 PROMPT_COMMAND=bash_prompt
