@@ -35,8 +35,15 @@ xset s 600 600 1800            # monitor powersaving
 xset -b                        # no friggen beep
 xsetroot -cursor_name left_ptr # set cursor so it's not an X
 
+##
+## Mount user .cache folder if not already done
+##
+
+
+
 # Autostart apps:
 ~/bin/wm/startup-sound &
+~/bin/mount-cache &
 compton &
 ~/.fehbg &
 unclutter &
