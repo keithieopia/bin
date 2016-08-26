@@ -185,7 +185,8 @@
     background = "#B14D4C"
     foreground = "#424242"
     timeout = 0
-
+    script = /home/timothy/bin/playalert alert
+    
 [volume]
     appname = volume 
     background = "#888888"
@@ -202,11 +203,6 @@
     appname = battery
     urgency = normal
     script = /home/timothy/bin/playalert lowpower
-    
-[default_critical]
-    summary = "*'
-    urgency = critical
-    script = /home/timothy/bin/playalert alert
     
 [default]
     summary = "*"
