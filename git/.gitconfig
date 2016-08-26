@@ -1,0 +1,13 @@
+[user]
+    email = timothykeith@gmail.com
+    name = Timothy Keith
+    signingkey = 9A581C87
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+	ui = true
+[core]
+	excludesfile = ~/.gitignore
