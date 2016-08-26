@@ -50,6 +50,8 @@ unclutter &
 urxvtd -q -f -o &
 pcmanfm -d &
 ~/bin/wm/lemonade &
+~/bin/wm/battmon &
+zim --plugin trayicon &
 
 # Autostart network specific apps:
 ~/bin/wm/autostart-net &
