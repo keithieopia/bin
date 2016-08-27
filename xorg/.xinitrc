@@ -35,29 +35,5 @@ xset s 600 600 1800            # monitor powersaving
 xset -b                        # no friggen beep
 xsetroot -cursor_name left_ptr # set cursor so it's not an X
 
-##
-## Mount user .cache folder if not already done
-##
-
-
-
-# Autostart apps:
-~/bin/wm/startup-sound &
-~/bin/mount-cache &
-compton &
-~/.fehbg &
-unclutter &
-urxvtd -q -f -o &
-pcmanfm -d &
-~/bin/wm/lemonade &
-~/bin/wm/battmon &
-zim --plugin trayicon &
-
-# Autostart network specific apps:
-~/bin/wm/autostart-net &
-sudo ~/bin/wm/autostart-net-trusted &
-
-# bspwm specific stuff:
-sxhkd &
-~/bin/wm/floating-desktop &
+# launch bspwm
 exec bspwm > .xinit.log 2>&1

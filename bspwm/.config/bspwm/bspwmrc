@@ -27,3 +27,25 @@ bspc rule -a lemonbar layer=above manage=on border=off
 
 # padding for lemonbar
 bspc config bottom_padding 20
+
+# bspwm specific apps to auto start:
+sxhkd &
+~/bin/wm/floating-desktop &
+
+# general apps to auto start:
+~/bin/wm/startup-sound &
+~/bin/mount-cache &
+compton &
+~/.fehbg &
+unclutter &
+urxvtd -q -f -o &
+pcmanfm -d &
+~/bin/wm/lemonade &
+~/bin/wm/battmon &
+zim --plugin trayicon &
+
+# Autostart network specific apps:
+~/bin/wm/autostart-net &
+sudo ~/bin/wm/autostart-net-trusted &
+
+
