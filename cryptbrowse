@@ -1,27 +1,21 @@
 #!/bin/bash
 
-usage () {
-cat <<HELP 
-Create and launch an encrypted Firefox profile
+# Create and launch an encrypted browser profiles
+# Works with Firefox and derivatives (IceCat, Pale Moon, etc) 
+#
+# https://github.com/keithieopia/bin/
+#    
+# Copyright (c) 2016 Timothy Keith
+# Licensed under the BSD 2-clause license.
 
-Usage: $(basename "$0") [-s num] [-c DIR] [-p DIR]
-   -s : Encrypted container size, in megabytes (Default: 100)
-   -c : Container directory, without trailing slash 
-        (Default: /home/[USER]/.private)
-   -p : Firefox profile directory
-        (Default: /home/[USER]/.mozilla/firefox)      
+WHOAMI=${SUDO_USER:-$(whoami)}
+CONTAINER_DIR="/home/$WHOAMI/.private" # directory to store encrypted container in
+CONTAINER_FILE="cryptbrowse" # name of encrypted container, doesn't really matter
+CONTAINER_SIZE="100M"  # this is a sane default, even with a ton of extensions
+BROWSER_EXE="palemoon" # browser executable, e.g.: firefox
+BROWSER_PROFILE="/home/$WHOAMI/.moonchild productions/pale moon" # typically ~/.mozilla/firefox
+CACHE_DIR="/home/$WHOAMI/.cache/moonchild productions/pale moon" # typically ~/.cache/mozilla/firefox 
 
-Note: 
-   $(basename "$0") has built-in sane defaults, only
-   advanced users should set the above flags
-
-
-https://github.com/keithieopia/bin/
-    
-Copyright (c) 2016 Timothy Keith
-Licensed under the BSD 2-clause license.
-HELP
-}
 
 have() { type "$1" &> /dev/null; }
 if ! have cryptsetup; then
@@ -36,39 +30,10 @@ if ! have sudo; then
     echo "$0 requires 'sudo' to be installed!"
     exit 1
 fi
-if ! have firefox; then
-    # queue the snark...
-    echo "$0 is rather useless without Firefox. You may wish to install it..."
+if ! have $BROWSER_EXE; then
+    echo "$0 is configured to use $BROWSER_EXE, you probably are using something else!"
     exit 1
 fi
-
-
-WHOAMI=${SUDO_USER:-$(whoami)}
-CONTAINER_DIR="/home/$WHOAMI/.private"
-PROFILE_DIR="/home/$WHOAMI/.mozilla/firefox"
-SIZE="100M"
-
-while [ "$1" != "" ]; do
-case $1 in
-    -s )    shift
-            SIZE="${1}M"
-            ;;
-    -p )    shift
-            PROFILE_DIR="$1"
-            ;;
-    -c )    shift
-            CONTAINER_DIR="$1"
-            ;;
-    -h )    usage
-            exit
-            ;;
-    * )     usage
-            exit 1
-            ;;
-    esac
-    shift
-done
-
 
 if [ "$EUID" -ne 0 ]; then
     while [ -z "$SUDO" ]; do
@@ -89,11 +54,11 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 function lockFirefox() {
-    umount "$PROFILE_DIR/cryptofox"
-    rmdir "$PROFILE_DIR/cryptofox"
+    umount "$BROWSER_PROFILE/$CONTAINER_FILE"
+    rmdir "$BROWSER_PROFILE/$CONTAINER_FILE"
     
     
-    DELETE_DIRS=("/home/$WHOAMI/.cache/mozilla/firefox/cryptofox"
+    DELETE_DIRS=("$CACHE_DIR/$CONTAINER_FILE"
                  "/home/$WHOAMI/.macromedia/Flash_Player"
                  "/home/$WHOAMI/.adobe/Flash_Player")
     
@@ -110,45 +75,46 @@ function lockFirefox() {
         fi
     done
     
-    cryptsetup luksClose cryptofox
+    cryptsetup luksClose $CONTAINER_FILE
 
     if [ $? -eq 0 ]; then
-        zenity --info --text "Firefox container locked!"
+        zenity --info --text "$BROWSER_EXE container locked!"
     else
         zenity --error --text="Could not lock profile!!!"
         return 1
     fi
 }
 
-function mountFirefox() {
+function mountProfile() {
     # Create mount point if it doesn't exist
-    if [ ! -d "$PROFILE_DIR/cryptofox" ]; then
-        mkdir -p "$PROFILE_DIR/cryptofox"
-        chmod 700 "$PROFILE_DIR/cryptofox"
+    if [ ! -d "$BROWSER_PROFILE/$CONTAINER_FILE" ]; then
+        mkdir -p "$BROWSER_PROFILE/$CONTAINER_FILE"
+        chown $WHOAMI "$BROWSER_PROFILE/$CONTAINER_FILE"
+        chmod 700 "$BROWSER_PROFILE/$CONTAINER_FILE"
     fi
 
-    mount -o noatime,nodev,nosuid /dev/mapper/cryptofox "$PROFILE_DIR/cryptofox" || {
+    mount -o noatime,nodev,nosuid /dev/mapper/$CONTAINER_FILE "$BROWSER_PROFILE/$CONTAINER_FILE" || {
         zenity --error --text="Could not mount profile!"
         return 1
     }
 }
 
-function startFirefox() {
-    sudo -u timothy firefox --no-remote --profile "$PROFILE_DIR/cryptofox"
+function startBrowser() {
+    sudo -u $WHOAMI $BROWSER_EXE --no-remote --profile "$BROWSER_PROFILE/$CONTAINER_FILE"
     trap lockFirefox EXIT
 }
 
 
-if mount | grep $PROFILE_D/cryptofox > /dev/null; then
-    zenity --error --text="Profile already mounted, starting Firefox..."
-    startFirefox
-elif [ ! -f "$CONTAINER_DIR/cryptofox" ]; then
+if mount | grep "$BROWSER_PROFILE/$CONTAINER_FILE" > /dev/null; then
+    zenity --error --text="Profile already mounted, starting $BROWSER_EXE..."
+    startBrowser
+elif [ ! -f "$CONTAINER_DIR/$CONTAINER_FILE" ]; then
     zenity --question --text "No encrypted profile found! Do you want to create it?"
     answer=$?
 
     if [ $answer = 0 ]; then
         while [ -z "$PROFILE" ]; do
-            cd "$PROFILE_DIR"
+            cd "$BROWSER_PROFILE"
             PROFILE=$(ls -d ./*/ | zenity --list --title "Select a Profile" --column "Profile" --separator=" " --multiple) || {
                 zenity --error --text="No profile was selected!"
             }
@@ -169,25 +135,27 @@ elif [ ! -f "$CONTAINER_DIR/cryptofox" ]; then
         if [ ! -d "$CONTAINER_DIR" ]; then
             mkdir -p "$CONTAINER_DIR"
             chmod 700 "$CONTAINER_DIR"
+            chown $WHOAMI "$CONTAINER_DIR"
         fi
 
-        truncate -s "$SIZE" "$CONTAINER_DIR/cryptofox"
-        chmod 600 "$CONTAINER_DIR/cryptofox"
+        truncate -s "$CONTAINER_SIZE" "$CONTAINER_DIR/$CONTAINER_FILE"
+        chown $WHOAMI "$CONTAINER_DIR/$CONTAINER_FILE"
+        chmod 600 "$CONTAINER_DIR/$CONTAINER_FILE"
 
         # Encrypt and open container
-        echo -n $PASSWORD | cryptsetup --key-file "-" luksFormat "$CONTAINER_DIR/cryptofox"
-        echo -n $PASSWORD | cryptsetup --key-file "-" luksOpen "$CONTAINER_DIR/cryptofox" cryptofox
+        echo -n $PASSWORD | cryptsetup --key-file "-" luksFormat "$CONTAINER_DIR/$CONTAINER_FILE"
+        echo -n $PASSWORD | cryptsetup --key-file "-" luksOpen "$CONTAINER_DIR/$CONTAINER_FILE" $CONTAINER_FILE
 
         # Make the filesystem
-        mkfs.ext2 /dev/mapper/cryptofox
-        tune2fs -m 0 /dev/mapper/cryptofox
+        mkfs.ext2 /dev/mapper/$CONTAINER_FILE
+        tune2fs -m 0 /dev/mapper/$CONTAINER_FILE
 
-        mountFirefox || exit 1
-        chown $WHOAMI "$PROFILE_DIR/cryptofox"
+        mountProfile || exit 1
 
-        cp -R "$PROFILE_DIR/$PROFILE/"* "$PROFILE_DIR/cryptofox"
+        cp -R "$BROWSER_PROFILE/$PROFILE/"* "$BROWSER_PROFILE/$CONTAINER_FILE"
+        chown $WHOAMI -R "$BROWSER_PROFILE/$CONTAINER_FILE"
 
-        startFirefox
+        startBrowser
     else
         zenity --error --text="Encrypted profile doesn't exist!"
         exit 1
@@ -195,11 +163,11 @@ elif [ ! -f "$CONTAINER_DIR/cryptofox" ]; then
 else
     PASSWORD=""$(zenity --entry --entry-hide-text --title 'Decrypt Password' --window-icon 'question' --text 'Password for decryption:')""
 
-    echo -n $PASSWORD | cryptsetup --key-file "-" luksOpen "$CONTAINER_DIR/cryptofox" cryptofox || {
+    echo -n $PASSWORD | cryptsetup --key-file "-" luksOpen "$CONTAINER_DIR/$CONTAINER_FILE" $CONTAINER_FILE || {
         zenity --error --text="Could not decrypt profile!"
         exit 1
     }
 
-    mountFirefox || exit 1
-    startFirefox
+    mountProfile || exit 1
+    startBrowser
 fi
