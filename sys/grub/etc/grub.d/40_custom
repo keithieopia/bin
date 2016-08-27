@@ -4,5 +4,8 @@ exec tail -n +3 $0
 # menu entries you want to add after this comment.  Be careful not to change
 # the 'exec tail' line above.
 
+# Not really concerned about this "secret" being public, PBKDF2 is is salted and 
+# incredibly slow, making brute-forcing this hash a moot point. Plus, this 
+# password is only for booting and not reused elsewhere...
 set superusers="timothy"
 password_pbkdf2 timothy grub.pbkdf2.sha512.10000.4D1636E4ABC85CE7679CC4FCB68C5BB224E63E00DB1B3BA941DA195605C89707F7F5103770691EA343F41B6B3732C1ECA3D91BDE62D94AC2D223E13AAF7B7295.87516807EC35BA1A36CD2CCDBD297C3EA99757E5FC22FDA49B5A40BED952E756981FC2248930128957C2FF2D1FB5CF662E2DD460B9350E6B8B2FC4538CDBF15D
