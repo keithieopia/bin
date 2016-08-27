@@ -9,7 +9,7 @@
  ░░░░░░  ░░░░░░     ░░    ░░   ░░ ░░░  ░░░░░░ ░░░░░░  
  
   ▓▓▓▓▓▓▓▓▓▓
- ░▓ about  ▓ Custom config files for Arch Linux
+ ░▓ about  ▓ Custom dotfiles and etc config files for Arch Linux
  ░▓ author ▓ Timothy Keith <timothykeith@gmail.com>
  ░▓ site   ▓ https://keithieopia.com
  ░▓ code   ▓ https://github.com/keithieopia/dotfiles
@@ -17,14 +17,10 @@
  ░░░░░░░░░░
 ```
 
-
-# Timothy's dotfiles
-
-*There's no place like $HOME*
-
-
 ## Synopsis
 These are various config files I use for my Linux environment and related programs. 
+
+> *There's no place like $HOME*
 
 ## Installation
 **Warning:** If you want to give these dotfiles a try, you should first fork this 
