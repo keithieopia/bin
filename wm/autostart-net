@@ -41,3 +41,4 @@ while [ -z "$ROUTE" ]; do
 done
 
 run dropbox
+run aarchup -l 360 # notify of updates every 6 hours
