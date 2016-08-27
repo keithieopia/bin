@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VOLUME=$(awk '/%/ {gsub(/[\[%\]]/,""); print $5}' <(amixer sget Master) | head -1)
+VOLUME=$(awk '/%/ {gsub(/[\[%\]]/,""); print $4}' <(amixer sget Master) | head -1)
 
 if $(amixer -D pulse get Master | tail -1 | grep off > /dev/null); then
     echo -n "mute"
