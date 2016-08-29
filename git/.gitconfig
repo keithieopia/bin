@@ -9,5 +9,9 @@
     branch = auto
     interactive = auto
 	ui = true
+
 [core]
 	excludesfile = ~/.gitignore
+
+[receive]
+    denyCurrentBranch = updateInstead
