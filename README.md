@@ -22,7 +22,7 @@ These are various config files I use for my Linux environment and related progra
 
 > *There's no place like $HOME*
 
-## Installation
+### Obligatory Warning
 **Warning:** If you want to give these dotfiles a try, you should first fork this 
 repository, review the code, and remove things you don’t want or need. Don't 
 blindly use my settings unless you know what that entails. Here be dragons!
@@ -43,21 +43,24 @@ blindly use my settings unless you know what that entails. Here be dragons!
  * [wget](https://www.gnu.org/software/wget/): saner defaults so you're not waiting forever for failed downloads
 
 ### System configs:
- * sys/[ccache](https://wiki.archlinux.org/index.php/Ccache): speedup tricks for [makepkg](https://wiki.archlinux.org/index.php/Makepkg) using ccache and multiple processor cores
- * sys/[firefox](https://www.mozilla.org/en-US/firefox/new/): force lock settings to disable built-in crapware, bad design decisions, and privacy issues. Note that this has become a pain to maintain, so I've switched to [Pale Moon](http://www.palemoon.org/) which is a optimized stripped down version of Firefox. 
- * sys/[fluidsynth](https://wiki.archlinux.org/index.php/FluidSynth): play MIDI audio. Working config for Arch Linux; package points to the wrong location for the FluidR3 soundfont
- * sys/[grub](https://www.gnu.org/software/grub/): nice Arch Linux theme for the GRUB bootloader with password protection 
- * sys/laptop-quirk-fixes: various bug fixes that took me forever to find a fix for: slow USB flash drive speed and choppy video/flash performance using intel's driver
- * sys/[letsencrypt](https://letsencrypt.org/): free CA for providing HTTPS. This uses a systemd timer for automated renewals using [certbot](https://github.com/certbot/certbot)
- * sys/motd-trump: makes logging in great again! *may cause xenophobia and/or wall building* 
- * sys/[munin](http://munin-monitoring.org/): host/network monitoring done right
- * sys/[mysql](https://mariadb.org/): setup MariaDB to use UTF-8 by default
- * sys/[nginx](http://nginx.org/): nginx webserver setup with SSL/HTTPS, PHP, and munin monitoring
- * sys/[pacman](https://wiki.archlinux.org/index.php/Pacman): Arch Linux's package manager: enable color, multilib, and pacman's pacman (as in the game)
- * sys/[samba](https://www.samba.org/): share mount points and home directories, with [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS) .local hostname resolution via [Avahi](https://github.com/lathiat/avahi)
- * sys/[ssh](http://www.openssh.com/): [more secure](https://stribika.github.io/2015/01/04/secure-secure-shell.html) client and server defaults plus a super secret banner
- * sys/[unbound](https://unbound.net/): why query DNS servers when we can run one faster locally, with results straight from [the horse's mouth](https://www.internic.net/domain/named.cache) (so to speak), and without ISP censorship or spying. Also, efficient low level adblocking
- * sys/[vnstat](http://humdi.net/vnstat/)-{laptop,server}: basic bandwidth stats and graphing
+> sys/ 
+
+ * [ccache](https://wiki.archlinux.org/index.php/Ccache): speedup tricks for [makepkg](https://wiki.archlinux.org/index.php/Makepkg) using ccache and multiple processor cores
+ * [firefox](https://www.mozilla.org/en-US/firefox/new/): force lock settings to disable built-in crapware, bad design decisions, and privacy issues. Note that this has become a pain to maintain, so I've switched to [Pale Moon](http://www.palemoon.org/) which is a optimized stripped down version of Firefox. 
+ * [fluidsynth](https://wiki.archlinux.org/index.php/FluidSynth): play MIDI audio. Working config for Arch Linux; package points to the wrong location for the FluidR3 soundfont
+ * [grub](https://www.gnu.org/software/grub/): nice Arch Linux theme for the GRUB bootloader with password protection 
+ * [letsencrypt](https://letsencrypt.org/): free CA for providing HTTPS. This uses a systemd timer for automated renewals using [certbot](https://github.com/certbot/certbot)
+ * motd-trump: makes logging in great again! *may cause xenophobia and/or wall building* 
+ * [munin](http://munin-monitoring.org/): host/network monitoring done right
+ * [mysql](https://mariadb.org/): setup MariaDB to use UTF-8 by default
+ * [nginx](http://nginx.org/): nginx webserver setup with SSL/HTTPS, PHP, and munin monitoring
+ * [pacman](https://wiki.archlinux.org/index.php/Pacman): Arch Linux's package manager: enable color, multilib, and pacman's pacman (as in the game)
+ * quirk-fixes-laptop: various bug fixes that took me forever to find a fix for: slow USB flash drive speed and choppy video/flash performance using intel's driver
+ * quirk-fixes-linode: fix various boot errors caused by a custom Arch Linux image (I would use their image, but it's beyond old!)
+ * [samba](https://www.samba.org/): share mount points and home directories, with [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS) .local hostname resolution via [Avahi](https://github.com/lathiat/avahi)
+ * [ssh](http://www.openssh.com/): [more secure](https://stribika.github.io/2015/01/04/secure-secure-shell.html) client and server defaults plus a super secret banner
+ * [unbound](https://unbound.net/): why query DNS servers when we can run one faster locally, with results straight from [the horse's mouth](https://www.internic.net/domain/named.cache) (so to speak), and without ISP censorship or spying. Also, efficient low level adblocking
+ * [vnstat](http://humdi.net/vnstat/)-{laptop,server}: basic bandwidth stats and graphing
 
 
 ## Installation / Managing
@@ -75,7 +78,7 @@ For instance, to install all the related bash dotfiles:
 
 Installing any of the system config files in "sys/" with stow is slightly 
 different, since you need them in / and not $HOME. To install "ssh":
-
+> $ cd dotfiles/sys/
 > $ sudo stow -t / ssh 
 
 
