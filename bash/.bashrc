@@ -47,6 +47,17 @@ if [ `/usr/bin/id -u` -eq 0 ]; then
     TMOUT=600
 fi
 
+##
+## Start ssh-agent if not running
+##
+if ! pgrep -u $USER ssh-agent > /dev/null; then
+    ssh-agent > ~/.cache/ssh-agent
+fi
+if [[ "$SSH_AGENT_PID" == "" ]]; then
+    eval $(<~/.cache/ssh-agent)
+fi
+        
+
 
 ##
 ## PATH
@@ -70,7 +81,7 @@ fi
 # Display QOTD if we're not on TTY1 
 # TTY1 is setup by .bash_profile to autostart Xorg, running fortune first slows the 
 # startup and we can't even see it
-if have fortune && $(w | grep -q tty1); then
+if have fortune && ! $(w | grep -q tty1); then
     echo -e "$(fortune -sa)\n" | colorize PURPLE
 fi
 
