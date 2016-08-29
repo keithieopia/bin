@@ -138,3 +138,5 @@ PubkeyAuthentication yes
 PasswordAuthentication no
 ChallengeResponseAuthentication no
 
+# LogLevel VERBOSE needed for fail2ban to work
+LogLevel VERBOSE
