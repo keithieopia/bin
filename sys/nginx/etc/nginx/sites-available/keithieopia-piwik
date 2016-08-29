@@ -1,0 +1,18 @@
+server {
+    listen 443;
+    listen [::]:443;
+
+    server_name piwik.keithieopia.com;
+    
+    access_log   /var/log/nginx/piwik-access.log;
+    error_log    /var/log/nginx/piwik-error.log;
+ 
+    root   /srv/http/piwik;
+
+    ssl_certificate /etc/letsencrypt/live/keithieopia.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/keithieopia.com/privkey.pem;
+
+    include include.d/all-common.conf;
+    include include.d/ssl-common.conf;
+    include include.d/php.conf;
+}
