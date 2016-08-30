@@ -1,6 +1,2 @@
 [fail2ban]
 user root
-
-[mysql_*]
-user munin
-env.mysqluser munin
