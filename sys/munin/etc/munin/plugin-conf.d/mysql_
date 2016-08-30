@@ -1,3 +1,0 @@
-[mysql_*]
-user munin
-env.mysqluser munin
