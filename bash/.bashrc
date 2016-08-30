@@ -50,13 +50,25 @@ fi
 ##
 ## Start ssh-agent if not running
 ##
-if ! pgrep -u $USER ssh-agent > /dev/null; then
-    ssh-agent > ~/.cache/ssh-agent
+
+SSH_ENV="$HOME/.cache/ssh-env"
+
+function start_agent {
+     ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+     chmod 600 "${SSH_ENV}"
+     . "${SSH_ENV}" > /dev/null
+#     ssh-add
+}
+
+if [ -f "${SSH_ENV}" ]; then
+     . "${SSH_ENV}" > /dev/null
+     if ! pgrep -u $USER ssh-agent > /dev/null; then
+         start_agent
+     fi
+else
+    start_agent
 fi
-if [[ "$SSH_AGENT_PID" == "" ]]; then
-    eval $(<~/.cache/ssh-agent)
-fi
-        
+                                    
 
 
 ##
