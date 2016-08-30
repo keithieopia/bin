@@ -87,15 +87,21 @@ fi
 
 
 ##
-## PS1
+## Display QOTD 
 ##
 
-# Display QOTD if we're not on TTY1 
-# TTY1 is setup by .bash_profile to autostart Xorg, running fortune first slows the 
-# startup and we can't even see it
-if have fortune && ! $(w | grep -q tty1); then
-    echo -e "$(fortune -sa)\n" | colorize PURPLE
+# don't display quotes on tty1, because Xorg is set to autostart 
+# on that term and fortune will cause a noticable delay
+
+if have fortune && ! $(tty | grep -q tty1); then
+    fortune -sa | colorize PURPLE
+    echo # newline
 fi
+
+
+##
+## PS1
+##
 
 # Set $PS1 (func in ~/dotfiles/alias.d/prompt.bash)
 PROMPT_COMMAND=bash_prompt
