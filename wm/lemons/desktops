@@ -3,8 +3,8 @@
 ACTIVE=$(bspc config focused_border_color)
 INACTIVE=$(bspc config active_border_color)
 
-DESKTOPS=$(bspc query -D)
-CURRENT=$(bspc query -D -d)
+DESKTOPS=$(bspc query -T -m | jshon -e desktops -a -e name -u)
+CURRENT=$(bspc query -T -d | jshon -e name -u)
 
 while read -r desktop; do
     if [[ "$desktop" == "$CURRENT" ]]; then
