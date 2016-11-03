@@ -44,15 +44,9 @@ icon () {
         "volume")   echo -e -n "\uf028" ;;
         "calendar") echo -e -n "\uf073" ;;
         "drive")    echo -e -n "\uf0a0" ;;
-
-        # Lame CPU alternative, since FontAwesome's team is 
-        # ignoring users and fork requests to implement this:
-        # https://github.com/FortAwesome/Font-Awesome/issues/1840
+        "home")     echo -e -n "\uf015" ;;
         "cpu")      echo -e -n "\uf085" ;; 
-        
-        # Lame RAM alternative, same B.S. as above:
-        # https://github.com/FortAwesome/Font-Awesome/issues/3239
-        "ram")      echo -e -n "\uf1c0" ;; 
+        "ram")      echo -e -n "\uf2db" ;; 
     esac
 }
 
@@ -110,7 +104,9 @@ while true; do
  
     lemon $ORANGE "cpu" "$(~/bin/wm/lemons/cpu)"
     lemon $ORANGE "ram" "$(~/bin/wm/lemons/ram)"
-    lemon $ORANGE "drive" "$(~/bin/wm/lemons/io)"
+
+    lemon $TEAL "drive" "$(~/bin/wm/lemons/disk-root)"
+    lemon $TEAL "home" "$(~/bin/wm/lemons/disk-home)"
 
     SPEED=$(~/bin/wm/lemons/net-speed) 
     lemon $PURPLE "download" "$(echo $SPEED | awk '{print $1$2}')"
