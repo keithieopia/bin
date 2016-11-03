@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/bin/df | grep "root" | awk '{print $5}'

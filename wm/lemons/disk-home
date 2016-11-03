@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/bin/df | grep "home" | head -1 | awk '{print $5}'
