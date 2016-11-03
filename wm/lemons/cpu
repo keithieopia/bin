@@ -1,5 +1,6 @@
 #!/bin/bash
 
 # Simplistic overall CPU usage: 100 - idle = %
+#mpstat | tail -1 | awk '{print (100 - $13)"%"}'
 
-mpstat | tail -1 | awk '{print (100 - $13)"%"}'
+echo $(ps -A -o pcpu | tail -n+2 | paste -sd+ | bc)%
