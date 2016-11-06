@@ -14,7 +14,7 @@ usage: $(basename "$0") [-i num] [-w num] [-c num] [-k num]
 https://github.com/keithieopia/bin/
     
 Copyright (c) 2016 Timothy Keith
-Licensed under the BSD 2-clause license.
+Licensed under the MIT license.
 HELP
 }
 

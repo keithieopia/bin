@@ -1,24 +1,24 @@
 #!/bin/bash
 
 usage () {
-cat <<HELP 
+cat <<HELP
 Creates and opens encrypted containers
 
 Usage: $(basename "$0") [-p DIR] [-m DIR] CONTAINER
    -c : Container directory, without trailing slash 
         (Default: /home/[USER]/.private)
    -m : Mount point, without trailing slash
-        (Default: /mnt)      
+        (Default: /mnt)
 
-Note: 
+Note:
    $(basename "$0") has built-in sane defaults, only
    advanced users should set the above flags
 
 
 https://github.com/keithieopia/bin/
-    
+
 Copyright (c) 2016 Timothy Keith
-Licensed under the BSD 2-clause license.
+Licensed under the MIT license.
 HELP
 }
 

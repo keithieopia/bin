@@ -11,7 +11,7 @@ decrypt a file created with this utility (files have an ".enc" extension)
 https://github.com/keithieopia/bin/
     
 Copyright (c) 2016 Timothy Keith
-Licensed under the BSD 2-clause license.
+Licensed under the MIT license.
 HELP
 }
 

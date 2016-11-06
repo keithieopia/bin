@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Create and launch an encrypted browser profiles
-# Works with Firefox and derivatives (IceCat, Pale Moon, etc) 
+# Works with Firefox and derivatives (IceCat, Pale Moon, etc)
 #
 # https://github.com/keithieopia/bin/
-#    
+#
 # Copyright (c) 2016 Timothy Keith
-# Licensed under the BSD 2-clause license.
+# Licensed under the MIT license.
 
 WHOAMI=${SUDO_USER:-$(whoami)}
 CONTAINER_DIR="/home/$WHOAMI/.private" # directory to store encrypted container in

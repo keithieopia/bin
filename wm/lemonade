@@ -59,14 +59,14 @@ if [ "$1" == "-h" ]; then
 cat <<HELP 
 Start lemonbar panel with useful system info, similar to conky
 
-Note: 
-   Edit the variables at the top of $(basename "$0") to customize 
-   
-   
+Note:
+   Edit the variables at the top of $(basename "$0") to customize
+
+
 https://github.com/keithieopia/bin/
-    
+
 Copyright (c) 2016 Timothy Keith
-Licensed under the BSD 2-clause license.
+Licensed under the MIT license.
 HELP
 exit
 fi
