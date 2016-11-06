@@ -6,7 +6,7 @@ from math import exp
 
 lat   = os.environ['LOCATION_LAT']
 lon   = os.environ['LOCATION_LON']
-cache = "~/.weather.json"
+cache = "~/.cache/weather.json"
 days  = 3
 
 degree_fahr= u'\N{DEGREE SIGN}F'
