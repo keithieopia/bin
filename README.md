@@ -40,7 +40,7 @@ you know what that entails. Here be dragons!
  * [xorg](http://www.x.org/wiki/): set minor Xorg settings and launch the WM
  
 ### System configs:
-> sys/ 
+Located in the `sys/` folder: 
 
  * bluetooth-headset: Settings for BlueZ and PulseAudio so you can use a 
    bluetooth headset
@@ -109,8 +109,8 @@ Installing any of the system config files in "sys/" with stow is slightly
 different, since you need them in / and not $HOME. To install "ssh":
 
 ```console
-> $ cd dotfiles/sys/  
-> $ sudo stow -t / ssh 
+$ cd dotfiles/sys/  
+$ sudo stow -t / ssh 
 ```
 
 ## Feedback
