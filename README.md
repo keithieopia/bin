@@ -66,16 +66,16 @@ as the usage and any flags or options that can be set.
 ## Credits
 
 * `cpu` - Fonseca's elegant [Stack Overflow one-liner](http://stackoverflow.com/questions/9229333/how-to-get-overall-cpu-usage-e-g-57-on-linux)
-* `disco` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/),  
-  License: *released into the public domain*
+* `disco` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
+  License: *public domain*
 * `floating-desktop` A workaround [workaround](https://github.com/baskerville/bspwm/issues/428#issuecomment-199985423)
-  by Bastien Dejean after he removed a similar feature. 
+  by Bastien Dejean after he removed a similar feature  
   License: [BSD 2-clause](https://github.com/baskerville/bspwm/blob/master/LICENSE)
 * `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-* `midi2ogg` - Found on the [ArchWiki](https://wiki.archlinux.org/index.php/FluidSynth#How_to_convert_MIDI_to_OGG), 
+* `midi2ogg` - Found on the [ArchWiki](https://wiki.archlinux.org/index.php/FluidSynth#How_to_convert_MIDI_to_OGG)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 * `screenlock` - Idea based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy)
-* `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)
+* `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 
 
