@@ -91,13 +91,13 @@ To import it into your keyring:
 $  gpg --keyserver pgp.mit.edu --recv-key 4135C5931D89368E7F32C8EDF4F4A135C022EE12
 ```
 
-Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/dotfiles/issues)
+Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/bin/issues)
 
 
 ## Author
 Copyright &copy; 2016 Timothy Keith, except where otherwise noted.
 
-Licensed under the [MIT license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
+Licensed under the [MIT license](https://github.com/keithieopia/bin/blob/master/LICENSE).
 
 *This is free software: you are free to change and redistribute it. There is NO 
 WARRANTY, to the extent permitted by law.*
