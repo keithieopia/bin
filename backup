@@ -1,0 +1,23 @@
+#!/bin/bash
+
+REPO="/run/media/timothy/BACKUPS"
+
+borg create -v --compression lz4 --stats --progress \
+    $REPO::$(hostname)-$(date +%Y-%m-%d) \
+    ~/backups                            \
+    ~/bin                                \
+    ~/books                              \
+    ~/docs                               \
+    ~/dotfiles                           \
+    ~/downloads                          \
+    ~/Dropbox                            \
+    ~/installs                           \
+    ~/pics                               \
+    ~/programming                        \
+    ~/projects                           \
+    ~/sounds                             \
+    ~/vids                               \
+    ~/vm                                 \
+    --exclude '*/.git'                   \
+    --exclude ~/Dropbox/.dropbox         \
+    --exclude ~/Dropbox/.dropbox.cache
