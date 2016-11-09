@@ -13,8 +13,8 @@ them useful
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) 
    simultaneously. 
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
+* `extract` - Wrapper to extract from many archives
 * `letsencrypt` - Renew SSL certs for my domains using certbot
-* `midi2ogg` - Convert all the MIDI files in the current directory to OGG.   
 * `mount-cache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
 * `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
@@ -68,12 +68,13 @@ as the usage and any flags or options that can be set.
 * `cpu` - Fonseca's elegant [Stack Overflow one-liner](http://stackoverflow.com/questions/9229333/how-to-get-overall-cpu-usage-e-g-57-on-linux)
 * `disco` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
   License: *public domain*
+* `extract` - Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
+  and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
+  License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
 * `floating-desktop` A workaround [workaround](https://github.com/baskerville/bspwm/issues/428#issuecomment-199985423)
   by Bastien Dejean after he removed a similar feature  
   License: [BSD 2-clause](https://github.com/baskerville/bspwm/blob/master/LICENSE)
 * `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-* `midi2ogg` - Found on the [ArchWiki](https://wiki.archlinux.org/index.php/FluidSynth#How_to_convert_MIDI_to_OGG)  
-  License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 * `screenlock` - Idea based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy)
 * `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
