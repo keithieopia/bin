@@ -2,7 +2,7 @@
 
 import json, os.path, time
 from urllib import urlopen
-from math import exp
+from math import pow
 
 lat   = os.environ['LOCATION_LAT']
 lon   = os.environ['LOCATION_LON']
@@ -46,6 +46,7 @@ def wind_chill(temp, mph):
     c4 = 0.4275
 
     if temp <= 50 and mph > 3:
+        mph = float(mph)
         wc = c1 + (c2 * temp) - (c3 * pow(mph, 0.16)) + (c4 * temp * pow(mph, 0.16))
         return int(round(wc, 0))
 
