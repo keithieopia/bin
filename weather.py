@@ -20,26 +20,25 @@ def download_weather():
 
     response = urlopen(url)
     data = response.read()
-    
+
     fo = open(cache, "wb")
     fo.write(data);
     fo.close()
 
     return data
-    
+
 def degrees_to_cardinal(d):
-    #dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-    #        "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-    #        
-    #ix = int((d + 11.25)/22.5)
-    #return dirs[ix % 16]
-    
+    # dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    #         "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    #
+    # ix = int((d + 11.25)/22.5)
+    # return dirs[ix % 16]
+
     dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-    
+
     ix = int((d + 23)/45)
     return dirs[ix % 8]
-    
-    
+
 def wind_chill(temp, mph):
     c1 = 35.74
     c2 = 0.6215
@@ -49,7 +48,7 @@ def wind_chill(temp, mph):
     if temp <= 50 and mph > 3:
         wc = c1 + (c2 * temp) - (c3 * pow(mph, 0.16)) + (c4 * temp * pow(mph, 0.16))
         return int(round(wc, 0))
-    
+
     else:
         return None
 
@@ -65,7 +64,6 @@ def heat_index(temp, humid):
     c9 = -1.99 * pow(10, -6)
 
     if temp >= 80 and humid >= 40:
-    
         hi = c1 + (c2 * temp) + \
         (c3 * humid) + \
         (c4 * temp * humid) + \
@@ -74,9 +72,9 @@ def heat_index(temp, humid):
         (c7 * pow(temp, 2) * humid) + \
         (c8 * temp * pow(humid, 2)) + \
         (c9 * pow(temp, 2) * pow(humid, 2))
-        
+
         return int(round(hi, 0))
-    
+
     else:
         return None
 
@@ -94,7 +92,7 @@ def cardinal_to_arrows(d):
 if os.path.exists(cache):
     now   = time.time()
     mtime = os.path.getmtime(cache)
-    
+
     if now - mtime > 60 * 60:
         data = download_weather()
     else:
@@ -123,7 +121,7 @@ print "Humidity:   " + str(humidity) + "%"
 hi = heat_index(temp, humidity)
 if hi is not None:
     print "Heat Index: " + str(hi) + degree_fahr
-    
+
 print "Weather:    " + data["currentobservation"]["Weather"]
 
 print "Wind:       " + mph + cardinal_to_arrows(degrees_to_cardinal(direction))
@@ -148,10 +146,9 @@ for i in range(len(data["time"]["startPeriodName"])):
         temps[i].sort()
         low  = temps[i][0]
         high = temps[i][1]
-    
-        
+
         forcast = data["data"]["weather"][i]
-        
+
         #remove_list = ['Likely', 'Slight', 'Chance', 'Snow/', 'Rain/', 'Areas', 'Mostly', 'Partly']
         #word_list = forcast.split()
         #forcast = ' '.join([x for x in word_list if x not in remove_list])
@@ -163,7 +160,7 @@ for i in range(len(data["time"]["startPeriodName"])):
 
         print "Temp:    " + low + degree_fahr + " - " + high + degree_fahr
         print "Forcast: " + forcast
-        
+
         percip = data["data"]["pop"][i]
         if percip is not None:
             print "Percip:  " + percip + "%"
@@ -174,4 +171,3 @@ for i in range(len(data["time"]["startPeriodName"])):
     count += 1
     if count > days: 
         break
-
