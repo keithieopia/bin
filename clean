@@ -101,6 +101,15 @@ in
         ;;
     
     "dir")
+        # Some safety from user stupidity, I've been burned by bash completion 
+        # too many times
+        DIR=$(pwd)
+    
+        if [ "$DIR" = "$HOME" ] || [ "$DIR" = "/" ]; then
+            echo "Cowardly refusing to shred \$HOME or root" | colorize ERROR
+            exit 1
+        fi
+    
         echo "Shredding entire directory..." | colorize TITLE
         find . -type f -exec $SHREDDER "{}" \;
         ;;
