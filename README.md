@@ -14,6 +14,8 @@ them useful
    simultaneously. 
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `extract` - Wrapper to extract from many archives
+* `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is 
+  still crap, so the script repetitively tries to connect before giving up
 * `letsencrypt` - Renew SSL certs for my domains using certbot
 * `mount-cache` - Create folders and files expected to be in ~/.cache normally, 
    useful if mounted as tmpfs
