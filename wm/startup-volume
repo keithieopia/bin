@@ -5,7 +5,7 @@
 H=$(date +%H)
 if (( 8 <= 10#$H && 10#$H < 21 )); then 
     amixer -D pulse set Master 50%
-    paplay "$HOME/bin/wm/sounds/psx.ogg" &
+    paplay "/usr/share/sounds/freedesktop/stereo/service-login.oga" &
 else
     amixer -D pulse set Master 0%
 fi
