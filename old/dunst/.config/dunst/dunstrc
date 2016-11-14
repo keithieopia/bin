@@ -174,18 +174,20 @@
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#888888"
     foreground = "#424242"
-    timeout = 5
+    timeout = 3
+    script = paplay /usr/share/sounds/freedesktop/stereo/dialog-information.oga
 
 [urgency_normal]
     background = "#568081"
     foreground = "#424242"
-    timeout = 10
+    timeout = 5
+    script = paplay /usr/share/sounds/freedesktop/stereo/dialog-information.oga
     
 [urgency_critical]
     background = "#B14D4C"
     foreground = "#424242"
-    timeout = 0
-    script = /home/timothy/bin/playalert alert
+    timeout = 10
+    script = paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga
     
 [volume]
     appname = volume 

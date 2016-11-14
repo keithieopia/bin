@@ -18,7 +18,6 @@ you know what that entails. Here be dragons!
    transparency and shadows
  * [default-dirs](https://wiki.archlinux.org/index.php/XDG_user_directories): 
    prevent annoying directories being auto created in $HOME
- * [dunst](http://knopwob.org/dunst/): lightweight notification daemon
  * [fix-flash](http://www.alsa-project.org/main/index.php/Asoundrc): Adobe Flash 
    uses ALSA and ignores PulseAudio, causing it to select the wrong sound card 
    resulting in no sound. Can we all agree Flash sucks and move on to HTML5 
@@ -49,11 +48,6 @@ Located in the `sys/` folder:
    multiple processor cores
  * [fail2ban](http://www.fail2ban.org/wiki/index.php/Main_Page): Prevent brute
    force attacks against a variety of services
- * [firefox](https://www.mozilla.org/en-US/firefox/new/): force lock settings to 
-   disable built-in crapware, bad design decisions, and privacy issues. Note 
-   that this has become a pain to maintain, so I've switched to 
-   [Pale Moon](http://www.palemoon.org/) which is a optimized stripped down 
-   version of Firefox. 
  * [fluidsynth](https://wiki.archlinux.org/index.php/FluidSynth): play MIDI 
    audio. Working config for Arch Linux; package points to the wrong location 
    for the FluidR3 soundfont
@@ -89,6 +83,16 @@ Located in the `sys/` folder:
    adblocking
  * [vnstat](http://humdi.net/vnstat/)-{laptop,server}: basic bandwidth stats and 
    graphing
+
+### Unmaintained configs
+Located in the `unmaintained` folder:
+
+ * [dunst](http://knopwob.org/dunst/): lightweight notification daemon
+ * [firefox](https://www.mozilla.org/en-US/firefox/new/): force lock settings to 
+   disable built-in crapware, bad design decisions, and privacy issues. Note 
+   that this has become a pain to maintain, so I've switched to 
+   [Pale Moon](http://www.palemoon.org/) which is a optimized stripped down 
+   version of Firefox
 
 
 ## Installation / Managing
