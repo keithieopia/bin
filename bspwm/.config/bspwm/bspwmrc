@@ -33,7 +33,7 @@ sxhkd &
 ~/bin/wm/floating-desktop &
 
 # general apps to auto start:
-~/bin/wm/startup-sound &
+~/bin/wm/startup-volume &
 ~/bin/mount-cache &
 compton &
 ~/.fehbg &
