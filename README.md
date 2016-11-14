@@ -14,6 +14,9 @@ them useful
    simultaneously. 
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `extract` - Wrapper to extract from many archives
+* `fehquote` - Sets a random quote on the current background. Reads `feh`'s 
+  config and uses a quote from `fortune -s`, while leaving your `.fehbg` is 
+  untouched
 * `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is 
   still crap, so the script repetitively tries to connect before giving up
 * `letsencrypt` - Renew SSL certs for my domains using certbot
