@@ -7,11 +7,6 @@ alias copy='rsync -ah --progress'
 # list only dirs
 alias lsd='ls -l | grep "^d"'   #list only directories
 
-# find biggest file in a dir
-alias biggest='find . -type f -exec ls -s {} \; | sort -n -r | head -5'
-
-# counts num of files in a dir
-alias filecount="echo $(ls -1 | wc -l)"
 
 # Makes dir then cd into it
 mkcdr () {
