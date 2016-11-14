@@ -46,7 +46,7 @@ export VISUAL=$EDITOR
 
 # Default X11 programs
 if [ "$DISPLAY" ]; then
-    export BROWSER="firefox "
+    export BROWSER=palemoon
     export WINEARCH=win32
 fi
 
