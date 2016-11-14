@@ -11,7 +11,8 @@ super + Return
 
 # program launcher
 super + d
-    dmenu_run
+#    dmenu_run
+    j4-dmenu-desktop
 
 # Screenshot
 Print
