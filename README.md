@@ -51,7 +51,7 @@ them useful
     * `screenlock` - Blurs and locks the screen with *Barney Fife 
       Protection&trade;* 
       that will make evildoers think twice!
-    * `startup-sound` -  Sets the volume to 50% and plays a startup sound or 
+    * `startup-volume` -  Sets the volume to 50% and plays a startup sound or 
       altogether mutes it depending on if it is too late at night
 
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
