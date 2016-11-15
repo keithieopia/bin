@@ -27,26 +27,29 @@ them useful
   IP addresses
 * `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
 * wm/
-    * `autostart-net` - Wait for the network to come up, then start a list of apps 
+    * `autostart-net` - Wait for the network to come up, then start a list of 
+      apps 
     * `autostart-net-trusted` - Similar to above, but only start on trusted 
       gateways (based on their MAC Address)
-    * `battmon` - Will warn about battery levels with increasing severity and then 
-      safely shut the system down if the battery gets too low.
+    * `battmon` - Will warn about battery levels with increasing severity and 
+      then safely shut the system down if the battery gets too low.
     * `floating-desktop` - Make all the windows on desktop 5 floating 
-    * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel with 
-      useful system info, similar to conky
+    * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel 
+      with useful system info, similar to conky
     * lemons/
-        * `arch-updates` - Syncs pacman's database after a set period of time and 
-          displays the number of updates available
+        * `arch-updates` - Syncs pacman's database after a set period of time 
+          and displays the number of updates available
         * `batt` - Shows the remaining battery percentage and if it's charging
         * `cpu` - Shows the live processor load, considering extra cores and 
           threads without extra dependencies
         * `desktops` - List all the desktops and color the current one
         * `disk-{home,root}` - Show the file system usage for /home and /
-        * `net-{signal,speed}` - Show the wifi strength and current transfer rates
+        * `net-{signal,speed}` - Show the wifi strength and current transfer 
+          rates
         * `ram` - Show the percent of RAM used
         * `volume` - Show the speaker volume
-    * `screenlock` - Blurs and locks the screen with *Barney Fife Protection&trade;* 
+    * `screenlock` - Blurs and locks the screen with *Barney Fife 
+      Protection&trade;* 
       that will make evildoers think twice!
     * `startup-sound` -  Sets the volume to 50% and plays a startup sound or 
       altogether mutes it depending on if it is too late at night
@@ -54,12 +57,15 @@ them useful
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names
 * `playalert` - Plays a tune, called when a OSD notification is sent on my system
+* `randgen` - Create random passwords, MAC addresses, letters, or numbers using 
+  /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
 * `test-colors` - Show the current terminal color scheme 
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and 
   accurate compared to commercial websites and APIs
 * `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/) 
-  password scheme generator. Uses the kernel's CSPRNG, unlike most implementations
+  password scheme generator. Uses the kernel's CSPRNG, unlike most 
+  implementations
 
 
 ## Usage
