@@ -56,7 +56,6 @@ them useful
 
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names
-* `playalert` - Plays a tune, called when a OSD notification is sent on my system
 * `randgen` - Create random passwords, MAC addresses, letters, or numbers using 
   /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
