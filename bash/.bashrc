@@ -5,59 +5,57 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Determine if a program is installed, used in below aliases
-have() { type "$1" &> /dev/null; }
-
-ALIAS_DIR="$HOME/.config/bash"
-
-# Load extras
-load_dotfiles() {
-    declare -a files=(
-        $ALIAS_DIR/exports.bash
-        $ALIAS_DIR/defaults.bash
-        $ALIAS_DIR/arch.bash
-        $ALIAS_DIR/colorize.bash
-        $ALIAS_DIR/archive.bash
-        $ALIAS_DIR/net.bash
-        $ALIAS_DIR/prompt.bash
-        $ALIAS_DIR/dir.bash
-        $ALIAS_DIR/strings.bash
-        $ALIAS_DIR/text.bash
-        $ALIAS_DIR/exports.bash
-        $ALIAS_DIR/completion.bash
-        $ALIAS_DIR/misc.bash
-    )
-
-    # if these files are readable, source them
-    for index in ${!files[*]}
-    do
-        if [[ -r ${files[$index]} ]]; then
-            source ${files[$index]}
-        fi
-    done
-}
-load_dotfiles
-unset load_dotfiles
+# Source files
+source "$HOME/.config/bash/functions.bash" # must be first, some functions used below
+source "$HOME/.config/bash/alias.bash"
+source "$HOME/.config/bash/exports.bash"
+source "$HOME/.config/bash/prompt.bash"
 
 
 ##
-## If root, set a timeout for the bash session
+## Command completion stuff
 ##
+
+if [ -f /usr/share/git/completion/git-completion.bash ]; then
+  source /usr/share/git/completion/git-completion.bash
+fi
+complete -cf sudo
+complete -cf man
+
+
+##
+## History
+##
+
+# After each command, append to the history file and reread it
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+# Keys
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+
+##
+## Security
+##
+
+# If root, set a timeout for the bash session
 if [ `/usr/bin/id -u` -eq 0 ]; then
     TMOUT=600
 fi
 
-##
-## Start ssh-agent if not running
-##
+# secret vars (api keys)
+if [ -f ~/.bash_secrets ]; then
+    source ~/.bash_secrets
+fi
 
+# SSH agent
 SSH_ENV="$HOME/.cache/ssh-env"
 
 function start_agent {
      ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
      chmod 600 "${SSH_ENV}"
      . "${SSH_ENV}" > /dev/null
-#     ssh-add
 }
 
 if [ -f "${SSH_ENV}" ]; then
@@ -68,7 +66,11 @@ if [ -f "${SSH_ENV}" ]; then
 else
     start_agent
 fi
-                                    
+
+# GPG agent
+echo BYE | gpg-connect-agent &> /dev/null
+GPG_TTY=$(tty)
+export GPG_TTY
 
 
 ##
@@ -80,9 +82,9 @@ if [ -d ~/bin ]; then
     PATH=~/bin:"${PATH}"
 fi
 
-# Enable ccache for speedy compiling if possible
-if [ -d /usr/lib/ccache/bin ] ; then
-    PATH=/usr/lib/ccache/bin:"${PATH}"
+# ccache pre-processor for C/C++
+if have ccache; then
+    PATH="/usr/lib/ccache/bin:$PATH"
 fi
 
 
@@ -94,20 +96,8 @@ fi
 # on that term and fortune will cause a noticable delay
 
 if have fortune && ! $(tty | grep -q tty1); then
-    fortune -sa | colorize PURPLE
-    echo # newline
+    echo -e "\033[0;35m$(fortune -sa)\033[0m\n"
 fi
-
-
-##
-## PS1
-##
-
-# Set $PS1 (func in ~/dotfiles/alias.d/prompt.bash)
-PROMPT_COMMAND=bash_prompt
-
-# After each command, append to the history file and reread it
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 
 ##

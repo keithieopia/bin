@@ -114,3 +114,6 @@ is_root () {
     fi
     return $PRIV
 }
+
+# Set $PS1
+PROMPT_COMMAND=bash_prompt

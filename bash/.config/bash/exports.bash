@@ -2,7 +2,11 @@
 ## Export and general options
 ##
 
-## Bash Options
+# No beep... WHY IS THIS NOT THE DEFAULT!?
+set bell-style visible 
+
+
+# Bash Options
 shopt -s extglob       # necessary for programmable completion
 shopt -s nocaseglob    # Case-insensitive globbing
 shopt -s progcomp      # Programmable completion is FUN
@@ -13,8 +17,6 @@ shopt -s checkhash     # check cache before finding full path
 shopt -s no_empty_cmd_completion
 shopt -s histappend histreedit histverify
 
-# No beep... WHY IS THIS NOT THE DEFAULT!?
-set bell-style visible 
 
 # Language
 export LANG=en_US.UTF-8
@@ -23,7 +25,6 @@ export LC_ALL=en_US.UTF-8
 
 # Colors
 export GREP_COLOR="1;33"
-
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;31m'
 export LESS_TERMCAP_me=$'\E[0m'
@@ -40,11 +41,13 @@ export HISTCONTROL="ignoreboth"
 export HISTTIMEFORMAT="%F %T "
 
 
+## 
 ## Default Programs
+##
 export EDITOR=/usr/bin/nano
 export VISUAL=$EDITOR
 
-# Default X11 programs
+# Xorg programs
 if [ "$DISPLAY" ]; then
     export BROWSER=palemoon
     export WINEARCH=win32
@@ -55,22 +58,6 @@ if have less; then
     export PAGER='less'
     unset LESSCHARSET # Fix manpages looking funky
     export LESS='--ignore-case --line-numbers --hilite-unread  -z-4 --hilite-search --LONG-PROMPT --no-init --quit-if-one-screen --quit-on-intr --RAW-CONTROL-CHARS'
-elif have most; then
-    export PAGER='most'
 else
     export PAGER='more'
-fi
-
-# SSH terminal fix
-alias ssh="TERM=linux ssh"
-
-# ccache pre-processor for C/C++
-if have ccache; then
-    export PATH="/usr/lib/ccache/bin/:$PATH"
-fi
-
-
-# secret vars (api keys)
-if [ -f ~/.bash_secrets ]; then
-    source ~/.bash_secrets
 fi
