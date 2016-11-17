@@ -2,26 +2,9 @@
 ## Export and general options
 ##
 
-# No beep... WHY IS THIS NOT THE DEFAULT!?
-set bell-style visible 
-
-
-# Bash Options
-shopt -s extglob       # necessary for programmable completion
-shopt -s nocaseglob    # Case-insensitive globbing
-shopt -s progcomp      # Programmable completion is FUN
-shopt -s checkwinsize  # update values of LINES and COLUMNS
-shopt -s cdspell       # correct minor spelling errors when cd'ing
-shopt -s cmdhist       # collapse multi-line commands to one line
-shopt -s checkhash     # check cache before finding full path
-shopt -s no_empty_cmd_completion
-shopt -s histappend histreedit histverify
-
-
 # Language
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
 
 # Colors
 export GREP_COLOR="1;33"
@@ -32,13 +15,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
-
-
-# History
-export HISTSIZE=60
-export HISTIGNORE="*history*:ls:df*:cd*:pwd:su:clear:exit:rm*:shred*"
-export HISTCONTROL="ignoreboth"
-export HISTTIMEFORMAT="%F %T "
 
 
 ## 

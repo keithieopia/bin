@@ -5,34 +5,24 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Source files
-source "$HOME/.config/bash/functions.bash" # must be first, some functions used below
-source "$HOME/.config/bash/alias.bash"
-source "$HOME/.config/bash/exports.bash"
+
+# Bash Options
+shopt -s extglob                         # necessary for programmable completion
+shopt -s nocaseglob                      # Case-insensitive globbing
+shopt -s checkwinsize                    # update values of LINES and COLUMNS
+shopt -s checkhash                       # check cache before finding full path
+bind "set mark-symlinked-directories on" # add slash to syslink dirs
+bind "set bell-style visible"            # no beep
+
+
+# Source files (comments denote dependencies that have to come before it)
+source "$HOME/.config/bash/functions.bash"
+source "$HOME/.config/bash/alias.bash"      # needs functions.bash
+source "$HOME/.config/bash/exports.bash"    # needs functions.bash
+source "$HOME/.config/bash/completion.bash"
+source "$HOME/.config/bash/agent.bash"
 source "$HOME/.config/bash/prompt.bash"
-
-
-##
-## Command completion stuff
-##
-
-if [ -f /usr/share/git/completion/git-completion.bash ]; then
-  source /usr/share/git/completion/git-completion.bash
-fi
-complete -cf sudo
-complete -cf man
-
-
-##
-## History
-##
-
-# After each command, append to the history file and reread it
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
-
-# Keys
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
+source "$HOME/.config/bash/history.bash"    # needs prompt.bash
 
 
 ##
@@ -48,29 +38,6 @@ fi
 if [ -f ~/.bash_secrets ]; then
     source ~/.bash_secrets
 fi
-
-# SSH agent
-SSH_ENV="$HOME/.cache/ssh-env"
-
-function start_agent {
-     ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-     chmod 600 "${SSH_ENV}"
-     . "${SSH_ENV}" > /dev/null
-}
-
-if [ -f "${SSH_ENV}" ]; then
-     . "${SSH_ENV}" > /dev/null
-     if ! pgrep -u $USER ssh-agent > /dev/null; then
-         start_agent
-     fi
-else
-    start_agent
-fi
-
-# GPG agent
-echo BYE | gpg-connect-agent &> /dev/null
-GPG_TTY=$(tty)
-export GPG_TTY
 
 
 ##
