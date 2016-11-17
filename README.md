@@ -18,10 +18,6 @@ you know what that entails. Here be dragons!
    transparency and shadows
  * [default-dirs](https://wiki.archlinux.org/index.php/XDG_user_directories): 
    prevent annoying directories being auto created in $HOME
- * [fix-flash](http://www.alsa-project.org/main/index.php/Asoundrc): Adobe Flash 
-   uses ALSA and ignores PulseAudio, causing it to select the wrong sound card 
-   resulting in no sound. Can we all agree Flash sucks and move on to HTML5 
-   instead?
  * [git](https://git-scm.com/docs/git-config): git VCS default settings; mostly 
    sign commits with GPG and enable colors
  * [nano](http://www.nano-editor.org/): disregard Cult of vi and Church of 
