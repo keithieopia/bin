@@ -44,9 +44,6 @@ Located in the `sys/` folder:
    multiple processor cores
  * [fail2ban](http://www.fail2ban.org/wiki/index.php/Main_Page): Prevent brute
    force attacks against a variety of services
- * [fluidsynth](https://wiki.archlinux.org/index.php/FluidSynth): play MIDI 
-   audio. Working config for Arch Linux; package points to the wrong location 
-   for the FluidR3 soundfont
  * [grub](https://www.gnu.org/software/grub/): nice Arch Linux theme for the 
    GRUB bootloader with password protection 
  * [letsencrypt](https://letsencrypt.org/): free CA for providing HTTPS. This 
@@ -89,7 +86,9 @@ Located in the `unmaintained` folder:
    that this has become a pain to maintain, so I've switched to 
    [Pale Moon](http://www.palemoon.org/) which is a optimized stripped down 
    version of Firefox
-
+ * [fluidsynth](https://wiki.archlinux.org/index.php/FluidSynth): play MIDI 
+   audio. Working config for Arch Linux; package points to the wrong location 
+   for the FluidR3 soundfont
 
 ## Installation / Managing
 These dotfiles are managed with [stow](http://www.gnu.org/software/stow/), 
