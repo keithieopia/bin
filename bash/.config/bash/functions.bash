@@ -18,10 +18,34 @@ dudir() {
 ##
 ## Archiving
 ##
-mktar() {  tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
-mktgz() {  tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
-mktbz2() { tar cvjf "${1%%/}.tar.bz2" "${1%%/}/"; }
+mktar()  { tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
 
+mktbz2() {
+    if have pbzip2; then
+        echo -e "\033[1;37mUsing parallel pbzip2...\033[00m"
+        tar -Ipbzip2 -cvf "${1%%/}.tbz2" "${1%%/}/"
+    else
+        tar cvjf "${1%%/}.tbz2" "${1%%/}/"; 
+    fi
+}
+
+mktgz() {
+    if have pigz; then
+        echo -e "\033[1;37mUsing parallel pigz...\033[00m"
+        tar -Ipigz -cvf "${1%%/}.tgz" "${1%%/}/"
+    else
+        tar cvzf "${1%%/}.tgz"  "${1%%/}/"
+    fi
+}
+
+mktxz() {
+    if have pixz; then
+        echo -e "\033[1;37mUsing parallel pixz...\033[00m"
+        tar -Ipixz -cvf "${1%%/}.txz" "${1%%/}/"
+    else
+        tar cvJf "${1%%/}.txz" "${1%%/}/"
+    fi
+}
 
 ##
 ## Groups
