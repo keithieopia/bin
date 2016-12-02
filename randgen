@@ -13,14 +13,14 @@ function mac_address() {
     # Second char of a MAC address is reserved for multicast if it's odd.
     # Rather than writing this specific use case, it's often quicker just to  
     # generate addresses until the second char is even
-    
+
     while : ; do
         mac="$(hexdump -vn 6 -e ' /1 "%02x"' /dev/urandom)"
         [[ "13579bdf" =~ ${mac:1:1} ]] || break
-    done 
-     
+    done
+
     # add colons every two chars to make the hex string into a MAC address
-    fold -w2 <$mac | paste -sd ':' -
+    echo $mac | fold -w2 - | paste -sd ':' -
 }
 
 function num() {
@@ -38,7 +38,7 @@ function port() {
 }
 
 function usage() {
-cat <<HELP 
+cat <<HELP
 Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 
 Usage: $(basename "$0") [OPTION...] FORMAT
@@ -56,7 +56,7 @@ Usage: $(basename "$0") [OPTION...] FORMAT
 
 
 https://github.com/keithieopia/bin/
-    
+
 Copyright (c) 2016 Timothy Keith
 Licensed under the MIT license.
 HELP
