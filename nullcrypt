@@ -32,7 +32,7 @@ colorize () {
     ESC="\033["
 
     COLOR=\$${1:-NORMAL}
-        
+
     echo -ne "${ESC}`eval echo ${COLOR}`m"
     cat
     echo -ne "${ESC}0m"
@@ -198,7 +198,7 @@ function makeContainer() {
                     done
                     ;;
                 *)
-                    HASH="sha1"
+                    HASH="sha512"
                     CIPHER="aes"
                     BITS="256"
                     ;;
@@ -223,7 +223,7 @@ function makeContainer() {
             echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $CONTAINER_DIR/$1 $1
 
             # Make the filesystem
-            sudo mkfs.ext2 /dev/mapper/$1
+            sudo mkfs.ext4 -L $1 /dev/mapper/$1
             sudo tune2fs -m 0 /dev/mapper/$1
 
             mountContainer $1
