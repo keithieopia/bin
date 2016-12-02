@@ -1,7 +1,7 @@
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=3
 GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="quiet cryptdevice=/dev/sda3:storage root=/dev/mapper/storage-root resume=/dev/storage/swap"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet cryptdevice=/dev/sda3:storage root=/dev/mapper/storage-root resume=/dev/mapper/storage-swap"
 GRUB_CMDLINE_LINUX=""
 
 # Preload both GPT and MBR modules so that they are not missed
@@ -45,6 +45,7 @@ GRUB_THEME="/boot/grub/themes/arch-silence/theme.txt"
 #GRUB_INIT_TUNE="480 440 1"
 
 # Mario Bros. Mushroom Powerup
-GRUB_INIT_TUNE="1750 523 1 392 1 523 1 659 1 784 1 1047 1 784 1 415 1 523 1 622 1 831 1 622 1 831 1 1046 1 1244 1 1661 1 1244 1 466 1 587 1 698 1 932 1 1195 1 1397 1 1865 1 1397 1"
+# (commented out as laptop doesn't have a BIOS-based PC speaker)
+#GRUB_INIT_TUNE="1750 523 1 392 1 523 1 659 1 784 1 1047 1 784 1 415 1 523 1 622 1 831 1 622 1 831 1 1046 1 1244 1 1661 1 1244 1 466 1 587 1 698 1 932 1 1195 1 1397 1 1865 1 1397 1"
 
 #GRUB_SAVEDEFAULT="true"
