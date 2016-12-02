@@ -43,9 +43,11 @@ pcmanfm -d &
 ~/bin/wm/lemonade &
 ~/bin/wm/battmon &
 zim --plugin trayicon &
+autocutsel -fork &
+autocutsel -selection PRIMARY -fork &
 
 # Autostart network specific apps:
 ~/bin/wm/autostart-net &
-sudo ~/bin/wm/autostart-net-trusted &
+#sudo ~/bin/wm/autostart-net-trusted &
 
 
