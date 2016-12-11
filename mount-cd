@@ -43,6 +43,6 @@ else
     mkdir -p /mnt/cdrom
 fi
 
-mount -o loop -t iso9660 $* /mnt/cdrom
+mount -o loop -t iso9660 "$*" /mnt/cdrom
 cd /mnt/cdrom
 ls -l
