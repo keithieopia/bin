@@ -92,10 +92,28 @@ fi
 
 LEMONBAR_ARGS="-g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
 
-# Used to monitor file changes and reload, similar to how conky works
-HASH=$(md5sum "$0" | cut -c 1-32)
-   
 
+# Make sure there's only run instance running
+PID_FILE="/var/run/user/$UID/lemonade.pid"
+
+if [ -e $PID_FILE ]; then
+    if kill -0 $(<$PID_FILE) &>1 > /dev/null; then
+        echo "$(basename $0) already running!"
+        exit 1
+    else
+        rm $PID_FILE
+    fi
+fi
+
+echo $$ > $PID_FILE
+
+# Used to monitor file changes and reload, similar to how conky works
+MTIME=$(stat -c %Y "$0")
+
+
+#
+# Main Script Loop
+# 
 while true; do
 
     echo -n "%{l}"
@@ -126,12 +144,17 @@ while true; do
 
 
     # Reload self on change
-    if [[ $(md5sum "$0" | cut -c 1-32) == "$HASH" ]]; then
+    if [[ $(stat -c %Y "$0") == "$MTIME" ]]; then
         echo # Send newline
         sleep 1
     else
-        killall lemonbar
-        exec $0 &
+        # run a new instance with new process group (not a child process)
+        setsid $0 & 
+        
+        # kill this process and all child processes (like lemonbar & sh)
+        pkill -P $$ 
+        
+        # just in case...
         exit
     fi
 
