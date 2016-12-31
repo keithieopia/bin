@@ -26,7 +26,7 @@ export VISUAL=$EDITOR
 # Xorg programs
 if [ "$DISPLAY" ]; then
     export BROWSER=palemoon
-    export WINEARCH=win32
+    #export WINEARCH=win32
 fi
 
 # Pager
