@@ -71,6 +71,8 @@ dec2hex() { echo $(bc <<< "obase=16; $1"); }
 hex2ascii() { echo -e "\0$(printf %o $((16#$1)))"; }
 ascii2hex() { echo $(hexdump -e '"%X"' <<< "$1"); }
 
+calc() { echo "scale=4;$*" | bc -l; }
+
 
 ##
 ## Arch Linux's pacman package manager
