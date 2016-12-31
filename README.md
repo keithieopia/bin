@@ -42,6 +42,7 @@ Located in the `sys/` folder:
  * [ccache](https://wiki.archlinux.org/index.php/Ccache): speedup tricks for 
    [makepkg](https://wiki.archlinux.org/index.php/Makepkg) using ccache and 
    multiple processor cores
+ * [chrony](https://chrony.tuxfamily.org/): Offline-aware NTP clock sync
  * [fail2ban](http://www.fail2ban.org/wiki/index.php/Main_Page): Prevent brute
    force attacks against a variety of services
  * [grub](https://www.gnu.org/software/grub/): nice Arch Linux theme for the 
@@ -128,7 +129,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/d
 
 
 ## Author
-Copyright &copy; 2016 Timothy Keith
+Copyright &copy; 2016 -2017 Timothy Keith
 
 Licensed under the [MIT license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
 
