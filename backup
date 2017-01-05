@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO="/run/media/timothy/BACKUPS"
+REPO="/run/media/timothy/backups/home"
 
 borg create -v --compression lz4 --stats --progress      \
     $REPO::$(hostname)-$(date +%Y-%m-%d)                 \
@@ -16,7 +16,6 @@ borg create -v --compression lz4 --stats --progress      \
     ~/programming                                        \
     ~/projects                                           \
     ~/sounds                                             \
-    ~/vids                                               \
     ~/vm                                                 \
     ~/.bash_secrets                                      \
     ~/.dosbox                                            \
@@ -30,3 +29,10 @@ borg create -v --compression lz4 --stats --progress      \
     --exclude '~/.wine/dosdevices'                       \
     --exclude ~/Dropbox/.dropbox                         \
     --exclude ~/Dropbox/.dropbox.cache
+
+# DRIVE="/run/media/timothy/media"
+# REPO="/run/media/timothy/backups/home"
+# borg create -v --compression lz4 --stats --progress      \
+#   $REPO::media-$(date +%Y-%m-%d)                         \
+#   $DRIVE                                                 \
+#   --exclude 'lost+found'
