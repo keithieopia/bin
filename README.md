@@ -29,7 +29,7 @@ them useful
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names
 * `quotes` - Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)). 
-* `randgen` - Create random passwords, MAC addresses, letters, or numbers using 
+* `rangen` - Create random passwords, MAC addresses, letters, or numbers using 
   /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
 * `test-colors` - Show the current terminal color scheme 
