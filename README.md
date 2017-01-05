@@ -31,12 +31,17 @@ them useful
 * `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
 * `optimize-images` Optimize images for the web by reduces image size and fixing 
    file names
+* `pdf-extract` - Extract pages from a PDF; useful for removing superfluous and 
+  unofficial cover sheets added by many online repositories. Compare to 
+  [pdftk](https://linux.die.net/man/1/pdftk).
 * `quotes` - Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)). 
 * `rangen` - Create random passwords, MAC addresses, letters, or numbers using 
   /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
 * `steam-preload` - Quirks fixes for Steam under bspwm with an Intel graphics card 
 * `test-colors` - Show the current terminal color scheme 
+* `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and 
+  accurate compared to commercial websites and APIs
 * wm/
     * `autostart-net` - Wait for the network to come up, then start a list of 
       apps 
@@ -64,8 +69,6 @@ them useful
       that will make evildoers think twice!
     * `startup-volume` -  Sets the volume to 50% and plays a startup sound or 
       altogether mutes it depending on if it is too late at night
-* `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and 
-  accurate compared to commercial websites and APIs
 * `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/) 
   password scheme generator. Uses the kernel's CSPRNG, unlike most 
   implementations
