@@ -32,6 +32,7 @@ them useful
 * `rangen` - Create random passwords, MAC addresses, letters, or numbers using 
   /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
+* `steam-preload` - Quirks fixes for Steam under bspwm with an Intel graphics card 
 * `test-colors` - Show the current terminal color scheme 
 * wm/
     * `autostart-net` - Wait for the network to come up, then start a list of 
