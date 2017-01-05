@@ -26,6 +26,13 @@ them useful
 * `net-status` - Show the network status as well as the Gateway and local/public 
   IP addresses
 * `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
+* `optimize-images` Optimize images for the web by reduces image size and fixing 
+   file names
+* `quotes` - Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)). 
+* `randgen` - Create random passwords, MAC addresses, letters, or numbers using 
+  /dev/urandom
+* `respawn` - Indefinitely restart a program after it exits
+* `test-colors` - Show the current terminal color scheme 
 * wm/
     * `autostart-net` - Wait for the network to come up, then start a list of 
       apps 
@@ -53,13 +60,6 @@ them useful
       that will make evildoers think twice!
     * `startup-volume` -  Sets the volume to 50% and plays a startup sound or 
       altogether mutes it depending on if it is too late at night
-
-* `optimize-images` Optimize images for the web by reduces image size and fixing 
-   file names
-* `randgen` - Create random passwords, MAC addresses, letters, or numbers using 
-  /dev/urandom
-* `respawn` - Indefinitely restart a program after it exits
-* `test-colors` - Show the current terminal color scheme 
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and 
   accurate compared to commercial websites and APIs
 * `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/) 
