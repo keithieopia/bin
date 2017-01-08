@@ -9,7 +9,7 @@ them useful
   which encrypts, uses differentials, and deduplicates stored data. 
 * `clean` - Erases files, directories, browser cache, junk files, history files, 
    and slack space
-* `cryptbrowse` - Create and launch an encrypted browser profiles
+* `cryptfox` - Create and launch an encrypted browser profiles
 * `digests` - List the various hashsums for a file and create or verify a 
   SHA256SUMS for a directory.
 * `disco` - Randomly colored lights in the terminal. For a more wholesome 
