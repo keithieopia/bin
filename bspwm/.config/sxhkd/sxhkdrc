@@ -16,7 +16,7 @@ super + d
 
 # Firefox
 super + f
-    firefox
+    firejail --whitelist=~/projects/startpage firefox
 
 # Geany
 super + g
