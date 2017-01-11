@@ -71,7 +71,7 @@ prompt_git() {
 
             # c
             if `git status | grep ahead > /dev/null`; then
-                local SYMBOL="${SYMBOL}${YELLOW}↺"
+                local SYMBOL="${SYMBOL}${YELLOW}^"
             fi
             
             #  uncommitted changes
