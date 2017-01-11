@@ -12,7 +12,7 @@ WHOAMI=${SUDO_USER:-$(whoami)}
 CONTAINER_DIR="/home/$WHOAMI/.private" # directory to store encrypted container in
 CONTAINER_FILE="cryptfox" # name of encrypted container, doesn't really matter
 CONTAINER_SIZE="100M"  # this is a sane default, even with a ton of extensions
-BROWSER_EXE="firefox" # browser executable, e.g.: firefox
+BROWSER_EXE="firejail --whitelist=~/projects/startpage firefox" # browser executable, e.g.: firefox
 BROWSER_PROFILE="/home/$WHOAMI/.mozilla/firefox" # typically ~/.mozilla/firefox
 CACHE_DIR="/home/$WHOAMI/.cache/mozilla/firefox" # typically ~/.cache/mozilla/firefox 
 
@@ -30,15 +30,11 @@ if ! have sudo; then
     echo "$0 requires 'sudo' to be installed!"
     exit 1
 fi
-if ! have $BROWSER_EXE; then
-    echo "$0 is configured to use $BROWSER_EXE, you probably are using something else!"
-    exit 1
-fi
 
 if [ "$EUID" -ne 0 ]; then
     while [ -z "$SUDO" ]; do
         PASSWORD="$(zenity --entry --entry-hide-text --title 'sudo' --window-icon 'question' --text 'Enter sudo password:')"
-        
+
         if [ ! $PASSWORD ]; then
             zenity --error --text="Canceling $(basename $0)"
             exit 1
@@ -56,12 +52,11 @@ fi
 function lockFirefox() {
     umount "$BROWSER_PROFILE/$CONTAINER_FILE"
     rmdir "$BROWSER_PROFILE/$CONTAINER_FILE"
-    
-    
+
     DELETE_DIRS=("$CACHE_DIR/$CONTAINER_FILE"
                  "/home/$WHOAMI/.macromedia/Flash_Player"
                  "/home/$WHOAMI/.adobe/Flash_Player")
-    
+
     for dir in "${DELETE_DIRS[@]}"; do
         if [ -d $dir ]; then
             if have shred; then
@@ -74,11 +69,11 @@ function lockFirefox() {
             rm -r "$dir"
         fi
     done
-    
+
     cryptsetup luksClose $CONTAINER_FILE
 
     if [ $? -eq 0 ]; then
-        zenity --info --text "$BROWSER_EXE container locked!"
+        zenity --info --text "Browser container locked!"
     else
         zenity --error --text="Could not lock profile!!!"
         return 1
