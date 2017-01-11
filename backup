@@ -2,37 +2,68 @@
 
 REPO="/run/media/timothy/backups/home"
 
-borg create -v --compression lz4 --stats --progress      \
-    $REPO::$(hostname)-$(date +%Y-%m-%d)                 \
-    ~/backups                                            \
-    ~/bin                                                \
-    ~/books                                              \
-    ~/docs                                               \
-    ~/dotfiles                                           \
-    ~/downloads                                          \
-    ~/Dropbox                                            \
-    ~/installs                                           \
-    ~/pics                                               \
-    ~/programming                                        \
-    ~/projects                                           \
-    ~/sounds                                             \
-    ~/vm                                                 \
-    ~/.bash_secrets                                      \
-    ~/.dosbox                                            \
-    ~/.fonts                                             \
-    ~/.gnupg                                             \
-    ~/.password-store                                    \
-    ~/.private                                           \
-    ~/.ssh                                               \
-    ~/.wine                                              \
-    --exclude '*/.git'                                   \
-    --exclude '~/.wine/dosdevices'                       \
-    --exclude ~/Dropbox/.dropbox                         \
+borg create -v --compression lz4 --stats --progress  \
+    $REPO::$(hostname)-$(date +%Y-%m-%d)             \
+    ~/backups                                        \
+    ~/bin                                            \
+    ~/books                                          \
+    ~/docs                                           \
+    ~/dotfiles                                       \
+    ~/downloads                                      \
+    ~/Dropbox                                        \
+    ~/installs                                       \
+    ~/pics                                           \
+    ~/programming                                    \
+    ~/projects                                       \
+    ~/sounds                                         \
+    ~/vm                                             \
+    ~/.bash_secrets                                  \
+    ~/.dosbox                                        \
+    ~/.fonts                                         \
+    ~/.gnupg                                         \
+    ~/.password-store                                \
+    ~/.ssh                                           \
+    ~/.wine                                          \
+    --exclude '*/.git'                               \
+    --exclude '~/.wine/dosdevices'                   \
+    --exclude ~/Dropbox/.dropbox                     \
     --exclude ~/Dropbox/.dropbox.cache
 
-# DRIVE="/run/media/timothy/media"
-# REPO="/run/media/timothy/backups/home"
-# borg create -v --compression lz4 --stats --progress      \
-#   $REPO::media-$(date +%Y-%m-%d)                         \
-#   $DRIVE                                                 \
-#   --exclude 'lost+found'
+
+##
+## UNENCRYPTED BACKUPS
+##      Borg does encryption by default, which is a good thing. However,
+##      there are some cases where encryption doesn't make sense.
+##      Fortunately, you can turn encryption off when creating a repo:
+##
+##      borg init --encryption=none
+##
+#############################################################################
+
+## ~/.private
+##     Already encrypted files and containers. Encrypting backups would be
+##     basically double encrypting which is slightly more paranoid than my
+##     current threat model.
+
+PRIVATE_DRIVE="/home/timothy/.private"
+PRIVATE_REPO="/run/media/timothy/backups/private"
+
+borg create -v --compression lz4 --stats --progress \
+     $PRIVATE_REPO::private-$(date +%Y-%m-%d)       \
+     $PRIVATE_DRIVE
+
+
+## Media Drive (unencrypted)
+##     It's an average external drive with no sensitive data (Movies,
+##     TV Shows, Clips, etc). Since the files are generally large,
+##     encrypting would be a waste of time.
+
+MEDIA_DRIVE="/run/media/timothy/media"
+MEDIA_REPO="/run/media/timothy/backups/media"
+
+if [ -d "$MEDIA_DRIVE" ]; then
+    borg create -v --compression lz4 --stats --progress \
+        $MEDIA_REPO::media-$(date +%Y-%m-%d)            \
+        $MEDIA_DRIVE                                    \
+        --exclude '*/lost+found'
+fi
