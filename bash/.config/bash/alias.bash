@@ -46,7 +46,8 @@ alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but bette
 alias google="firefox -P Browsing http://www.google.com"
 alias wiki="firefox -P Browsing http://en.wikipedia.org/wiki/Main_Page"
 
-
+# Security
+alias firefox="firejail --whitelist=~/projects/startpage firefox"
 
 
 
