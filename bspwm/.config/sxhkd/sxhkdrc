@@ -14,10 +14,17 @@ super + d
 #    dmenu_run
     j4-dmenu-desktop
 
+# Firefox
+super + f
+    firefox
+
+# Geany
+super + g
+    geany
+
 # Screenshot
 Print
     scrot -bs ~/screenshot_%d%m%y_%H%M%S.png
-
 
 # lockscreen
 super + l
