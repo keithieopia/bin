@@ -1,8 +1,0 @@
-#!/bin/bash
-
-DEVICE="2" # Run 'solaar show' to print paired device numbers
-
-# Note this is very slow. it's best to cache the result
-CMD=$(solaar show $DEVICE | grep "Battery: " | awk '{print $2}')
-
-echo ${CMD::-2} # Remove the 2 trailing chars, "%,"

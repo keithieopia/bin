@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# Other Examples:
+#   GOOD - https://gist.github.com/jinyeow/dd51376dfff1b8947c2f
+#   https://github.com/muse/Captain/blob/master/captain
+#   https://gist.github.com/vixus0/4141617
+#   IDEAS - https://github.com/jaagr/polybar
+
+while getopts d option; do
+    case "$option" in
+        d) DEBUG=1 ;;
+    esac
+done
+
 # Colors
 WHITE="#FCFDFA"
 GREEN="#27AE60"
@@ -10,154 +22,354 @@ BLUE="#2A80B8"
 TEAL="#15A88B"
 PURPLE="#8E44AD"
 BLACK="#252525"
-
-BACKGROUND="$(bspc config normal_border_color)"
+BG_COLOR="$(bspc config normal_border_color)"
 
 # Dimensions
-RES_WIDTH=$(xdpyinfo | awk -F'[ x]+' '/dimensions:/{print $3}')
-RES_HEIGHT=$(xdpyinfo | awk -F'[ x]+' '/dimensions:/{print $4}')
-
 HEIGHT="40"
-WIDTH=$RES_WIDTH
+WIDTH=$(xdpyinfo | awk -F'[ x]+' '/dimensions:/{print $3}')
 
+# Fonts
 FONT="DroidSansMono:size=10"
 FONTAWESOME="FontAwesome:size=10"
 
-# Formatting Functions
-lemon () {
-    echo -n "%{B$1}"
-    echo -n " $(icon $2) "
+# Other
+NET_IFACE="wlp1s0"
+PKG_UPDATE_INTERVAL="86400"
+LOGITECH_DEV="2" # Logitech mouse device number, run 'solaar show'
 
-    # remove leading spaces and pad
-    echo -n "$3" | sed -e 's/^[[:space:]]*//' | sed -e :a -e 's/^.\{1,5\}$/& /;ta'
+##
+## Internal Vars
+##
+PROCESS_NAME=$(basename $0)
+LEMONBAR_ARGS="-g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
+PANEL_FIFO=/tmp/statusbar.fifo
+DESKTOPS=$(bspc query -T -m | jshon -e desktops -a -e name -u)
 
-    echo -n " %{B$BACKGROUND}"
+##
+## Sub-process Management
+################################################################################
+
+if [ $(pgrep -cx $PROCESS_NAME) -gt 1 ]; then
+    echo "$PROCESS_NAME already running."
+    exit 1
+fi
+
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+[ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
+mkfifo "$PANEL_FIFO"
+
+
+##
+## Helper Functions
+################################################################################
+
+human_bytes () {
+    if [[ $1 =~ ^-?[0-9]+$ ]]; then
+        bytes=$1
+        kilobytes=$((bytes >> 10))
+        megabytes=$((bytes >> 20))
+        gigabytes=$((bytes >> 30))
+
+        if [ $gigabytes -gt 1 ]; then
+            echo "$gigabytes" "GB"
+        elif [ $megabytes -gt 1 ]; then
+            echo "$megabytes" "MB"
+        elif [ $kilobytes -gt 1 ]; then
+            echo "$kilobytes" "KB"
+        else
+            echo "$bytes" "B"
+        fi
+    else
+        # not an integer, just return what was given
+        echo $1
+    fi
 }
 
 icon () {
     case $1 in
-        "clock")    echo -e -n "\uf017" ;;
-        "signal")   echo -e -n "\uf012" ;;
-        "upload")   echo -e -n "\uf093" ;;
-        "download") echo -e -n "\uf019" ;;
-        "battery")  echo -e -n "\uf1e6" ;;
-        "volume")   echo -e -n "\uf028" ;;
-        "calendar") echo -e -n "\uf073" ;;
-        "drive")    echo -e -n "\uf0a0" ;;
-        "home")     echo -e -n "\uf015" ;;
-        "cpu")      echo -e -n "\uf085" ;; 
-        "ram")      echo -e -n "\uf2db" ;; 
-        "pkgs")     echo -e -n "\uf187" ;;
+        "batt-0")   echo -ne "\uf244" ;;
+        "batt-25")  echo -ne "\uf243" ;;
+        "batt-50")  echo -ne "\uf242" ;;
+        "batt-75")  echo -ne "\uf241" ;;
+        "batt-100") echo -ne "\uf240" ;;
+        "box")      echo -ne "\uf187" ;;
+        "chip")     echo -ne "\uf2db" ;;
+        "calendar") echo -ne "\uf073" ;;
+        "clock")    echo -ne "\uf017" ;;
+        "download") echo -ne "\uf019" ;;
+        "drive")    echo -ne "\uf0a0" ;;
+        "gears")    echo -ne "\uf085" ;; 
+        "home")     echo -ne "\uf015" ;;
+        "mouse")    echo -ne "\uf245" ;;
+        "plug")     echo -ne "\uf1e6" ;;
+        "upload")   echo -ne "\uf093" ;;
+        "vol-off")  echo -ne "\uf026" ;;
+        "vol-on")   echo -ne "\uf028" ;;
+        "wifi")     echo -ne "\uf1eb" ;;
     esac
 }
 
+format () {
+    echo -n "%{B$2}"
+    echo -n " $(icon $1) "
 
+    # remove leading spaces and pad
+    echo -n "$3" | sed -e 's/^[[:space:]]*//' | sed -e :a -e 's/^.\{1,5\}$/& /;ta'
 
-##### DO NOT EDIT BELOW ########################################################
+    echo -n " %{B$BG_COLOR}"
+}
 
-if [ "$1" == "-h" ]; then
-cat <<HELP 
-Start lemonbar panel with useful system info, similar to conky
+subprocess() {
+    while true; do
+        local OUTPUT="$($1)"
+        
+        if [[ "$OUTPUT" != "$LAST_OUTPUT" ]]; then
+            local LAST_OUTPUT="$OUTPUT"
+            echo "$OUTPUT"
+        fi
+        
+        sleep $2
+    done > "$PANEL_FIFO" &
+} 
 
-Note:
-   Edit the variables at the top of $(basename "$0") to customize
+##
+## Data Collection
+################################################################################
 
+cpu() {
+    echo "CPU $(ps -A -o pcpu | tail -n+2 | paste -sd+ | bc)"
+}
 
-https://github.com/keithieopia/bin/
+drives() {
+    echo "ROOT $(/bin/df | grep 'storage-root' | head -1 | awk '{print $5}' | tr -d %)"
+    echo "HOME $(/bin/df | grep 'storage-home' | head -1 | awk '{print $5}' | tr -d %)"
+}
 
-Copyright (c) 2016 Timothy Keith
-Licensed under the MIT license.
-HELP
-exit
-fi
+ram() {
+    local FREE=$(free -m | sed -n '2p' | awk '{print $7}')
+    local TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
+    local USED=$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)
+    
+    echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED")"
+}
 
-have() { type "$1" &> /dev/null; }
-if ! have lemonbar; then
-    echo "$0 requires 'lemonbar' to be installed!"
-    exit 1
-fi
-if ! have xdotool; then
-    echo "$0 requires 'xdotool' to be installed!"
-    exit 1
-fi
-if ! have amixer; then
-    echo "$0 requires 'alsa-utils' to be installed!"
-    exit 1
-fi
-if ! have xprop; then
-    echo "$0 requires 'xorg-xprop' to be installed!"
-    exit 1
-fi
+desktop() {
+    echo "DESKTOP $(bspc query -T -d | jshon -e name -u)"
+}
 
+net() {
+    local CACHE_FILE="/tmp/net_$NET_IFACE"
 
-LEMONBAR_ARGS="-g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
+    if [[ $(< /sys/class/net/$NET_IFACE/operstate) == "up" ]]; then
+        echo "NET_CONNECTED 1"
 
+        local TIME=$(date +%s)
+        local TX_TOTAL=$(< /sys/class/net/$NET_IFACE/statistics/tx_bytes)
+        local RX_TOTAL=$(< /sys/class/net/$NET_IFACE/statistics/rx_bytes)
 
-# Make sure there's only run instance running
-PID_FILE="/var/run/user/$UID/lemonade.pid"
+        if [ -f "$CACHE_FILE" ]; then
+            local TIME_CACHE=$(stat -c %Y $CACHE_FILE)
+            local ELAPSED_TIME=$(bc <<< "$TIME - $TIME_CACHE")
+            
+            local TX_TOTAL_CACHE=$(awk '{print $1}' < "$CACHE_FILE")
+            local RX_TOTAL_CACHE=$(awk '{print $2}' < "$CACHE_FILE")
 
-if [ -e $PID_FILE ]; then
-    if kill -0 $(<$PID_FILE) &>1 > /dev/null; then
-        echo "$(basename $0) already running!"
-        exit 1
+            if [[ "$ELAPSED_TIME" != 0 ]]; then
+                local TX=$(bc <<< "($TX_TOTAL - $TX_TOTAL_CACHE) / $ELAPSED_TIME")
+                local RX=$(bc <<< "($RX_TOTAL - $RX_TOTAL_CACHE) / $ELAPSED_TIME")
+                
+                echo "NET_UP $(human_bytes $TX)"
+                echo "NET_DOWN $(human_bytes $RX)"
+            else
+                echo "NET_UP 0"
+                echo "NET_DOWN 0"
+            fi
+        else
+            echo "NET_UP ???"
+            echo "NET_DOWN ???"
+        fi
+
+        # Write the cache file
+        echo "$TX_TOTAL $RX_TOTAL" > "$CACHE_FILE"
     else
-        rm $PID_FILE
+        echo "NET_CONNECTED 0"
+        echo "NET_UP ---"
+        echo "NET_DOWN ---"
     fi
-fi
+}
 
-echo $$ > $PID_FILE
+updates() {
+    # update the pacman db if it's older than $UPDATE_AFTER seconds
+    local LAST_UPDATE=$(grep 'synchronizing package lists' /var/log/pacman.log | \
+                        tail -1 | awk '{print $1" "$2}' | tr -d \[\])
+    local LAST_TIME=$(date -d "$LAST_UPDATE" +%s)
+    local TIME=$(date +%s)
 
-# Used to monitor file changes and reload, similar to how conky works
-MTIME=$(stat -c %Y "$0")
+    if ((TIME-LAST_TIME > PKG_UPDATE_INTERVAL)); then
+        # update the db or die if it fails
+        # you'll want to setup a NOPASSWD sudo entry
+        if ! sudo pacman -Sy &> /dev/null; then
+            local FAILED=1
+        else
+            local FAILED=0
+        fi
+    fi
+
+    if [ "$FAILED" != "1" ]; then
+        # list the number of updates available
+        local NUM_UPDATES=$(pacman -Qu | wc -l)
+
+        if ((NUM_UPDATES > 0)); then
+            echo "UPDATES $NUM_UPDATES pkgs"
+        else
+            echo "UPDATES up-to-date"
+        fi
+    else
+        echo "UPDATES db outdated!"
+    fi
+}
+
+battery () {
+    echo "BATTERY $(< /sys/class/power_supply/BAT1/capacity)"
+
+    if [ "$(< /sys/class/power_supply/BAT1/status)" == "Discharging" ]; then
+        echo "AC 0"
+    else
+        echo "AC 1"
+    fi
+}
+
+mouse () {
+    echo "MOUSE $(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)"
+}
+
+volume () {
+    local VOLUME="$(amixer -D pulse get Master | tail -1)"
+
+    if grep -q 'off' <<< "$VOLUME"; then
+        echo "MUTED 1"
+    else
+        echo "MUTED 0"
+    fi
+    
+    echo "VOLUME $(awk '{print $5}' <<< $VOLUME | tr -d \[\]%)"
+}
+
+datetime () {
+    echo "DATE $(date +"%a, %b") $(date +"%e" | tr -d ' ')"
+    echo "TIME $(date +"%l:%M %P")"
+}
 
 
-#
-# Main Script Loop
-# 
-while true; do
+##
+## Timers
+################################################################################
 
-    echo -n "%{l}"
-    lemon $BACKGROUND "" "$(~/bin/wm/lemons/desktops)"
+subprocess cpu 2
+subprocess ram 2
+subprocess desktop 2
+subprocess net 5
+subprocess volume 5
+subprocess datetime 5
+subprocess battery 10
+subprocess drives 300
+subprocess updates 21600
+subprocess mouse 21600
 
+
+##
+## Main lemonbar loop
+################################################################################
+
+while read -r line; do
+    if [[ "$DEBUG" == "1" ]]; then
+        (>&2 echo "$line")
+    fi
+    
+    SECTION=$(cut -d' ' -f1 <<< "$line")
+    OUTPUT=$(cut -d' ' -f2- <<< "$line")
+
+    case $SECTION in
+        AC)             AC="$OUTPUT"                                       ;;
+        BATTERY)        BATTERY="$OUTPUT"                                  ;;
+        CPU)            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")         ;;
+        DATE)           DATE=$(format "calendar" "$GREEN" "$OUTPUT")       ;;
+        DESKTOP)        DESKTOP="$OUTPUT"                                  ;;
+        HOME)           HOME=$(format "home" "$TEAL" "$OUTPUT%")           ;;
+        MOUSE)          MOUSE=$(format "mouse" "$RED" "$OUTPUT%")          ;;
+        MUTED)          MUTED="$OUTPUT"                                    ;;
+        NET_CONNECTED)  NET_CONNECTED="$OUTPUT"                            ;;
+        NET_DOWN)       NET_DOWN=$(format "download" "$PURPLE" "$OUTPUT")  ;;
+        NET_UP)         NET_UP=$(format "upload" "$PURPLE" "$OUTPUT")      ;;
+        RAM)            RAM=$(format "chip" "$ORANGE" "$OUTPUT%")          ;;
+        ROOT)           ROOT=$(format "drive" "$TEAL" "$OUTPUT%")          ;;
+        TIME)           TIME=$(format "clock" "$GREEN" "$OUTPUT")          ;;
+        UPDATES)        UPDATES=$(format "box" "$YELLOW" "$OUTPUT")        ;;
+        VOLUME)         VOLUME="$OUTPUT"                                   ;;
+    esac
+    
+    # Battery / AC
+    if [[ "$AC" == 1 ]]; then
+        BATT_ICON="plug"
+    else
+        if [[ "$BATTERY" > 80 ]]; then
+            BATT_ICON="batt-100"
+        elif [[ "$BATTERY" > 60 ]]; then
+            BATT_ICON="batt-75"
+        elif [[ "$BATTERY" > 40 ]]; then
+            BATT_ICON="batt-50"
+        elif [[ "$BATTERY" > 20 ]]; then
+            BATT_ICON="batt-25"
+        else
+            BATT_ICON="batt-0"
+        fi
+    fi
+    BATT=$(format "$BATT_ICON" "$RED" "$BATTERY%")
+    
+    # Network
+    if [[ "$NET_CONNECTED" == 0 ]]; then
+        NET=$(format "wifi" "$PURPLE" "disconnected")
+    else
+        NET="$NET_UP$NET_DOWN"
+    fi
+    
+    # Volume
+    if [[ "$MUTED" == 1 ]]; then
+        VOL_ICON="vol-off"
+    else
+        VOL_ICON="vol-on"
+    fi
+    VOL=$(format "$VOL_ICON" "$BLUE" "$VOLUME%")
+    
+    #
+    # Output to lemonbar
+    #
+    
+    echo -n " " # spacing
+    
+    # Left Side: Desktops
+    while read -r desk; do
+        if [[ "$desk" == "$DESKTOP" ]]; then
+            echo -n "%{F$TEAL}$desk%{F-} "
+        else
+            echo -n "%{A:bspc desktop -f $desk:}"
+            echo -n "%{F$BLACK}$desk%{F-}"
+            echo -n "%{A} "
+        fi
+    done <<< "$DESKTOPS"
+    
+    # Right Side: Status
     echo -n "%{r}"
- 
-    lemon $ORANGE "cpu" "$(~/bin/wm/lemons/cpu)"
-    lemon $ORANGE "ram" "$(~/bin/wm/lemons/ram)"
-
-    lemon $TEAL "drive" "$(~/bin/wm/lemons/disk-root)"
-    lemon $TEAL "home" "$(~/bin/wm/lemons/disk-home)"
-
-    SPEED=$(~/bin/wm/lemons/net-speed) 
-    lemon $PURPLE "download" "$(echo $SPEED | awk '{print $1$2}')"
-    lemon $PURPLE "upload" "$(echo $SPEED | awk '{print $4$5}')"
-    lemon $PURPLE "signal" "$(~/bin/wm/lemons/net-signal)"
-
-    lemon $YELLOW "pkgs" "$(~/bin/wm/lemons/arch-updates)"
-
-    lemon $BLUE "volume" "$(~/bin/wm/lemons/volume)"
-
-    lemon $RED "battery" "$(~/bin/wm/lemons/batt)"
-
-    # Use 'tr' to remove the day's space padding 
-    lemon $GREEN "calendar" "$(date +"%a, %b") $(date +"%e" | tr -d ' ')"
-    lemon $GREEN "clock" "$(date +"%l:%M %P")"
+    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET}${UPDATES}${VOL}${MOUSE}${BATT}${DATE}${TIME}"
+    echo "" # newline
+    
+done < "$PANEL_FIFO" | lemonbar $LEMONBAR_ARGS | bash
 
 
-    # Reload self on change
-    if [[ $(stat -c %Y "$0") == "$MTIME" ]]; then
-        echo # Send newline
-        sleep 1
-    else
-        # run a new instance with new process group (not a child process)
-        setsid $0 & 
-        
-        # kill this process and all child processes (like lemonbar & sh)
-        pkill -P $$ 
-        
-        # just in case...
-        exit
-    fi
 
-done | lemonbar $LEMONBAR_ARGS | sh
 
-exit 0
+
+
+
+

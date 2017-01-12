@@ -1,9 +1,0 @@
-#!/bin/bash
-
-VOLUME="$(amixer -D pulse get Master | tail -1)"
-
-if $(grep -q "off" <<<$VOLUME); then
-    echo -n "mute"
-else
-    echo -n "$(awk '{print $5}' <<<$VOLUME | tr -d \[\])"
-fi
