@@ -52,18 +52,6 @@ them useful
     * `floating-desktop` - Make all the windows on desktop 5 floating 
     * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel 
       with useful system info, similar to conky
-    * lemons/
-        * `arch-updates` - Syncs pacman's database after a set period of time 
-          and displays the number of updates available
-        * `batt` - Shows the remaining battery percentage and if it's charging
-        * `cpu` - Shows the live processor load, considering extra cores and 
-          threads without extra dependencies
-        * `desktops` - List all the desktops and color the current one
-        * `disk-{home,root}` - Show the file system usage for /home and /
-        * `net-{signal,speed}` - Show the wifi strength and current transfer 
-          rates
-        * `ram` - Show the percent of RAM used
-        * `volume` - Show the speaker volume
     * `screenlock` - Blurs and locks the screen with *Barney Fife 
       Protection&trade;* 
       that will make evildoers think twice!
