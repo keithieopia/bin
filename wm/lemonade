@@ -106,7 +106,6 @@ icon () {
         "upload")   echo -ne "\uf093" ;;
         "vol-off")  echo -ne "\uf026" ;;
         "vol-on")   echo -ne "\uf028" ;;
-        "wifi")     echo -ne "\uf1eb" ;;
     esac
 }
 
@@ -162,8 +161,6 @@ net() {
     local CACHE_FILE="/tmp/net_$NET_IFACE"
 
     if [[ $(< /sys/class/net/$NET_IFACE/operstate) == "up" ]]; then
-        echo "NET_CONNECTED 1"
-
         local TIME=$(date +%s)
         local TX_TOTAL=$(< /sys/class/net/$NET_IFACE/statistics/tx_bytes)
         local RX_TOTAL=$(< /sys/class/net/$NET_IFACE/statistics/rx_bytes)
@@ -193,7 +190,6 @@ net() {
         # Write the cache file
         echo "$TX_TOTAL $RX_TOTAL" > "$CACHE_FILE"
     else
-        echo "NET_CONNECTED 0"
         echo "NET_UP ---"
         echo "NET_DOWN ---"
     fi
@@ -231,17 +227,26 @@ updates() {
 }
 
 battery () {
-    echo "BATTERY $(< /sys/class/power_supply/BAT1/capacity)"
-
     if [ "$(< /sys/class/power_supply/BAT1/status)" == "Discharging" ]; then
         echo "AC 0"
     else
         echo "AC 1"
     fi
+    
+    echo "BATTERY $(< /sys/class/power_supply/BAT1/capacity)"
 }
 
 mouse () {
-    echo "MOUSE $(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)"
+    # Sanity check first
+    if lsusb | grep -q 'Logitech, Inc. Unifying Receiver'; then
+        
+        # Solaar takes a while to run, so first output something so we
+        # know this widget is in fact running
+        echo "MOUSE ???"
+        echo "MOUSE $(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)"
+    else
+        echo "MOUSE ---"
+    fi
 }
 
 volume () {
@@ -286,62 +291,105 @@ while read -r line; do
     if [[ "$DEBUG" == "1" ]]; then
         (>&2 echo "$line")
     fi
-    
+
+
+    #
+    # Formatting
+    #
     SECTION=$(cut -d' ' -f1 <<< "$line")
     OUTPUT=$(cut -d' ' -f2- <<< "$line")
 
     case $SECTION in
-        AC)             AC="$OUTPUT"                                       ;;
-        BATTERY)        BATTERY="$OUTPUT"                                  ;;
-        CPU)            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")         ;;
-        DATE)           DATE=$(format "calendar" "$GREEN" "$OUTPUT")       ;;
-        DESKTOP)        DESKTOP="$OUTPUT"                                  ;;
-        HOME)           HOME=$(format "home" "$TEAL" "$OUTPUT%")           ;;
-        MOUSE)          MOUSE=$(format "mouse" "$RED" "$OUTPUT%")          ;;
-        MUTED)          MUTED="$OUTPUT"                                    ;;
-        NET_CONNECTED)  NET_CONNECTED="$OUTPUT"                            ;;
-        NET_DOWN)       NET_DOWN=$(format "download" "$PURPLE" "$OUTPUT")  ;;
-        NET_UP)         NET_UP=$(format "upload" "$PURPLE" "$OUTPUT")      ;;
-        RAM)            RAM=$(format "chip" "$ORANGE" "$OUTPUT%")          ;;
-        ROOT)           ROOT=$(format "drive" "$TEAL" "$OUTPUT%")          ;;
-        TIME)           TIME=$(format "clock" "$GREEN" "$OUTPUT")          ;;
-        UPDATES)        UPDATES=$(format "box" "$YELLOW" "$OUTPUT")        ;;
-        VOLUME)         VOLUME="$OUTPUT"                                   ;;
+        AC)
+            # Used in BATTERY case
+            AC="$OUTPUT"
+            ;;
+            
+        CPU)
+            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")
+            ;;
+        
+        BATTERY)
+            if [[ "$AC" == 1 ]]; then
+                BATT_ICON="plug"
+            else
+                if [[ "$OUTPUT" > 80 ]]; then
+                    BATT_ICON="batt-100"
+                elif [[ "$OUTPUT" > 60 ]]; then
+                    BATT_ICON="batt-75"
+                elif [[ "$OUTPUT" > 40 ]]; then
+                    BATT_ICON="batt-50"
+                elif [[ "$OUTPUT" > 20 ]]; then
+                    BATT_ICON="batt-25"
+                else
+                    BATT_ICON="batt-0"
+                fi
+            fi
+            BATTERY=$(format "$BATT_ICON" "$RED" "$OUTPUT%")
+            ;;
+
+        DATE)
+            DATE=$(format "calendar" "$GREEN" "$OUTPUT")
+            ;;
+            
+        DESKTOP)
+            # Handled below...
+            DESKTOP="$OUTPUT"
+            ;;
+            
+        HOME)
+            HOME=$(format "home" "$TEAL" "$OUTPUT%")
+            ;;
+            
+        MOUSE)
+            if [[ "$OUTPUT" == "---" ]] || [[ "$OUTPUT" == "???" ]]; then
+                MOUSE=$(format "mouse" "$RED" "$OUTPUT")
+            else
+                MOUSE=$(format "mouse" "$RED" "$OUTPUT%")
+            fi
+            ;;
+            
+        MUTED)
+            # Handled in VOLUME case
+            MUTED="$OUTPUT"
+            ;;
+
+        NET_DOWN)
+            NET_DOWN=$(format "download" "$PURPLE" "$OUTPUT")
+            ;;
+        
+        NET_UP)
+            NET_UP=$(format "upload" "$PURPLE" "$OUTPUT")
+            ;;
+        
+        RAM)
+            RAM=$(format "chip" "$ORANGE" "$OUTPUT%")
+            ;;
+        
+        ROOT)
+            ROOT=$(format "drive" "$TEAL" "$OUTPUT%")
+            ;;
+        
+        TIME)
+            TIME=$(format "clock" "$GREEN" "$OUTPUT")
+            ;;
+
+        UPDATES)
+            UPDATES=$(format "box" "$YELLOW" "$OUTPUT")        
+            ;;
+            
+        VOLUME)
+            # Volume
+            if [[ "$MUTED" == 1 ]]; then
+                VOL_ICON="vol-off"
+            else
+                VOL_ICON="vol-on"
+            fi
+            VOLUME=$(format "$VOL_ICON" "$BLUE" "$OUTPUT%")
+            ;;
     esac
-    
-    # Battery / AC
-    if [[ "$AC" == 1 ]]; then
-        BATT_ICON="plug"
-    else
-        if [[ "$BATTERY" > 80 ]]; then
-            BATT_ICON="batt-100"
-        elif [[ "$BATTERY" > 60 ]]; then
-            BATT_ICON="batt-75"
-        elif [[ "$BATTERY" > 40 ]]; then
-            BATT_ICON="batt-50"
-        elif [[ "$BATTERY" > 20 ]]; then
-            BATT_ICON="batt-25"
-        else
-            BATT_ICON="batt-0"
-        fi
-    fi
-    BATT=$(format "$BATT_ICON" "$RED" "$BATTERY%")
-    
-    # Network
-    if [[ "$NET_CONNECTED" == 0 ]]; then
-        NET=$(format "wifi" "$PURPLE" "disconnected")
-    else
-        NET="$NET_UP$NET_DOWN"
-    fi
-    
-    # Volume
-    if [[ "$MUTED" == 1 ]]; then
-        VOL_ICON="vol-off"
-    else
-        VOL_ICON="vol-on"
-    fi
-    VOL=$(format "$VOL_ICON" "$BLUE" "$VOLUME%")
-    
+        
+
     #
     # Output to lemonbar
     #
@@ -361,9 +409,9 @@ while read -r line; do
     
     # Right Side: Status
     echo -n "%{r}"
-    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET}${UPDATES}${VOL}${MOUSE}${BATT}${DATE}${TIME}"
+    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET_DOWN}${NET_UP}${UPDATES}${VOL}${MOUSE}${BATTERY}${DATE}${TIME}"
     echo "" # newline
-    
+
 done < "$PANEL_FIFO" | lemonbar $LEMONBAR_ARGS | bash
 
 
