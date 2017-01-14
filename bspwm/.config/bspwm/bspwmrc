@@ -13,8 +13,6 @@ bspc monitor -d term web code media float
 
 # Open apps on a certain desktop
 bspc rule -a Gimp desktop=^4 state=floating follow=on
-bspc rule -a VLC desktop=^4 state=floating
-
 
 # colors
 bspc config normal_border_color  "#111111" # Black
@@ -34,7 +32,7 @@ sxhkd &
 # general apps to auto start:
 ~/bin/wm/startup-volume &
 ~/bin/mount-cache &
-compton &
+compton -d &
 ~/.fehbg &
 unclutter &
 urxvtd -q -f -o &
@@ -43,10 +41,8 @@ pcmanfm -d &
 ~/bin/wm/battmon &
 zim --plugin trayicon &
 autocutsel -fork &
-autocutsel -selection PRIMARY -fork &
+#autocutsel -selection PRIMARY -fork &
 
 # Autostart network specific apps:
 ~/bin/wm/autostart-net &
 #sudo ~/bin/wm/autostart-net-trusted &
-
-
