@@ -32,7 +32,7 @@ alias ..="cd .."
 alias ~='cd ~ && clear'
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias reload='source ~/.bashrc'
-alias snano='sudo nano'
+
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)' # some people are nice and instead call this "please"
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
@@ -49,8 +49,6 @@ alias wiki="firefox -P Browsing http://en.wikipedia.org/wiki/Main_Page"
 # Security
 alias firefox="firejail --whitelist=~/projects/startpage firefox"
 
-
-
-
-
-
+# sudo
+alias snano='sudo nano'
+alias ufw='sudo ufw'
