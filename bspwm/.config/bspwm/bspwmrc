@@ -32,7 +32,7 @@ sxhkd &
 # general apps to auto start:
 ~/bin/wm/startup-volume &
 ~/bin/mount-cache &
-compton -d &
+compton &
 ~/.fehbg &
 unclutter &
 urxvtd -q -f -o &
