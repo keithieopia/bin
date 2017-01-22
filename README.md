@@ -53,7 +53,6 @@ them useful
       gateways (based on their MAC Address)
     * `battmon` - Will warn about battery levels with increasing severity and
       then safely shut the system down if the battery gets too low.
-    * `floating-desktop` - Make all the windows on desktop 5 floating
     * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
       with useful system info, similar to conky
     * `lockscreen` - Blurs and locks the screen with *Barney Fife
@@ -89,9 +88,9 @@ License: [MIT](https://opensource.org/licenses/MIT)
 
 
 ## Feedback
-I would love your feedback! If you found any of these config files useful,
-please drop me [an email](mailto:timothykeith@gmail.com). For the privacy
-conscious, feel free to encrypt any messages using my [PGP key](http://pgp.mit.edu/pks/lookup?op=vindex&fingerprint=on&search=0xF4F4A135C022EE12):
+I would love your feedback! If you found any of these scripts useful, please
+drop me [an email](mailto:timothykeith@gmail.com). For the privacy conscious,
+feel free to encrypt any messages using my [PGP key](http://pgp.mit.edu/pks/lookup?op=vindex&fingerprint=on&search=0xF4F4A135C022EE12):
 
 > 4135 C593 1D89 368E 7F32 C8ED F4F4 A135 C022 EE12
 
