@@ -1,80 +1,91 @@
 #!/bin/bash
 
 usage () {
-cat <<HELP 
+cat <<HELP
 Send OSD notifications on low battery levels
 
-usage: $(basename "$0") [-i num] [-w num] [-c num] [-k num]
-   -i : refresh interval in seconds (Default: 300)
-   -w : warn percent (Default: 20)
-   -c : critical percent (Default: 10)
-   -s : shutdown percent (Default: 5)
-
+usage: $(basename "$0") [-w num] [-c num]
+   -w : warn percent (Default: 25)
+   -c : critical percent (Default: 5)
 
 https://github.com/keithieopia/bin/
-    
-Copyright (c) 2016 Timothy Keith
+
+Copyright (c) 2016 - 2017 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
 
-have() { type "$1" &> /dev/null; }
-if have notify-send; then 
-    NOTIFY="notify-send -a battery"
-else
-    echo "$0 requires 'libnotify' to be installed!"
-    exit 1
-fi
-
-interval=300
-warn_level=20
-critical_level=10
-shutdown_level=5
+WARN=25
+CRITICAL=5
 
 while [ "$1" != "" ]; do
 case $1 in
-    -i )    shift
-            interval=$1
-            ;;
-    -w )    shift
-            warn_level=$1
-            ;;
-    -c )    shift
-            critical_level=$1
-            ;;
-    -s )    shift
-            shutdown_level=$1
-            ;;
-    -h )    usage
-            exit
-            ;;
-    * )     usage
-            exit 1
-            ;;
+    -w) shift
+        WARN=$1
+        ;;
+    -c) shift
+        CRITICAL=$1
+        ;;
+    -h) usage
+        exit
+        ;;
+    *)  usage
+        exit 1
+        ;;
     esac
     shift
 done
 
+time_left() {
+    ACPI=$(acpi -b | awk '{print $5}' | tr ':' ' ')
+    H=$(awk '{print $1}' <<< "$ACPI" | sed 's/^0*//')
+    M=$(awk '{print $2}' <<< "$ACPI" | sed 's/^0*//')
 
-while true
-do
-    status="$(cat /sys/class/power_supply/BAT1/status)"
- 
-    if [ "$status" == "Discharging" ]; then
-        battery_level="$(cat /sys/class/power_supply/BAT1/capacity)"
-
-        if [ $battery_level -le $shutdown_level ]; then
-            $NOTIFY -u critical "Battery Dead!" \
-            "System will use remaining power to shutdown safely"
-            sleep 10
-            systemctl poweroff
-        elif [ $battery_level -le $critical_level ]; then
-            $NOTIFY -u normal "Battery level is very low!" \
-            "Please plug into AC adapter. Only $battery_level% remains"
-        elif [ $battery_level -le $warn_level ]; then
-            $NOTIFY -u normal -a "Battery level is low!" \
-            "Only $battery_level% remains"
+    if [ -z "$H" ]; then
+        H=0
+    else
+        if [ "$H" -gt "1" ]; then
+            HOURS="$H hours"
+        else
+            HOURS="1 hour"
         fi
     fi
-    sleep $interval
+
+    if [ -z "$M" ]; then
+        M=0
+    else
+        if [ "$M" -gt "1" ]; then
+            MINUTES="$M minutes"
+        else
+            MINUTES="1 minute"
+        fi
+    fi
+
+    # output
+    if [ "$H" -gt "0" ]; then
+        if [ "$M" -gt "0" ]; then
+            echo "$HOURS and $MINUTES"
+        else
+            echo "$HOURS"
+        fi
+    else
+        echo "$MINUTES"
+    fi
+}
+
+while true; do
+    source /sys/class/power_supply/BAT1/uevent
+
+    if [ "$POWER_SUPPLY_STATUS" == "Discharging" ]; then
+        if [ $POWER_SUPPLY_CAPACITY -le $CRITICAL ]; then
+            paplay "$HOME/bin/assets/sounds/warning.ogg"
+            say "The battery is critically low. Only $(time_left) remains"
+            paplay "$HOME/bin/assets/sounds/warning.ogg"
+        elif [ $POWER_SUPPLY_CAPACITY -le $WARN ]; then
+            paplay "$HOME/bin/assets/sounds/info.ogg"
+            say "The battery is low. There is enough charge to last $(time_left)"
+        fi
+    fi
+
+    sleep 300
 done
