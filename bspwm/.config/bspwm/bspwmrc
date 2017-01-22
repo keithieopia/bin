@@ -31,7 +31,6 @@ bspc config bottom_padding 20
 sxhkd &
 
 # general apps to auto start:
-~/bin/wm/startup-volume &
 ~/bin/mount-cache &
 compton &
 ~/.fehbg &
@@ -45,3 +44,5 @@ autocutsel -fork &
 
 # make dropbox play nice
 ionice -c 3 -n 7 dropbox start -i && cpulimit -b -e dropbox -l 10
+
+~/bin/wm/greeting &
