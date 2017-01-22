@@ -29,7 +29,6 @@ bspc config bottom_padding 20
 
 # bspwm specific apps to auto start:
 sxhkd &
-~/bin/wm/floating-desktop &
 
 # general apps to auto start:
 ~/bin/wm/startup-volume &
@@ -43,8 +42,6 @@ pcmanfm -d &
 ~/bin/wm/battmon &
 zim --plugin trayicon &
 autocutsel -fork &
-#autocutsel -selection PRIMARY -fork &
 
-# Autostart network specific apps:
-~/bin/wm/autostart-net &
-#sudo ~/bin/wm/autostart-net-trusted &
+# make dropbox play nice
+ionice -c 3 -n 7 dropbox start -i && cpulimit -b -e dropbox -l 10
