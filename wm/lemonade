@@ -41,7 +41,7 @@ LOGITECH_DEV="2" # Logitech mouse device number, run 'solaar show'
 ## Internal Vars
 ##
 PROCESS_NAME=$(basename $0)
-LEMONBAR_ARGS="-g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
+LEMONBAR_ARGS="-n 'lemonpanel' -g $HEIGHTx$WIDTH+0+0 -b -d -f $FONT -f $FONTAWESOME -F $WHITE -B $BLACK -p"
 PANEL_FIFO=/tmp/statusbar.fifo
 DESKTOPS=$(bspc query -T -m | jshon -e desktops -a -e name -u)
 
@@ -99,7 +99,7 @@ icon () {
         "clock")    echo -ne "\uf017" ;;
         "download") echo -ne "\uf019" ;;
         "drive")    echo -ne "\uf0a0" ;;
-        "gears")    echo -ne "\uf085" ;; 
+        "gears")    echo -ne "\uf085" ;;
         "home")     echo -ne "\uf015" ;;
         "mouse")    echo -ne "\uf245" ;;
         "plug")     echo -ne "\uf1e6" ;;
@@ -122,22 +122,24 @@ format () {
 subprocess() {
     while true; do
         local OUTPUT="$($1)"
-        
+
         if [[ "$OUTPUT" != "$LAST_OUTPUT" ]]; then
             local LAST_OUTPUT="$OUTPUT"
             echo "$OUTPUT"
         fi
-        
+
         sleep $2
     done > "$PANEL_FIFO" &
-} 
+}
 
 ##
 ## Data Collection
 ################################################################################
 
 cpu() {
-    echo "CPU $(ps -A -o pcpu | tail -n+2 | paste -sd+ | bc)"
+    local IDLE=$(mpstat | tail -1 | awk '{print $13}')
+    local CPU=$(echo "100 - $IDLE" | bc -l)
+    echo "CPU $CPU"
 }
 
 drives() {
@@ -149,7 +151,7 @@ ram() {
     local FREE=$(free -m | sed -n '2p' | awk '{print $7}')
     local TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
     local USED=$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)
-    
+
     echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED")"
 }
 
@@ -168,14 +170,14 @@ net() {
         if [ -f "$CACHE_FILE" ]; then
             local TIME_CACHE=$(stat -c %Y $CACHE_FILE)
             local ELAPSED_TIME=$(bc <<< "$TIME - $TIME_CACHE")
-            
+
             local TX_TOTAL_CACHE=$(awk '{print $1}' < "$CACHE_FILE")
             local RX_TOTAL_CACHE=$(awk '{print $2}' < "$CACHE_FILE")
 
             if [[ "$ELAPSED_TIME" != 0 ]]; then
                 local TX=$(bc <<< "($TX_TOTAL - $TX_TOTAL_CACHE) / $ELAPSED_TIME")
                 local RX=$(bc <<< "($RX_TOTAL - $RX_TOTAL_CACHE) / $ELAPSED_TIME")
-                
+
                 echo "NET_UP $(human_bytes $TX)"
                 echo "NET_DOWN $(human_bytes $RX)"
             else
@@ -232,14 +234,14 @@ battery () {
     else
         echo "AC 1"
     fi
-    
+
     echo "BATTERY $(< /sys/class/power_supply/BAT1/capacity)"
 }
 
 mouse () {
     # Sanity check first
     if lsusb | grep -q 'Logitech, Inc. Unifying Receiver'; then
-        
+
         # Solaar takes a while to run, so first output something so we
         # know this widget is in fact running
         echo "MOUSE ???"
@@ -257,7 +259,7 @@ volume () {
     else
         echo "MUTED 0"
     fi
-    
+
     echo "VOLUME $(awk '{print $5}' <<< $VOLUME | tr -d \[\]%)"
 }
 
@@ -304,11 +306,11 @@ while read -r line; do
             # Used in BATTERY case
             AC="$OUTPUT"
             ;;
-            
+
         CPU)
             CPU=$(format "gears" "$ORANGE" "$OUTPUT%")
             ;;
-        
+
         BATTERY)
             if [[ "$AC" == 1 ]]; then
                 BATT_ICON="plug"
@@ -331,16 +333,16 @@ while read -r line; do
         DATE)
             DATE=$(format "calendar" "$GREEN" "$OUTPUT")
             ;;
-            
+
         DESKTOP)
             # Handled below...
             DESKTOP="$OUTPUT"
             ;;
-            
+
         HOME)
             HOME=$(format "home" "$TEAL" "$OUTPUT%")
             ;;
-            
+
         MOUSE)
             if [[ "$OUTPUT" == "---" ]] || [[ "$OUTPUT" == "???" ]]; then
                 MOUSE=$(format "mouse" "$RED" "$OUTPUT")
@@ -348,7 +350,7 @@ while read -r line; do
                 MOUSE=$(format "mouse" "$RED" "$OUTPUT%")
             fi
             ;;
-            
+
         MUTED)
             # Handled in VOLUME case
             MUTED="$OUTPUT"
@@ -357,27 +359,27 @@ while read -r line; do
         NET_DOWN)
             NET_DOWN=$(format "download" "$PURPLE" "$OUTPUT")
             ;;
-        
+
         NET_UP)
             NET_UP=$(format "upload" "$PURPLE" "$OUTPUT")
             ;;
-        
+
         RAM)
             RAM=$(format "chip" "$ORANGE" "$OUTPUT%")
             ;;
-        
+
         ROOT)
             ROOT=$(format "drive" "$TEAL" "$OUTPUT%")
             ;;
-        
+
         TIME)
             TIME=$(format "clock" "$GREEN" "$OUTPUT")
             ;;
 
         UPDATES)
-            UPDATES=$(format "box" "$YELLOW" "$OUTPUT")        
+            UPDATES=$(format "box" "$YELLOW" "$OUTPUT")
             ;;
-            
+
         VOLUME)
             # Volume
             if [[ "$MUTED" == 1 ]]; then
@@ -388,14 +390,13 @@ while read -r line; do
             VOLUME=$(format "$VOL_ICON" "$BLUE" "$OUTPUT%")
             ;;
     esac
-        
 
     #
     # Output to lemonbar
     #
-    
+
     echo -n " " # spacing
-    
+
     # Left Side: Desktops
     while read -r desk; do
         if [[ "$desk" == "$DESKTOP" ]]; then
@@ -406,18 +407,10 @@ while read -r line; do
             echo -n "%{A} "
         fi
     done <<< "$DESKTOPS"
-    
+
     # Right Side: Status
     echo -n "%{r}"
-    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET_DOWN}${NET_UP}${UPDATES}${VOL}${MOUSE}${BATTERY}${DATE}${TIME}"
+    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET_DOWN}${NET_UP}${UPDATES}${VOLUME}${MOUSE}${BATTERY}${DATE}${TIME}"
     echo "" # newline
 
 done < "$PANEL_FIFO" | lemonbar $LEMONBAR_ARGS | bash
-
-
-
-
-
-
-
-
