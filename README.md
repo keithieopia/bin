@@ -42,6 +42,7 @@ them useful
 * `rangen` - Create random passwords, MAC addresses, letters, or numbers using
   /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
+* `say` - Use Pico TTS to speak the given text
 * `steam-preload` - Quirks fixes for Steam under bspwm with an Intel graphics card
 * `test-colors` - Show the current terminal color scheme
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
