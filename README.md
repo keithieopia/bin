@@ -59,7 +59,8 @@ them useful
     * `screenlock` - Blurs and locks the screen with *Barney Fife
       Protection&trade;*
       that will make evildoers think twice!
-    * `startup-volume` -  Sets the volume to 50% and plays a startup sound or
+    * `greeting` - Sets the volume to an appropriate level given the time and
+      says a greeting
       altogether mutes it depending on if it is too late at night
 * `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
   password scheme generator. Uses the kernel's CSPRNG, unlike most
