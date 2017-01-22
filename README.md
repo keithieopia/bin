@@ -56,7 +56,7 @@ them useful
     * `floating-desktop` - Make all the windows on desktop 5 floating
     * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
       with useful system info, similar to conky
-    * `screenlock` - Blurs and locks the screen with *Barney Fife
+    * `lockscreen` - Blurs and locks the screen with *Barney Fife
       Protection&trade;*
       that will make evildoers think twice!
     * `greeting` - Sets the volume to an appropriate level given the time and
@@ -81,7 +81,9 @@ as the usage and any flags or options that can be set.
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
 * `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-* `screenlock` - Idea based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy)
+* `screenlock` - Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
+which in turn is based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy).  
+License: [MIT](https://opensource.org/licenses/MIT)
 * `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 
