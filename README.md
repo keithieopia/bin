@@ -79,9 +79,6 @@ as the usage and any flags or options that can be set.
 * `extract` - Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
-* `floating-desktop` A workaround [workaround](https://github.com/baskerville/bspwm/issues/428#issuecomment-199985423)
-  by Bastien Dejean after he removed a similar feature  
-  License: [BSD 2-clause](https://github.com/baskerville/bspwm/blob/master/LICENSE)
 * `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
 * `screenlock` - Idea based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy)
 * `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
