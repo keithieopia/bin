@@ -18,9 +18,13 @@ super + d
 super + f
     firejail --whitelist=~/projects/startpage firefox
 
-# Geany
-super + g
-    geany
+# Atom (editor)
+super + a
+    atom
+
+# PCManFM
+super + p
+    pcmanfm
 
 # Screenshot
 Print
@@ -28,7 +32,7 @@ Print
 
 # lockscreen
 super + l
-    ~/bin/wm/screenlock
+    ~/bin/wm/lockscreen
 
 # make sxhkd reload its configuration files:
 super + r
@@ -110,7 +114,7 @@ super + @button{1-3}
 
 XF86Audio{RaiseVolume,LowerVolume,Mute}
     amixer -D pulse set Master {5%+,5%-,toggle}
-    $HOME/bin/wm/volume up
+    paplay $HOME/bin/assets/sounds/volume.ogg
 
 XF86MonBrightness{Down,Up}
     xbacklight -{dec,inc} 10%
