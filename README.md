@@ -11,20 +11,45 @@ programs.
 and remove things you don’t want or need. Don't blindly use my settings unless
 you know what that entails. Here be dragons!
 
-## High Level Overview
-|                   |                                                                       |
-| ----------------- | --------------------------------------------------------------------- |
-| **shell**:        | [Bash](https://www.gnu.org/software/bash/)                            |
-| **terminal**:     | [rxvt-unicode](http://software.schmorp.de/pkg/rxvt-unicode.html)      |
-| **color scheme**: | [Base16 Darktooth](https://github.com/chriskempson/base16-xresources) |
-| **editor**:       | [nano](http://www.nano-editor.org/)                                   |
-| **font**:         | [Input Mono Compressed](http://input.fontbureau.com/)                 |
-| **wm**:           | [bspwm](https://github.com/baskerville/bspwm)                         |
-| **compositor**:   | [compton](https://github.com/chjj/compton)                            |
-| **media player**: | [mpv](https://mpv.io/)                                                |
-| **browser**:      | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                 |
+* [Overview](#overview):
+* [Descriptions](#desc)
+    * [dotfiles](#dotfiles)
+    * [System Wide Configs](#sys-configs)
+    * [Unmaintained](#unmaintained-configs)
+* [Installing](#stow): how to install these and why the directory layout is weird
+* [Feedback](#feedback)
+* [Author](#author)
 
-## Directory
+## Overview
+<a name="overview"></a>
+Here's a high level overview if you just want to see what I use:
+
+| Category          | Program                                                               |
+| ----------------- | --------------------------------------------------------------------- |
+| **Shell**:        | [Bash](https://www.gnu.org/software/bash/)                            |
+| **Terminal**:     | [rxvt-unicode](http://software.schmorp.de/pkg/rxvt-unicode.html)      |
+| **Color scheme**: | [Base16 Darktooth](https://github.com/chriskempson/base16-xresources) |
+| **Editor**:       | [nano](http://www.nano-editor.org/)                                   |
+| **Font**:         | [Input Mono Compressed](http://input.fontbureau.com/)                 |
+| **WM**:           | [bspwm](https://github.com/baskerville/bspwm)                         |
+| **Compositor**:   | [compton](https://github.com/chjj/compton)                            |
+| **Media player**: | [mpv](https://mpv.io/)                                                |
+| **Browser**:      | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                 |
+
+
+## Descriptions
+<a name="desc"></a>
+This gives a brief description of what exactly is configured in each
+[stow package](#stow) in this repo. Clicking the package name will links directly
+to the main config file or folder of the package.
+
+* [dotfiles](#dotfiles): in my $HOME
+* [System Wide Configs](#sys-configs): in root, such as /etc and /usr
+* [Unmaintained](#unmaintained-configs): old stuff
+
+### Dotfiles
+<a name="dotfiles"></a>
+These are per-user configs, found in my $HOME. Most people know these as dotfiles.
 
 * [bash](https://github.com/keithieopia/dotfiles/tree/master/bash):
   .bashrc, aliases, functions, and .bash_profile to start Xorg without a login
@@ -67,7 +92,11 @@ you know what that entails. Here be dragons!
 * [youtube-dl](https://github.com/keithieopia/dotfiles/tree/master/youtube-dl/.config/youtube-dl/config):
   disable IPv6 and anything greater than 720p, because my connection is bad.
 
-### System configs:
+### System Wide Configs:
+<a name="sys-configs"></a>
+Global configuration, typically found in */etc* and */usr* on Linux systems.
+You'll obviously need root permissions to use these.
+
 Located in the `sys/` folder:
 
 * [bluetooth-headset](https://github.com/keithieopia/dotfiles/tree/master/sys/bluetooth-headset/):
@@ -120,7 +149,11 @@ Located in the `sys/` folder:
   a DNS server for each domain. Also implement low level ad blocking.
 
 
-### Unmaintained configs
+### Unmaintained
+<a name="unmaintained-configs"></a>
+These are old, slightly worn and dusty configs. They may not work anymore, so
+use caution.
+
 Located in the `unmaintained` folder:
 
 * [dunst](http://knopwob.org/dunst/):
@@ -133,6 +166,7 @@ Located in the `unmaintained` folder:
 
 
 ## Installation / Managing
+<a name="stow"></a>
 These dotfiles are managed with [stow](http://www.gnu.org/software/stow/),
 which allows you to group dotfiles based on the programs they configure. Thus,
 you can pick and choose which dotfiles you want to install.  
@@ -155,6 +189,7 @@ $ sudo stow -t / ssh
 ```
 
 ## Feedback
+<a name="feedback"></a>
 I would love your feedback! If you found any of these config files useful,
 please drop me [an email](mailto:timothykeith@gmail.com). For the privacy
 conscious, feel free to encrypt any messages using my [PGP key](http://pgp.mit.edu/pks/lookup?op=vindex&fingerprint=on&search=0xF4F4A135C022EE12):
@@ -170,6 +205,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/d
 
 
 ## Author
+<a name="author"></a>
 Copyright &copy; 2016 - 2017 Timothy Keith
 
 Licensed under the [MIT license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
