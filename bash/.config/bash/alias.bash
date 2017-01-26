@@ -31,7 +31,7 @@ have pydf && alias df='pydf'
 alias ..="cd .."
 alias ~='cd ~ && clear'
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
-alias reload='source ~/.bashrc'
+
 
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)' # some people are nice and instead call this "please"
@@ -52,3 +52,10 @@ alias firefox="firejail --whitelist=~/projects/startpage firefox"
 # sudo
 alias snano='sudo nano'
 alias ufw='sudo ufw'
+
+# reload
+alias reload-bash='source ~/.bashrc'
+alias reload-alias='source ~/.config/bash/alias.bash'
+alias reload-net='sudo systemctl reload netctl-auto@wlp1s0'
+alias reload-fonts='fc-cache'
+alias reload-xresources='xrdb -merge ~/.Xresources'
