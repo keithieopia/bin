@@ -21,6 +21,7 @@ you know what that entails. Here be dragons!
    transparency and shadows
  * [default-dirs](https://wiki.archlinux.org/index.php/XDG_user_directories):
    prevent annoying directories being auto created in $HOME
+ * flash: Fix for Adobe's Flash being too stupid to detect the correct sound card. 
  * [git](https://git-scm.com/docs/git-config): git VCS default settings; mostly
    sign commits with GPG and enable colors
  * [nano](http://www.nano-editor.org/): disregard Cult of vi and Church of
@@ -28,7 +29,7 @@ you know what that entails. Here be dragons!
  * [remind](https://www.roaringpenguin.com/products/remind): easy to use console
    calendar, alarm, and reminder program
  * [rxvt](http://software.schmorp.de/pkg/rxvt-unicode.html): transparency,
-   [iosevka](https://be5invis.github.io/Iosevka/) font, and
+   [input](http://input.fontbureau.com/) font, and
    [raven-dark](https://github.com/baskerville/xresources-color-schemes) color
    scheme
  * [ssh](http://www.openssh.com/): some good defaults for usability and host
