@@ -18,7 +18,6 @@ alias ssh="TERM=linux ssh" # SSH terminal fix
 # defaults to optional programs
 have shred && alias shred='shred -fuzvn 1'
 have unclutter && alias unclutter='unclutter -idle 1 -root -grab -visible'
-have youtube-dl && alias youtube-dl='youtube-dl -4' # My ISP has issues with IPv6 and YouTube
 
 # replace built-ins with better programs if we have them
 have dcfldd && alias dd='dcfldd'

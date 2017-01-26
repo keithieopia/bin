@@ -1,0 +1,9 @@
+# My ISP's IPv6 support is shoddy at best and transfers are
+# very slow (throttling maybe?). On an unrelated note, avoid
+# Comcast for reasons...
+--force-ipv4
+
+
+# When given the choice, ignore formats greater than 720p.
+# Again, my ISP sucks.
+-f bestvideo[height<=?720]+bestaudio/best
