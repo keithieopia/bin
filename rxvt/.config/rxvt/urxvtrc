@@ -1,3 +1,5 @@
+URxvt.termName: rxvt
+
 ! do not scroll with output
 URxvt*scrollTtyOutput: false
 
@@ -7,7 +9,8 @@ URxvt*scrollWithBuffer: true
 ! scroll back to the bottom on keypress
 URxvt*scrollTtyKeypress: true
 
-URxvt.font: xft:iosevka:size=10
+!URxvt.font: xft:input:size=10
+URxvt.font: xft:Input Mono Compressed:style=Regular:size=10
 
 URxvt.scrollBar: false
 
