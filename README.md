@@ -16,7 +16,7 @@ you know what that entails. Here be dragons!
     * [dotfiles](#dotfiles)
     * [System Wide Configs](#sys-configs)
     * [Unmaintained](#unmaintained-configs)
-* [Installing](#stow): how to install these and why the directory layout is weird
+* [Installing](#stow)
 * [Feedback](#feedback)
 * [Author](#author)
 
@@ -39,9 +39,9 @@ Here's a high level overview if you just want to see what I use:
 
 ## Descriptions
 <a name="desc"></a>
-This gives a brief description of what exactly is configured in each
-[stow package](#stow) in this repo. Clicking the package name will links directly
-to the main config file or folder of the package.
+A brief description of what exactly is configured in each [stow package](#stow).
+Note the package's name may be misleading as some contain configuration for more
+than one program. For instance, `sys/sshd` configs both ssh and fail2ban.
 
 * [dotfiles](#dotfiles): in my $HOME
 * [System Wide Configs](#sys-configs): in root, such as /etc and /usr
@@ -49,7 +49,7 @@ to the main config file or folder of the package.
 
 ### Dotfiles
 <a name="dotfiles"></a>
-These are per-user configs, found in my $HOME. Most people know these as dotfiles.
+These are per-user configs, found in my $HOME; most people know these as dotfiles.
 
 * [bash](https://github.com/keithieopia/dotfiles/tree/master/bash):
   .bashrc, aliases, functions, and .bash_profile to start Xorg without a login
