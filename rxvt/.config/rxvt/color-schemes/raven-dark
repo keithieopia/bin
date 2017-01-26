@@ -1,6 +1,3 @@
-! raven-dark
-! https://github.com/baskerville/xresources-color-schemes
-
 #define t_bg_floor     #010000
 #define t_bg_dip       #2B2B28
 #define t_background   #32312E
@@ -292,3 +289,5 @@ URxvt.color252: #DC90AE
 URxvt.color253: #DD90AD
 URxvt.color254: #DD90AB
 URxvt.color255: #DE8FAA
+
+! vim: set ft=xdefaults:

@@ -19,5 +19,5 @@ Xft.hintstyle: hintslight
 !  URxvt                                        !
 !===============================================!
 
-#include ".config/rxvt/urxvtrc"
-#include ".config/rxvt/raven-dark"
+#include ".config/rxvt/urxvt"
+#include ".config/rxvt/color-schemes/base16-darktooth-256"
