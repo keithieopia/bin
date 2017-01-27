@@ -16,7 +16,7 @@ super + d
 
 # Firefox
 super + f
-    firejail --whitelist=~/projects/startpage firefox
+    firefox
 
 # Atom (editor)
 super + a
