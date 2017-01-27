@@ -12,7 +12,7 @@ WHOAMI=${SUDO_USER:-$(whoami)}
 CONTAINER_DIR="/home/$WHOAMI/.private" # directory to store encrypted container in
 CONTAINER_FILE="cryptfox" # name of encrypted container, doesn't really matter
 CONTAINER_SIZE="100M"  # this is a sane default, even with a ton of extensions
-BROWSER_EXE="firejail --whitelist=~/projects/startpage firefox" # browser executable, e.g.: firefox
+BROWSER_EXE="firefox" # browser executable, e.g.: firefox
 BROWSER_PROFILE="/home/$WHOAMI/.mozilla/firefox" # typically ~/.mozilla/firefox
 CACHE_DIR="/home/$WHOAMI/.cache/mozilla/firefox" # typically ~/.cache/mozilla/firefox 
 
