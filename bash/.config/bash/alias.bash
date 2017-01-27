@@ -51,6 +51,6 @@ alias ufw='sudo ufw'
 # reload
 alias reload-bash='source ~/.bashrc'
 alias reload-alias='source ~/.config/bash/alias.bash'
-alias reload-net='sudo systemctl reload netctl-auto@wlp1s0'
+alias reload-net='sudo systemctl restart netctl-auto@wlp1s0'
 alias reload-fonts='fc-cache'
 alias reload-xresources='xrdb -merge ~/.Xresources'
