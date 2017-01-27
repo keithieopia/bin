@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# INSTALLATION
+# ------------
+# to use this script by default instead of plain vanilla dropbox, copy
+# or symlink this script to '/usr/local/bin':
+#
+#    ln -s ~/bin/dropbox /usr/local/bin/dropbox
+
+# stop dropbox if it's already running
+if pgrep "dropbox" > /dev/null; then
+    echo "dropbox is already running, stopping it..."
+    killall -w -9 dropbox
+fi
+
+
+# stop dropbox from downloading updates and trying to install them. it's really
+# buggy under linux and fails to install, making dropbox waste bandwidth
+# needlessly. You are probably using distro's package manager anyway...
+if [ -w "~/.dropbox-dist" ]; then
+    echo "nuking dropbox's auto-update mechanism..."
+    rm -rf ~/.dropbox-dist
+    install -dm0 ~/.dropbox-dist
+fi
+
+firejail --nice=7 dropbox

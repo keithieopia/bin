@@ -16,11 +16,14 @@ them useful
 * `disco` - Randomly colored lights in the terminal. For a more wholesome
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
    simultaneously.
+* `dropbox` - Nuke dropbox's buggy auto-update mechanism and run it in a
+  firejail sandbox.
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `extract` - Wrapper to extract from many archives
 * `fehquote` - Sets a random quote on the current background. Reads `feh`'s
   config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
   untouched
+* `firefox` - Run Firefox in a firejail sandbox.
 * `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
   still crap, so the script repetitively tries to connect before giving up
 * install/
