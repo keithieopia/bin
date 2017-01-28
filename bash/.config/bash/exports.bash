@@ -17,15 +17,15 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 
-## 
+##
 ## Default Programs
 ##
-export EDITOR=/usr/bin/nano
-export VISUAL=$EDITOR
+export EDITOR="/usr/bin/nano"
+export VISUAL="$EDITOR"
 
 # Xorg programs
-if [ "$DISPLAY" ]; then
-    export BROWSER=palemoon
+if [ -n "$DISPLAY" ]; then
+    export BROWSER="firefox"
     #export WINEARCH=win32
 fi
 
