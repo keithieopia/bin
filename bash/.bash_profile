@@ -8,7 +8,7 @@
 # if we're running interactively and '~/.bashrc' exists, source it
 case "$-" in
     *i*)
-        if [[ "$-" != *i* ]] && [[ -f ~/.bashrc ]]; then
+        if [[ -f ~/.bashrc ]]; then
             . ~/.bashrc
         fi
 esac
