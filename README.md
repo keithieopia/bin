@@ -35,6 +35,7 @@ them useful
 * `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
 * `net-status` - Show the network status as well as the Gateway and local/public
   IP addresses
+* `net-wait` - Wait for the network to come up, then start the given app
 * `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
 * `optimize-images` Optimize images for the web by reduces image size and fixing
    file names
@@ -51,10 +52,6 @@ them useful
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
   accurate compared to commercial websites and APIs
 * wm/
-    * `autostart-net` - Wait for the network to come up, then start a list of
-      apps
-    * `autostart-net-trusted` - Similar to above, but only start on trusted
-      gateways (based on their MAC Address)
     * `battmon` - Will warn about battery levels with increasing severity and
       then safely shut the system down if the battery gets too low.
     * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
