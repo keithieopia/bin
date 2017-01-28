@@ -137,9 +137,12 @@ subprocess() {
 ################################################################################
 
 cpu() {
-    local IDLE=$(mpstat | tail -1 | awk '{print $13}')
-    local CPU=$(echo "100 - $IDLE" | bc -l)
+    local MPSTAT=$(mpstat | tail -1)
+    local CPU=$(echo "100 - $(awk '{print $13}' <<< $MPSTAT)" | bc -l)
+    local IO=$(awk '{print $7}' <<< $MPSTAT)
+
     echo "CPU $CPU"
+    echo "IO $IO"
 }
 
 drives() {
@@ -241,11 +244,15 @@ battery () {
 mouse () {
     # Sanity check first
     if lsusb | grep -q 'Logitech, Inc. Unifying Receiver'; then
-
         # Solaar takes a while to run, so first output something so we
         # know this widget is in fact running
-        echo "MOUSE ???"
-        echo "MOUSE $(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)"
+        SOLAAR=$(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)
+
+        if [[ "$SOLAAR" == "unknown" ]]; then
+            echo "MOUSE ???"
+        else
+            echo "MOUSE $SOLAAR"
+        fi
     else
         echo "MOUSE ---"
     fi
@@ -307,10 +314,6 @@ while read -r line; do
             AC="$OUTPUT"
             ;;
 
-        CPU)
-            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")
-            ;;
-
         BATTERY)
             if [[ "$AC" == 1 ]]; then
                 BATT_ICON="plug"
@@ -330,6 +333,10 @@ while read -r line; do
             BATTERY=$(format "$BATT_ICON" "$RED" "$OUTPUT%")
             ;;
 
+        CPU)
+            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")
+            ;;
+
         DATE)
             DATE=$(format "calendar" "$GREEN" "$OUTPUT")
             ;;
@@ -341,6 +348,10 @@ while read -r line; do
 
         HOME)
             HOME=$(format "home" "$TEAL" "$OUTPUT%")
+            ;;
+
+        IO)
+            IO=$(format "drive" "$ORANGE" "$OUTPUT%")
             ;;
 
         MOUSE)
@@ -410,7 +421,13 @@ while read -r line; do
 
     # Right Side: Status
     echo -n "%{r}"
-    echo -n "${CPU}${RAM}${ROOT}${HOME}${NET_DOWN}${NET_UP}${UPDATES}${VOLUME}${MOUSE}${BATTERY}${DATE}${TIME}"
+    echo -n "${CPU}${IO}${RAM}"
+    echo -n "${ROOT}${HOME}"
+    echo -n "${NET_DOWN}${NET_UP}"
+    echo -n "${UPDATES}"
+    echo -n "${VOLUME}"
+    echo -n "${MOUSE}${BATTERY}"
+    echo -n "${DATE}${TIME}"
     echo "" # newline
 
 done < "$PANEL_FIFO" | lemonbar $LEMONBAR_ARGS | bash
