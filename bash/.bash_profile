@@ -6,9 +6,12 @@
 #    https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980
 
 # if we're running interactively and '~/.bashrc' exists, source it
-if [[ "$-" != *i* ]] && [[ -f ~/.bashrc ]]; then
-    . ~/.bashrc
-fi
+case "$-" in
+    *i*)
+        if [[ "$-" != *i* ]] && [[ -f ~/.bashrc ]]; then
+            . ~/.bashrc
+        fi
+esac
 
 ##
 ## Start X on login if we're on TTY 1 (the default TTY)
