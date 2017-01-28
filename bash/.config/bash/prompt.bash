@@ -32,7 +32,7 @@ bash_prompt () {
     fi
 
     if is_ssh; then
-        local HOST="$BLUE[ $WHITE\h $BLUE] "
+        local HOST="$BLUE[ $WHITE\h $BLUE]"
     fi
 
     if [ $EXIT_STATUS != 0 ]; then
