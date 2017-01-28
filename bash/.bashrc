@@ -1,10 +1,12 @@
-#
 # ~/.bashrc
+#    read by Bash on start, if the shell is interactive.
 #
-
-# If not running interactively, don't do anything
-[[ "$-" != *i* ]] && return
-
+#    DO NOT USE interactivity checks such as: [[ "$-" != *i* ]] && return
+#    Rather, interactivity should be preformed in .bash_profile which then
+#    sources .bashrc
+#
+#    Recommended reading:
+#    https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980
 
 # Bash Options
 shopt -s extglob                         # necessary for programmable completion
@@ -56,10 +58,10 @@ fi
 
 
 ##
-## Display QOTD 
+## Display QOTD
 ##
 
-# don't display quotes on tty1, because Xorg is set to autostart 
+# don't display quotes on tty1, because Xorg is set to autostart
 # on that term and fortune will cause a noticable delay
 
 if have fortune && ! $(tty | grep -q tty1); then
