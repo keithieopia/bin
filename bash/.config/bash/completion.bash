@@ -7,7 +7,6 @@ shopt -s dirspell                    # same as above, but with dirs
 
 shopt -s progcomp                    # Programmable completion is FUN
 shopt -s no_empty_cmd_completion
-bind "set completion-ignore-case on" # case insensitive file completion 
 
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
   source /usr/share/git/completion/git-completion.bash

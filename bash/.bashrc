@@ -13,9 +13,6 @@ shopt -s extglob                         # necessary for programmable completion
 shopt -s nocaseglob                      # Case-insensitive globbing
 shopt -s checkwinsize                    # update values of LINES and COLUMNS
 shopt -s checkhash                       # check cache before finding full path
-bind "set mark-symlinked-directories on" # add slash to syslink dirs
-bind "set bell-style visible"            # no beep
-
 
 # Source files (comments denote dependencies that have to come before it)
 source "$HOME/.config/bash/functions.bash"
