@@ -139,10 +139,8 @@ subprocess() {
 cpu() {
     local MPSTAT=$(mpstat | tail -1)
     local CPU=$(echo "100 - $(awk '{print $13}' <<< $MPSTAT)" | bc -l)
-    local IO=$(awk '{print $7}' <<< $MPSTAT)
 
     echo "CPU $CPU%"
-    echo "IO $IO"
 }
 
 drives() {
@@ -155,7 +153,7 @@ ram() {
     local TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
     local USED=$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)
 
-    echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED%")"
+    echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED")%"
 }
 
 desktop() {
@@ -418,7 +416,7 @@ while read -r line; do
 
     # Right Side: Status
     echo -n "%{r}"
-    echo -n "${CPU}${IO}${RAM}"
+    echo -n "${CPU}${RAM}"
     echo -n "${ROOT}${HOME}"
     echo -n "${NET_DOWN}${NET_UP}"
     echo -n "${UPDATES}"
