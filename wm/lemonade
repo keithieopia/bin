@@ -141,13 +141,13 @@ cpu() {
     local CPU=$(echo "100 - $(awk '{print $13}' <<< $MPSTAT)" | bc -l)
     local IO=$(awk '{print $7}' <<< $MPSTAT)
 
-    echo "CPU $CPU"
+    echo "CPU $CPU%"
     echo "IO $IO"
 }
 
 drives() {
-    echo "ROOT $(/bin/df | grep 'storage-root' | head -1 | awk '{print $5}' | tr -d %)"
-    echo "HOME $(/bin/df | grep 'storage-home' | head -1 | awk '{print $5}' | tr -d %)"
+    echo "ROOT $(/bin/df | grep 'storage-root' | head -1 | awk '{print $5}')"
+    echo "HOME $(/bin/df | grep 'storage-home' | head -1 | awk '{print $5}')"
 }
 
 ram() {
@@ -155,7 +155,7 @@ ram() {
     local TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
     local USED=$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)
 
-    echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED")"
+    echo "RAM $(awk '{printf("%.2f", $1)}' <<< "$USED%")"
 }
 
 desktop() {
@@ -248,10 +248,11 @@ mouse () {
         # know this widget is in fact running
         SOLAAR=$(solaar show $LOGITECH_DEV | grep 'Battery: ' | awk '{print $2}' | tr -d %,)
 
-        if [[ "$SOLAAR" == "unknown" ]]; then
+        if [[ "$SOLAAR" =~ '^[0-9]+$' ]]; then
+            # not a number, something bad happened
             echo "MOUSE ???"
         else
-            echo "MOUSE $SOLAAR"
+            echo "MOUSE $SOLAAR%"
         fi
     else
         echo "MOUSE ---"
@@ -267,7 +268,7 @@ volume () {
         echo "MUTED 0"
     fi
 
-    echo "VOLUME $(awk '{print $5}' <<< $VOLUME | tr -d \[\]%)"
+    echo "VOLUME $(awk '{print $5}' <<< $VOLUME | tr -d \[\])"
 }
 
 datetime () {
@@ -334,7 +335,7 @@ while read -r line; do
             ;;
 
         CPU)
-            CPU=$(format "gears" "$ORANGE" "$OUTPUT%")
+            CPU=$(format "gears" "$ORANGE" "$OUTPUT")
             ;;
 
         DATE)
@@ -347,7 +348,7 @@ while read -r line; do
             ;;
 
         HOME)
-            HOME=$(format "home" "$TEAL" "$OUTPUT%")
+            HOME=$(format "home" "$TEAL" "$OUTPUT")
             ;;
 
         IO)
@@ -355,11 +356,7 @@ while read -r line; do
             ;;
 
         MOUSE)
-            if [[ "$OUTPUT" == "---" ]] || [[ "$OUTPUT" == "???" ]]; then
-                MOUSE=$(format "mouse" "$RED" "$OUTPUT")
-            else
-                MOUSE=$(format "mouse" "$RED" "$OUTPUT%")
-            fi
+            MOUSE=$(format "mouse" "$RED" "$OUTPUT")
             ;;
 
         MUTED)
@@ -376,11 +373,11 @@ while read -r line; do
             ;;
 
         RAM)
-            RAM=$(format "chip" "$ORANGE" "$OUTPUT%")
+            RAM=$(format "chip" "$ORANGE" "$OUTPUT")
             ;;
 
         ROOT)
-            ROOT=$(format "drive" "$TEAL" "$OUTPUT%")
+            ROOT=$(format "drive" "$TEAL" "$OUTPUT")
             ;;
 
         TIME)
@@ -398,7 +395,7 @@ while read -r line; do
             else
                 VOL_ICON="vol-on"
             fi
-            VOLUME=$(format "$VOL_ICON" "$BLUE" "$OUTPUT%")
+            VOLUME=$(format "$VOL_ICON" "$BLUE" "$OUTPUT")
             ;;
     esac
 
