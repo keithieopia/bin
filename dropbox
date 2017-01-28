@@ -8,9 +8,11 @@
 #    ln -s ~/bin/dropbox /usr/local/bin/dropbox
 
 # stop dropbox if it's already running
-if pgrep "dropbox" > /dev/null; then
+
+PID=$(pgrep -o dropbox)
+if [[ "$PID" != "$$" ]]; then
     echo "dropbox is already running, stopping it..."
-    killall -w -9 dropbox
+    kill -9 $PID
 fi
 
 
@@ -23,4 +25,9 @@ if [ -w "~/.dropbox-dist" ]; then
     install -dm0 ~/.dropbox-dist
 fi
 
-firejail --nice=7 dropbox
+
+# ionice -c 3
+#    run sandbox only when disk is idle
+# firejail --nice=7
+#    run dropbox nicely, so it doesn't hog the cpu
+ionice -c 3 firejail --nice=7 dropbox
