@@ -7,7 +7,7 @@
 
 # terminal emulator
 super + Return
-    urxvt
+    urxvtc
 
 # program launcher
 super + d
@@ -48,7 +48,7 @@ super + Escape
 
 # close window
 alt + F4
-    bspc node -c ; paplay ~/bin/sounds/squish.ogg    
+    bspc node -c ; paplay ~/bin/sounds/squish.ogg
 
 # next window
 alt + Tab
@@ -84,7 +84,7 @@ super + shift + {KP_Left,KP_Down,KP_Up,KP_Left}
 
 # Select previous / next desktop
 super + {bracketleft,bracketright}
-    bspc desktop -f {prev.occupied,next.occupied} 
+    bspc desktop -f {prev.occupied,next.occupied}
 
 # Select specific desktop
 super + {1-9,0}
@@ -118,6 +118,6 @@ XF86Audio{RaiseVolume,LowerVolume,Mute}
 
 XF86MonBrightness{Down,Up}
     xbacklight -{dec,inc} 10%
-    
+
 XF86Display
     xbacklight -set {0,100}%
