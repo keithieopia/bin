@@ -38,11 +38,9 @@ unclutter &
 urxvtd -q -f -o &
 pcmanfm -d &
 ~/bin/wm/lemonade &
-~/bin/wm/battmon &
 zim --plugin trayicon &
 autocutsel -fork &
-
-# make dropbox play nice
-ionice -c 3 -n 7 dropbox start -i && cpulimit -b -e dropbox -l 10
-
 ~/bin/wm/greeting &
+
+(sleep 60s && ~/bin/dropbox) &
+(sleep 60s && ~/bin/wm/battmon) &
