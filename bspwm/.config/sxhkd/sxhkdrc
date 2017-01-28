@@ -48,7 +48,7 @@ super + Escape
 
 # close window
 alt + F4
-    bspc node -c ; paplay ~/bin/sounds/squish.ogg
+    bspc node -c ; paplay ~/bin/assets/sounds/close.ogg
 
 # next window
 alt + Tab
