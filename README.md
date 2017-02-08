@@ -65,6 +65,9 @@ them useful
 * `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
   password scheme generator. Uses the kernel's CSPRNG, unlike most
   implementations
+* `zeronet` - Script to run [ZeroNet](https://zeronet.io/), a decentralized
+  censorship resistant network, using [Tor](https://www.torproject.org/) for
+  anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
 
 
 ## Usage
