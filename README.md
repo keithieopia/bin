@@ -30,6 +30,7 @@ them useful
     * `get-packer` - Install [packer](https://aur.archlinux.org/packages/packer/),
       an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
 * `letsencrypt` - Renew SSL certs for my domains using certbot
+* `mirror` - Mirror a website sanely with wget
 * `mount-cache` - Create folders and files expected to be in ~/.cache normally,
    useful if mounted as tmpfs
 * `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
