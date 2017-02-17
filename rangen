@@ -8,10 +8,20 @@ function alpha() {
     echo $(</dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN})
 }
 
+function cia() {
+    LEN=2
+    digraph=$(alpha)
+
+    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
+    word=$(shuf -n 1 --random-source=/dev/urandom <<< "$words")
+
+    tr '[:lower:]' '[:upper:]' <<< "$digraph$word"
+}
+
 function mac_address() {
 
     # Second char of a MAC address is reserved for multicast if it's odd.
-    # Rather than writing this specific use case, it's often quicker just to  
+    # Rather than writing this specific use case, it's often quicker just to
     # generate addresses until the second char is even
 
     while : ; do
@@ -27,7 +37,7 @@ function num() {
     echo $(</dev/urandom tr -cd '[:digit:]' | head -c ${1:-$LEN})
 }
 
-function passwd() {
+function pass() {
     echo $(</dev/urandom tr -cd '[:graph:]' | head -c ${1:-$LEN})
 }
 
@@ -44,6 +54,7 @@ Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 Usage: $(basename "$0") [OPTION...] FORMAT
 
   alpha         uppercase and lowercase letters
+  cia           CIA cryptonym; a digraph combinded with a word
   digit         digits
   lower         lowercase letters
   mac           MAC address
@@ -70,11 +81,14 @@ while getopts l:c:h option; do
     esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 
 case $1 in
     alpha)  alpha
+            exit
+            ;;
+    cia)    cia
             exit
             ;;
     digit)  num
@@ -87,7 +101,7 @@ case $1 in
     mac)    mac_address
             exit
             ;;
-    passwd) passwd
+    pass)   pass
             exit
             ;;
     port)   port
