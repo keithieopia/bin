@@ -53,6 +53,11 @@ if have ccache; then
     PATH="/usr/lib/ccache/bin:$PATH"
 fi
 
+# ruby
+if have ruby; then
+    PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+fi
+
 
 ##
 ## Display QOTD
