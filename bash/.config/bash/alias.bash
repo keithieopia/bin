@@ -54,3 +54,9 @@ alias reload-alias='source ~/.config/bash/alias.bash'
 alias reload-net='sudo systemctl restart netctl-auto@wlp1s0'
 alias reload-fonts='fc-cache'
 alias reload-xresources='xrdb -merge ~/.Xresources'
+
+
+alias start='sudo systemctl start '
+alias stop='sudo systemctl stop '
+alias restart='sudo systemctl restart '
+alias status='systemctl status '
