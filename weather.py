@@ -2,7 +2,6 @@
 
 import json, os.path, time
 from urllib import urlopen
-from math import pow
 
 lat   = os.environ['LOCATION_LAT']
 lon   = os.environ['LOCATION_LON']
