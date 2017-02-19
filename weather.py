@@ -169,5 +169,5 @@ for i in range(len(data["time"]["startPeriodName"])):
         print
 
     count += 1
-    if count > days: 
+    if count > days:
         break
