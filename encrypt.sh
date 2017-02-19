@@ -1,21 +1,21 @@
 #!/bin/bash
 
 usage () {
-cat <<HELP 
+cat <<HELP
 Wrapper for GPG symmetric encryption
 
-Encrypt files or directories using AES256 or automatically 
+Encrypt files or directories using AES256 or automatically
 decrypt a file created with this utility (files have an ".enc" extension)
 
 
 https://github.com/keithieopia/bin/
-    
+
 Copyright (c) 2016 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
 
-if [ -z "$1" ]; then 
+if [ -z "$1" ]; then
     echo -e "\e[31mYou must specify something to encrypt!\e[39m"
     exit 1
 elif [ "$1" == "-h" ]; then
@@ -25,31 +25,31 @@ fi
 
 
 if [ -d "$*" ]; then
-    echo -e "\033[1;32mEncrypting directory...\033[0m" 
+    echo -e "\033[1;32mEncrypting directory...\033[0m"
 
     NAME=$(basename $*)
     tar -c --xz "$*" | gpg --output "$NAME.txz.enc" --symmetric --cipher-algo AES256
-    
+
 else
-    
+
     if [ -f "$*" ]; then
-        
+
         FILE="$*"
-    
+
         if [[ ${FILE: -8} == ".txz.enc" ]]; then
-            echo -e "\033[1;32mDecrypting directory...\033[0m" 
-            
+            echo -e "\033[1;32mDecrypting directory...\033[0m"
+
             gpg --decrypt $FILE | tar -xJf -
-            
+
         elif [[ ${FILE: -4} == ".enc" ]]; then
-            echo -e "\033[1;32mDecrypting file...\033[0m" 
-        
+            echo -e "\033[1;32mDecrypting file...\033[0m"
+
             NAME=$(basename $FILE .enc)
             gpg --output $NAME --decrypt $FILE
-            
+
         else
-            echo -e "\033[1;32mEncrypting file...\033[0m" 
-        
+            echo -e "\033[1;32mEncrypting file...\033[0m"
+
             gpg --output $FILE.enc --symmetric --cipher-algo AES256 $FILE
         fi
     else
