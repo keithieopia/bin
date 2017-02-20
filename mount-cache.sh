@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage () {
-cat <<HELP 
+cat <<HELP
 Create folders and files expected to be in ~/.cache normally
 
 Usage: $(basename "$0")
@@ -15,16 +15,17 @@ Licensed under the MIT license.
 HELP
 }
 
-colorize () {
-    SUCCESS="0;32"
-    WARN="0;33"
-    ESC="\033["
+success() {
+    echo -e "$(tput setaf 2)$@$(tput sgr0)"
+}
 
-    COLOR=\$${1:-NORMAL}
+warn() {
+    echo -e "$(tput setaf 3)$@$(tput sgr0)"
+}
 
-    echo -ne "${ESC}`eval echo ${COLOR}`m"
-    cat
-    echo -ne "${ESC}0m"
+error() {
+    echo -e "$(tput setaf 1)$@$(tput sgr0)"
+    exit 1
 }
 
 
@@ -49,10 +50,10 @@ if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
 
         # Create lockfile used to test if .cache has been populated yet
         touch "$HOME/.cache/.lock"
-        [[ $DEBUG == "1" ]] && echo "~/.cache setup!" | colorize SUCCESS
+        [[ $DEBUG == "1" ]] && success "~/.cache setup!"
     else
-        [[ $DEBUG == "1" ]] && echo "~/.cache already setup, nothing to do..." | colorize WARN
+        [[ $DEBUG == "1" ]] && warn "~/.cache already setup, nothing to do..."
     fi
 else
-    [[ $DEBUG == "1" ]] && echo "~/.cache is not mounted as tmpfs, nothing to do..." | colorize WARN
+    [[ $DEBUG == "1" ]] && warn "~/.cache is not mounted as tmpfs, nothing to do..."
 fi
