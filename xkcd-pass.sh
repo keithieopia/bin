@@ -30,7 +30,6 @@ fi
 # remove "words" starting with non-sense
 DICT=$(grep -E '^[a-zA-Z]{3,6}$' "$DICT")
 
-WORDS=$(echo "$DICT" | shuf -n $NUM_WORDS --random-source=/dev/urandom | paste -s -d ' ')
-XKCD=$(echo $WORDS | sed 's/ //g')
- 
-echo "$XKCD ($WORDS)"
+WORDS=$(shuf -n $NUM_WORDS --random-source=/dev/urandom <<< "$DICT" | paste -s -d ' ')
+
+echo "${WORDS// /} ($WORDS)"
