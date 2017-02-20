@@ -1,10 +1,15 @@
-<span style="float: right">
-    [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
-</span>
-
-# bin
-
-> Useful shell scripts in my $PATH
+<table>
+    <tr>
+        <td>
+            <h1>bin</h1>
+            <blockquote>
+                Useful shell scripts in my $PATH
+            </blockquote>
+        </td><td>
+            [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
+        </td>
+    </tr>
+</table>
 
 These are various shell scripts I use on a regular basis. You may find some of
 them useful
