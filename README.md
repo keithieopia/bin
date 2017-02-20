@@ -1,4 +1,4 @@
-<table>
+<table style="width: 100%">
     <tr>
         <td>
             <h1>bin</h1>
@@ -6,7 +6,9 @@
                 Useful shell scripts in my $PATH
             </blockquote>
         </td><td>
-            [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
+            <a href="https://www.codacy.com/app/timothykeith/bin">
+                <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766">
+            </a>
         </td>
     </tr>
 </table>
