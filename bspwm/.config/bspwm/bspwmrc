@@ -31,16 +31,16 @@ bspc config bottom_padding 20
 sxhkd &
 
 # general apps to auto start:
-~/bin/mount-cache &
+~/bin/mount-cache.sh &
 compton &
 ~/.fehbg &
 unclutter &
 urxvtd -q -f -o &
 pcmanfm -d &
-~/bin/wm/lemonade &
+~/bin/wm/lemonade.sh &
 zim --plugin trayicon &
 autocutsel -fork &
-~/bin/wm/greeting &
+~/bin/wm/greeting.sh &
 
-(sleep 60s && ~/bin/dropbox) &
-(sleep 60s && ~/bin/wm/battmon) &
+(sleep 60s && ~/bin/dropbox.sh) &
+(sleep 60s && ~/bin/wm/battmon.sh) &

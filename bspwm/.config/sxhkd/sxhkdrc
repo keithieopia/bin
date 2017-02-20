@@ -32,7 +32,7 @@ Print
 
 # lockscreen
 super + l
-    ~/bin/wm/lockscreen
+    ~/bin/wm/lockscreen.sh
 
 # make sxhkd reload its configuration files:
 super + r
