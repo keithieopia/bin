@@ -11,7 +11,9 @@ some are simply novelties to see if a certain problem could be solved in a
 humble shell script.
 
 <p align="center">
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
+    <a href="https://www.codacy.com/app/timothykeith/bin">
+        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766">
+    </a>
 </p>
 
 ---
