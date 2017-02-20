@@ -36,4 +36,4 @@ else
 fi
 
 paplay "$HOME/bin/assets/sounds/startup.ogg"
-say "$GREETING. Today is $DATE. It is $TIME"
+say.sh "$GREETING. Today is $DATE. It is $TIME"
