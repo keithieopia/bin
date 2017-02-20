@@ -1,16 +1,16 @@
 #!/bin/bash
 
-colorize () {
-    SUCCESS="0;32"
-    WARN="0;33"
-    ERROR="0;31"
-    ESC="\033["
+success() {
+    echo -e "$(tput setaf 2)$@$(tput sgr0)"
+}
 
-    COLOR=\$${1:-NORMAL}
+warn() {
+    echo -e "$(tput setaf 3)$@$(tput sgr0)"
+}
 
-    echo -ne "${ESC}`eval echo ${COLOR}`m"
-    cat
-    echo -ne "${ESC}0m"
+error() {
+    echo -e "$(tput setaf 1)$@$(tput sgr0)"
+    exit 1
 }
 
 STATUS=$(ip route show match 0/0)
@@ -18,7 +18,7 @@ STATUS=$(ip route show match 0/0)
 if [ ! -z "$STATUS" ]; then
 
     read GATEWAYIP IFACE LOCALIP <<< $(echo $STATUS | awk '{print $3" "$5" "$7}')
-    GATEWAYMAC=$(ip neigh | grep $GATEWAYIP | awk '{print $5}')
+    GATEWAYMAC=$(ip neigh | grep "$GATEWAYIP " | awk '{print $5}')
 
     echo "INTERFACE:   $IFACE"
     echo "GATEWAY IP:  $GATEWAYIP"
@@ -30,13 +30,12 @@ if [ ! -z "$STATUS" ]; then
 
         echo "PUBLIC IP:   $PUBLICIP"
 
-        echo "Online" | colorize SUCCESS
+        success "\nOnline"
     else
         echo
-        echo "Local Only" | colorize WARN
+        warn "\nLocal Only"
         exit 1
     fi
 else
-    echo "Interface Offline" | colorize ERROR
-    exit 1
+    error "\nInterface Offline"
 fi
