@@ -1,16 +1,15 @@
-# dotfiles
+## dotfiles
 
 <img align="right" alt="Markdown Screenshot" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.assets/markdown_circle.png">
 
-> *There's no place like $HOME*
+> Being a Linux user is sort of like living in a house inhabited by a large family of carpenters and architects. Every morning when you wake up, the house is a little different. Maybe there is a new turret, or some walls have moved. Or perhaps someone has temporarily removed the floor under your bed."
+
+> -- Unix for Dummies, 2nd Edition
 
 These are various config files I use for my Linux environment and related
 programs.
 
-**Obligatory Warning:** You should first fork this repository, review the code,
-and remove things you don’t want or need. Don't blindly use my settings unless
-you know what that entails. Here be dragons!
-
+#### Table of Contents
 * [Overview](#overview):
 * [Descriptions](#desc)
     * [dotfiles](#dotfiles)
@@ -19,6 +18,16 @@ you know what that entails. Here be dragons!
 * [Installing](#stow)
 * [Feedback](#feedback)
 * [Author](#author)
+
+
+<img alt="Mad Madam Mim as a Dragon" style="padding-right: 8px" align="left" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.assets/mad_madam_min.png">
+
+**Obligatory Warning**  
+You should first fork this repository, review the code, and remove things you
+don't want or need. Don't blindly use my settings unless you know what that
+entails. *Here be dragons!*  
+
+<br>
 
 ## Overview
 <a name="overview"></a>
