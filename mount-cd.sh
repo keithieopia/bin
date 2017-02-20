@@ -1,43 +1,39 @@
 #!/bin/bash
 
-colorize () {
-    SUCCESS="0;32"
-    WARN="0;33"
-    ERROR="0;31"
-    ESC="\033["
-
-    COLOR=\$${1:-NORMAL}
-
-    echo -ne "${ESC}`eval echo ${COLOR}`m"
-    cat
-    echo -ne "${ESC}0m"
+success() {
+    echo -e "$(tput setaf 2)$@$(tput sgr0)"
 }
 
-if [ -z "$1" ]; then 
-    echo "You must specify an image to mount!" | colorize ERROR
+warn() {
+    echo -e "$(tput setaf 3)$@$(tput sgr0)"
+}
+
+error() {
+    echo -e "$(tput setaf 1)$@$(tput sgr0)"
     exit 1
-else 
+}
+
+if [ -z "$1" ]; then
+    error "You must specify an image to mount!"
+else
     if [ ! -f "$*" ]; then
-        echo "\e[31mThat image does not exist!\e[39m" | colorize ERROR
-        exit 1
+        error "That image does not exist!"
     fi
 fi
 
  if [ "$EUID" -ne 0 ]; then
     if [ -z "$SUDO_COMMAND" ]; then
-        echo "This script must be run as root, recalling self with sudo..." | colorize WARN
+        warn "This script must be run as root, recalling self with sudo..."
         sudo $0 $*
         exit 0
     else
-        echo "This script must be run as root" | colorize ERROR
-        exit 1
+        error "This script must be run as root"
     fi
 fi
 
 if [ -d "/mnt/cdrom" ]; then
     if mount | grep /mnt/cdrom > /dev/null; then
-        echo "A CD-ROM has already been mounted..." | colorize ERROR
-        exit 1
+        error "A CD-ROM has already been mounted..."
     fi
 else
     mkdir -p /mnt/cdrom
