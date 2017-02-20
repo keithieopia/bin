@@ -1,22 +1,22 @@
-<table style="width: 100%">
-    <tr>
-        <td>
-            <h1>bin</h1>
-            <blockquote>
-                Useful shell scripts in my $PATH
-            </blockquote>
-        </td><td>
-            <a href="https://www.codacy.com/app/timothykeith/bin">
-                <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766">
-            </a>
-        </td>
-    </tr>
-</table>
+## ~/bin
 
-These are various shell scripts I use on a regular basis. You may find some of
-them useful
+> Most good programmers do programming not because they expect to get paid or
+get adulation by the public, but because it is fun to program.
 
-## Shell scripts:
+> -- Linus Torvalds
+
+
+These are various shell scripts I have in my `$PATH`. Most are quite useful, but
+some are simply novelties to see if a certain problem could be solved in a
+humble shell script.
+
+<p align="center">
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
+</p>
+
+---
+
+## Table of Contents:
 
 * `backup.sh` - Automatically backup using [borg](https://borgbackup.readthedocs.io/en/stable/),
   which encrypts, uses differentials, and deduplicates stored data.
@@ -84,9 +84,8 @@ them useful
 
 
 ## Usage
-All shell scripts include a help command that can be invoked by passing the `-h`
-flag to them. This will print a brief explanation of what the script does as well
-as the usage and any flags or options that can be set.
+Complex shell scripts *usually&trade;* include a help/usage statement that can
+be invoked by passing the typical `-h` flag.
 
 
 ## Credits
