@@ -33,4 +33,4 @@ else
 fi
 
 paplay "$HOME/bin/assets/sounds/startup.ogg"
-~/bin/say.sh "$GREETING. Today is $DATE. It is $TIME"
+$HOME/bin/say.sh "$GREETING. Today is $DATE. It is $TIME"
