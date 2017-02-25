@@ -12,5 +12,5 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 certbot certonly --email timothykeith@gmail.com --webroot -w /var/lib/letsencrypt/ \
--d keithieopia.com -d www.keithieopia.com \
+-d keithieopia.com -d www.keithieopia.com -d piwik.keithieopia.com \
 -d kerrikeith.com  -d www.kerrikeith.com
