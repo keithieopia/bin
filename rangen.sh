@@ -3,7 +3,6 @@
 LEN=10
 CASE="alpha"
 
-
 function alpha() {
     echo $(</dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN})
 }
@@ -71,7 +70,7 @@ Usage: $(basename "$0") [OPTION...] FORMAT
 
 https://github.com/keithieopia/bin/
 
-Copyright (c) 2016 Timothy Keith
+Copyright (c) 2016 - 2017 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
