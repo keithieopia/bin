@@ -3,23 +3,25 @@
 LEN=10
 CASE="alpha"
 
-function alpha() {
-    echo $(</dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN})
+alpha() {
+    </dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN}
 }
 
-function word() {
-    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
-    shuf -n 1 --random-source=/dev/urandom <<< "$words"
-}
-
-function cia() {
+cia() {
     LEN=2
     digraph=$(alpha)
 
     tr '[:lower:]' '[:upper:]' <<< "$digraph$(word)"
 }
 
-function mac_address() {
+fakeword() {
+    c="aeiou"
+    v="bcdfghjklmnpqrstvwxyz"
+    
+    
+}
+
+mac_address() {
 
     # Second char of a MAC address is reserved for multicast if it's odd.
     # Rather than writing this specific use case, it's often quicker just to
@@ -34,21 +36,21 @@ function mac_address() {
     echo $mac | fold -w2 - | paste -sd ':' -
 }
 
-function num() {
-    echo $(</dev/urandom tr -cd '[:digit:]' | head -c ${1:-$LEN})
+num() {
+    </dev/urandom tr -cd '[:digit:]' | head -c ${1:-$LEN}
 }
 
-function pass() {
-    echo $(</dev/urandom tr -cd '[:graph:]' | head -c ${1:-$LEN})
+pass() {
+    </dev/urandom tr -cd '[:graph:]' | head -c ${1:-$LEN}
 }
 
-function port() {
+port() {
     RANGE="$(awk '{print $2}' </proc/sys/net/ipv4/ip_local_port_range)"
 
     shuf -n 1 -i 1024-$RANGE --random-source=/dev/urandom
 }
 
-function usage() {
+usage() {
 cat <<HELP
 Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 
@@ -73,6 +75,11 @@ https://github.com/keithieopia/bin/
 Copyright (c) 2016 - 2017 Timothy Keith
 Licensed under the MIT license.
 HELP
+}
+
+word() {
+    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
+    shuf -n 1 --random-source=/dev/urandom <<< "$words"
 }
 
 
