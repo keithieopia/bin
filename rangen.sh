@@ -8,14 +8,16 @@ function alpha() {
     echo $(</dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN})
 }
 
+function word() {
+    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
+    shuf -n 1 --random-source=/dev/urandom <<< "$words"
+}
+
 function cia() {
     LEN=2
     digraph=$(alpha)
 
-    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
-    word=$(shuf -n 1 --random-source=/dev/urandom <<< "$words")
-
-    tr '[:lower:]' '[:upper:]' <<< "$digraph$word"
+    tr '[:lower:]' '[:upper:]' <<< "$digraph$(word)"
 }
 
 function mac_address() {
@@ -61,6 +63,7 @@ Usage: $(basename "$0") [OPTION...] FORMAT
   passwd        password (letters, numbers, symbols)
   port          random port (1024 - ip_local_port_range)
   upper         uppercase letters
+  word          dictionary word
 
   -l [NUM]      number of chars to generate (default: 10)
   -h            display this help
@@ -109,6 +112,9 @@ case $1 in
             ;;
     upper)  CASE="upper"
             alpha
+            exit
+            ;;
+    word)   word
             exit
             ;;
     * )     usage
