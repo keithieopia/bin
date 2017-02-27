@@ -15,14 +15,31 @@ cia() {
 }
 
 fakeword() {
-    c="aeiou"
-    v="bcdfghjklmnpqrstvwxyz"
-    
-    
+    # Makes fake words using the following pattern:
+    #   consonant, vowel, consonant, etc...
+
+    # split string into chars on newlines for shuf
+    consonants=$(fold -w1 <<< 'aeiou')
+    vowels=$(fold -w1 <<< 'bcdfghjklmnpqrstvwxyz')
+
+    for ((i=0;i<$LEN;i++)); do
+        # depending on the current iteration's parity:
+        #   if even: output a vowel
+        #   if odd:  output a consonant
+
+        if [ $((i%2)) -eq 0 ]; then # even
+            shuf -n 1 --random-source=/dev/urandom <<< "$vowels" | tr -d '\n'
+        else # odd
+            shuf -n 1 --random-source=/dev/urandom <<< "$consonants" | tr -d '\n'
+        fi
+    done
+
+    # this echo is intentional, since tr is used to strips newlines
+    # for each character outputted
+    echo
 }
 
 mac_address() {
-
     # Second char of a MAC address is reserved for multicast if it's odd.
     # Rather than writing this specific use case, it's often quicker just to
     # generate addresses until the second char is even
@@ -59,9 +76,10 @@ Usage: $(basename "$0") [OPTION...] FORMAT
   alpha         uppercase and lowercase letters
   cia           CIA cryptonym; a digraph combinded with a word
   digit         digits
+  fakeword      non-sense word based on a CVCV... pattern
   lower         lowercase letters
   mac           MAC address
-  passwd        password (letters, numbers, symbols)
+  pass          password (letters, numbers, symbols)
   port          random port (1024 - ip_local_port_range)
   upper         uppercase letters
   word          dictionary word
@@ -94,35 +112,38 @@ shift $((OPTIND-1))
 
 
 case $1 in
-    alpha)  alpha
-            exit
-            ;;
-    cia)    cia
-            exit
-            ;;
-    digit)  num
-            exit
-            ;;
-    lower)  CASE="lower"
-            alpha
-            exit
-            ;;
-    mac)    mac_address
-            exit
-            ;;
-    pass)   pass
-            exit
-            ;;
-    port)   port
-            exit
-            ;;
-    upper)  CASE="upper"
-            alpha
-            exit
-            ;;
-    word)   word
-            exit
-            ;;
-    * )     usage
-            exit 1
+    alpha)    alpha
+              exit
+              ;;
+    cia)      cia
+              exit
+              ;;
+    digit)    num
+              exit
+              ;;
+    fakeword) fakeword
+              exit
+              ;;
+    lower)    CASE="lower"
+              alpha
+              exit
+              ;;
+    mac)      mac_address
+              exit
+              ;;
+    pass)     pass
+              exit
+              ;;
+    port)     port
+              exit
+              ;;
+    upper)    CASE="upper"
+              alpha
+              exit
+              ;;
+    word)     word
+              exit
+              ;;
+    *)        usage
+              exit 1
 esac
