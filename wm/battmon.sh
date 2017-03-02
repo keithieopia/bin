@@ -79,11 +79,11 @@ while true; do
     if [ "$POWER_SUPPLY_STATUS" == "Discharging" ]; then
         if [ $POWER_SUPPLY_CAPACITY -le $CRITICAL ]; then
             paplay "$HOME/bin/assets/sounds/warning.ogg"
-            say "The battery is critically low. Only $(time_left) remains"
+            say.sh "The battery is critically low. Only $(time_left) remains"
             paplay "$HOME/bin/assets/sounds/warning.ogg"
         elif [ $POWER_SUPPLY_CAPACITY -le $WARN ]; then
             paplay "$HOME/bin/assets/sounds/info.ogg"
-            say "The battery is low. There is enough charge to last $(time_left)"
+            say.sh "The battery is low. There is enough charge to last $(time_left)"
         fi
     fi
 
