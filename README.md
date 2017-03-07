@@ -69,10 +69,13 @@ These are per-user configs, found in my $HOME; most people know these as dotfile
   of bspwm.
 * [compton](https://github.com/keithieopia/dotfiles/blob/master/compton/.config/compton.conf):
   shadow and opacity eye candy.
-* [default-dirs](https://github.com/keithieopia/dotfiles/blob/master/default-dirs/.config/user-dirs.dirs)
+* [default-dirs](https://github.com/keithieopia/dotfiles/blob/master/default-dirs/.config/user-dirs.dirs):
   prevents annoying fluff directories (like ~/Desktop) from being created in
   $HOME. See [XDG user directories](https://www.freedesktop.org/wiki/Software/xdg-user-dirs/)
-  for more info.
+  for more info
+* [geany](http://www.geany.org/):
+  [base16](https://chriskempson.github.io/base16/) eighties dark theme for
+  Geany, a simple text editor 
 * [flash](https://github.com/keithieopia/dotfiles/blob/master/flash/.asoundrc):
   Adobe Flash only supports ALSA (not PulseAudio). Even at that it's too
   stupid to detect the correct sound card, resulting in no sound. This is the fix.
