@@ -18,9 +18,9 @@ super + d
 super + f
     firefox
 
-# Atom (editor)
-super + a
-    atom
+# Editor
+super + e
+    geany
 
 # PCManFM
 super + p
