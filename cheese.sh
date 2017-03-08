@@ -36,8 +36,9 @@ while getopts ":hq" opt; do
             exit 1
             ;;
     esac
-    shift $((OPTIND-1))
 done
+shift $((OPTIND-1))
+
 
 if ! hash ffmpeg 2>/dev/null; then
     echo "ffmpeg is not installed!"
