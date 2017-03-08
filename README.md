@@ -27,63 +27,69 @@ humble shell script.
    files, and slack space
 * `cryptfox.sh` - Create and launch an encrypted browser profiles
 * `digests.sh` - List the various hashsums for a file and create or verify a
-  SHA256SUMS for a directory.
+   SHA256SUMS for a directory.
 * `disco.sh` - Randomly colored lights in the terminal. For a more wholesome
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
    simultaneously.
 * `dropbox.sh` - Nuke dropbox's buggy auto-update mechanism and run it in a
-  firejail sandbox.
+   firejail sandbox.
 * `encrypt.sh` - Wrapper for GPG symmetric encryption using AES256
 * `extract.sh` - Wrapper to extract from many archives
 * `fehquote.sh` - Sets a random quote on the current background. Reads `feh`'s
-  config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
-  untouched
+   config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
+   untouched
 * `firefox.sh` - Run Firefox in a firejail sandbox.
 * `headset.sh` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
-  still crap, so the script repetitively tries to connect before giving up
+   still crap, so the script repetitively tries to connect before giving up
 * **install/**
     * `get-packer.sh` - Install [packer](https://aur.archlinux.org/packages/packer/),
       an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
 * `letsencrypt.sh` - Renew SSL certs for my domains using certbot
+* `local-wiki.sh` - Starts PHP's built-in webserver and Firefox to access 
+   a local [dokuwiki](https://www.dokuwiki.org) install. After Firefox is 
+   closed, PHP is automatically closed.
 * `mirror.sh` - Mirror a website sanely with wget
 * `mount-cache.sh` - Create folders and files expected to be in ~/.cache normally,
    useful if mounted as tmpfs
 * `mount-cd.sh` - Mounts an .iso CD/DVD image to /mnt/cdrom
 * `net-status.sh` - Show the network status as well as the Gateway and local/public
-  IP addresses
+   IP addresses
 * `net-wait.sh` - Wait for the network to come up, then start the given app
 * `nullcrypt.sh` - Creates and opens encrypted LUKS containers with sane settings
 * `optimize-images.sh` - Optimize images for the web by reduces image size and fixing
    file names
 * `pdf-extract.sh` - Extract pages from a PDF; useful for removing superfluous and
-  unofficial cover sheets added by many online repositories. Compare to
-  [pdftk](https://linux.die.net/man/1/pdftk).
-* `quotes.sh` - Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)).
-* `rangen.sh` - Create random passwords, MAC addresses, letters, or numbers using
-  /dev/urandom
+   unofficial cover sheets added by many online repositories. Compare to
+   [pdftk](https://linux.die.net/man/1/pdftk).
+* `quotes.sh` - Random curated quotes in a easy to understand all-in-one format 
+   (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)).
+* `rangen.sh` - Create random passwords, MAC addresses, letters, or numbers 
+   using /dev/urandom
 * `respawn.sh` - Indefinitely restart a program after it exits
 * `say.sh` - Use Pico TTS to speak the given text
-* `steam-preload.sh` - Quirks fixes for Steam under bspwm with an Intel graphics card
+* `steam-preload.sh` - Quirks fixes for Steam under bspwm with an Intel graphics
+   card
 * `test-colors.sh` - Show the current terminal color scheme
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
-  accurate compared to commercial websites and APIs
+   accurate compared to commercial websites and APIs
 * **wm/**
     * `battmon.sh` - Will warn about battery levels with increasing severity and
-      then safely shut the system down if the battery gets too low.
+       then safely shut the system down if the battery gets too low.
     * `lemonade.sh` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
-      with useful system info, similar to conky
+       with useful system info, similar to conky
     * `lockscreen.sh` - Blurs and locks the screen with *Barney Fife
-      Protection&trade;*
-      that will make evildoers think twice!
+       Protection&trade;*
+       that will make evildoers think twice!
     * `greeting.sh` - Sets the volume to an appropriate level given the time and
-      says a greeting
-      altogether mutes it depending on if it is too late at night
+       says a greeting
+       altogether mutes it depending on if it is too late at night
 * `xkcd-pass.sh` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
-  password scheme generator. Uses the kernel's CSPRNG, unlike most
-  implementations
+   password scheme generator. Uses the kernel's CSPRNG, unlike most
+   implementations
 * `zeronet.sh` - Script to run [ZeroNet](https://zeronet.io/), a decentralized
-  censorship resistant network, using [Tor](https://www.torproject.org/) for
-  anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
+   censorship resistant network, using [Tor](https://www.torproject.org/) for
+   anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) 
+   [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
 
 
 ## Usage
