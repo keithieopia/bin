@@ -43,11 +43,11 @@ humble shell script.
    still crap, so the script repetitively tries to connect before giving up
 * **install/**
     * `get-packer.sh` - Install [packer](https://aur.archlinux.org/packages/packer/),
-      an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
+       an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
 * `letsencrypt.sh` - Renew SSL certs for my domains using certbot
 * `local-wiki.sh` - Starts PHP's built-in webserver and Firefox to access 
    a local [dokuwiki](https://www.dokuwiki.org) install. After Firefox is 
-   closed, PHP is automatically closed.
+   closed, the PHP webserver is automatically stopped.
 * `mirror.sh` - Mirror a website sanely with wget
 * `mount-cache.sh` - Create folders and files expected to be in ~/.cache normally,
    useful if mounted as tmpfs
