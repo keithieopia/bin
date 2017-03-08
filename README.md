@@ -21,9 +21,10 @@ humble shell script.
 ## Table of Contents:
 
 * `backup.sh` - Automatically backup using [borg](https://borgbackup.readthedocs.io/en/stable/),
-  which encrypts, uses differentials, and deduplicates stored data.
-* `clean.sh` - Erases files, directories, browser cache, junk files, history files,
-   and slack space
+   which encrypts, uses differentials, and deduplicates stored data
+* `cheese.sh` - Take a picture of yourself using the webcam
+* `clean.sh` - Erases files, directories, browser cache, junk files, history 
+   files, and slack space
 * `cryptfox.sh` - Create and launch an encrypted browser profiles
 * `digests.sh` - List the various hashsums for a file and create or verify a
   SHA256SUMS for a directory.
