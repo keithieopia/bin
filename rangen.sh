@@ -1,5 +1,34 @@
 #!/bin/bash
 
+usage() {
+cat <<HELP
+Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
+
+Usage: $(basename "$0") [OPTION...] FORMAT
+
+  alpha         uppercase and lowercase letters
+  cia           CIA cryptonym; a digraph combinded with a word
+  digit         digits
+  fakeword      non-sense word based on a CVCV... pattern
+  lower         lowercase letters
+  mac           MAC address
+  pass          password (letters, numbers, symbols)
+  port          random port (1024 - ip_local_port_range)
+  upper         uppercase letters
+  word          dictionary word
+
+  -l [NUM]      number of chars to generate (default: 10)
+  -h            display this help
+
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2016 - 2017 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+# Defaults
 LEN=10
 CASE="alpha"
 
@@ -65,34 +94,6 @@ port() {
     RANGE="$(awk '{print $2}' </proc/sys/net/ipv4/ip_local_port_range)"
 
     shuf -n 1 -i 1024-$RANGE --random-source=/dev/urandom
-}
-
-usage() {
-cat <<HELP
-Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
-
-Usage: $(basename "$0") [OPTION...] FORMAT
-
-  alpha         uppercase and lowercase letters
-  cia           CIA cryptonym; a digraph combinded with a word
-  digit         digits
-  fakeword      non-sense word based on a CVCV... pattern
-  lower         lowercase letters
-  mac           MAC address
-  pass          password (letters, numbers, symbols)
-  port          random port (1024 - ip_local_port_range)
-  upper         uppercase letters
-  word          dictionary word
-
-  -l [NUM]      number of chars to generate (default: 10)
-  -h            display this help
-
-
-https://github.com/keithieopia/bin/
-
-Copyright (c) 2016 - 2017 Timothy Keith
-Licensed under the MIT license.
-HELP
 }
 
 word() {
