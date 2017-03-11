@@ -30,9 +30,14 @@ super + p
 Print
     scrot -bs ~/screenshot_%d%m%y_%H%M%S.png
 
-# lockscreen
+# lock screen
 super + l
     ~/bin/wm/lockscreen.sh
+
+# blank screen
+super + b
+    # sleep is needed otherwise it won't work
+    sleep 1; xset s activate
 
 # kill app
 super + k
