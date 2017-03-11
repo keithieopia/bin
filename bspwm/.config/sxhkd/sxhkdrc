@@ -34,13 +34,8 @@ Print
 super + l
     ~/bin/wm/lockscreen.sh
 
-# blank screen
-super + b
-    # sleep is needed otherwise it won't work
-    sleep 1; xset s activate
-
 # kill app
-super + k
+alt + F4
     ~/bin/wm/xkill.sh
 
 # make sxhkd reload its configuration files:
@@ -56,7 +51,7 @@ super + Escape
 #
 
 # close window
-alt + F4
+super + x
     bspc node -c ; paplay ~/bin/assets/sounds/close.ogg
 
 # next window
@@ -125,8 +120,8 @@ XF86Audio{RaiseVolume,LowerVolume,Mute}
     amixer -D pulse set Master {5%+,5%-,toggle}
     paplay $HOME/bin/assets/sounds/volume.ogg
 
-XF86MonBrightness{Down,Up}
-    xbacklight -{dec,inc} 10%
+XF86MonBrightness{Up,Down}
+    light -{A,U} 5%
 
 XF86Display
-    xbacklight -set {0,100}%
+    sleep 1; xset s activate
