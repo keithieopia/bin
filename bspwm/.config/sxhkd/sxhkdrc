@@ -34,6 +34,10 @@ Print
 super + l
     ~/bin/wm/lockscreen.sh
 
+# kill app
+super + k
+    ~/bin/wm/xkill.sh
+
 # make sxhkd reload its configuration files:
 super + r
     pkill -USR1 -x sxhkd
