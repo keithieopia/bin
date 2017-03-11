@@ -31,14 +31,11 @@ humble shell script.
 * `disco.sh` - Randomly colored lights in the terminal. For a more wholesome
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
    simultaneously.
-* `dropbox.sh` - Nuke dropbox's buggy auto-update mechanism and run it in a
-   firejail sandbox.
 * `encrypt.sh` - Wrapper for GPG symmetric encryption using AES256
 * `extract.sh` - Wrapper to extract from many archives
 * `fehquote.sh` - Sets a random quote on the current background. Reads `feh`'s
    config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
    untouched
-* `firefox.sh` - Run Firefox in a firejail sandbox.
 * `headset.sh` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
    still crap, so the script repetitively tries to connect before giving up
 * **install/**
@@ -75,11 +72,14 @@ humble shell script.
 * **wm/**
     * `battmon.sh` - Will warn about battery levels with increasing severity and
        then safely shut the system down if the battery gets too low.
+    * `dropbox.sh` - Nuke dropbox's buggy auto-update mechanism and run it in a
+       firejail sandbox
     * `lemonade.sh` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
        with useful system info, similar to conky
     * `lockscreen.sh` - Blurs and locks the screen with *Barney Fife
        Protection&trade;*
        that will make evildoers think twice!
+    * `firefox.sh` - Run Firefox in a firejail sandbox
     * `greeting.sh` - Sets the volume to an appropriate level given the time and
        says a greeting
        altogether mutes it depending on if it is too late at night

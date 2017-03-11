@@ -5,7 +5,7 @@
 # to use this script by default instead of plain vanilla firefox, copy
 # or symlink this script to '/usr/local/bin':
 #
-#    ln -s ~/bin/firefox /usr/bin/firefox
+#    ln -s ~/bin/wm/firefox /usr/local/bin/firefox
 #
 #
 # WHITELIST NOTES
@@ -22,4 +22,4 @@
 
 firejail --whitelist=~/dotfiles/sys/firefox \
          --whitelist=~/projects/startpage \
-         firefox $@
+         /usr/bin/firefox "$@"

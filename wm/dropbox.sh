@@ -5,7 +5,7 @@
 # to use this script by default instead of plain vanilla dropbox, copy
 # or symlink this script to '/usr/local/bin':
 #
-#    ln -s ~/bin/dropbox /usr/local/bin/dropbox
+#    ln -s ~/bin/wm/dropbox /usr/local/bin/dropbox
 
 # stop dropbox if it's already running
 
@@ -30,4 +30,4 @@ fi
 #    run sandbox only when disk is idle
 # firejail --nice=7
 #    run dropbox nicely, so it doesn't hog the cpu
-ionice -c 3 firejail --nice=7 dropbox
+ionice -c 3 firejail --nice=7 /usr/bin/dropbox
