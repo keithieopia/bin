@@ -17,5 +17,5 @@ esac
 ## Start X on login if we're on TTY 1 (the default TTY)
 ##
 if [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-    exec startx
+    exec startx -- -keeptty -nolisten tcp > ~/.xorg.log 2>&1
 fi
