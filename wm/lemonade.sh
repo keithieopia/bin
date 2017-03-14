@@ -49,12 +49,17 @@ DESKTOPS=$(bspc query -T -m | jshon -e desktops -a -e name -u)
 ## Sub-process Management
 ################################################################################
 
+trap cleanup INT TERM QUIT EXIT
+
+cleanup() {
+    pkill -TERM -P $$
+    exit 0
+}
+
 if [ $(pgrep -cx $PROCESS_NAME) -gt 1 ]; then
     echo "$PROCESS_NAME already running."
     exit 1
 fi
-
-trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 [ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
 mkfifo "$PANEL_FIFO"
