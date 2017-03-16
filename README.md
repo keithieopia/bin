@@ -1,20 +1,13 @@
-## ~/bin
+## ~/bin [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
 
 > Most good programmers do programming not because they expect to get paid or
-get adulation by the public, but because it is fun to program.
-
+> get adulation by the public, but because it is fun to program.
+>  
 > -- Linus Torvalds
-
 
 These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 some are simply novelties to see if a certain problem could be solved in a
 humble shell script.
-
-<p align="center">
-    <a href="https://www.codacy.com/app/timothykeith/bin">
-        <img alt="Codacy Badge" src="https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766">
-    </a>
-</p>
 
 ---
 
