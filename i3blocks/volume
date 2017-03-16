@@ -1,0 +1,11 @@
+#!/bin/bash
+VOLUME="$(amixer -D pulse get Master | tail -1)"
+
+if grep -q 'off' <<< "$VOLUME"; then
+    ICON="\uf026"
+else
+    ICON="\uf028"
+fi
+
+echo -ne "<span font='FontAwesome'>$ICON</span> "
+echo -n "$(awk '{print $5}' <<< $VOLUME | tr -d \[\])"

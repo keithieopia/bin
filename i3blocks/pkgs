@@ -1,0 +1,33 @@
+#!/bin/bash
+
+UPDATE_INTERVAL="86400"
+WARN=10
+
+# update the pacman db if it's older than $UPDATE_AFTER seconds
+LAST_UPDATE=$(grep 'synchronizing package lists' /var/log/pacman.log | \
+              tail -1 | awk '{print $1" "$2}' | tr -d \[\])
+LAST_TIME=$(date -d "$LAST_UPDATE" +%s)
+TIME=$(date +%s)
+
+if ((TIME-LAST_TIME > UPDATE_INTERVAL)); then
+    # update the db or die if it fails
+    # you'll want to setup a NOPASSWD sudo entry
+    if ! sudo pacman -Sy &> /dev/null; then
+        echo -e "<span font='FontAwesome'>\uf021</span> ?"
+        echo -e "<span font='FontAwesome'>\uf021</span> ?"
+        ./colors error
+        exit
+    fi
+fi
+
+# list the number of updates available
+NUM_UPDATES=$(pacman -Qu | wc -l)
+
+echo -e "<span font='FontAwesome'>\uf021</span> $NUM_UPDATES"
+echo -e "<span font='FontAwesome'>\uf021</span> $NUM_UPDATES"
+
+if ((NUM_UPDATES >= WARN)); then
+    $HOME/bin/i3blocks/colors warn
+else
+    $HOME/bin/i3blocks/colors success
+fi

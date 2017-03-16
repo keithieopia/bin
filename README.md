@@ -38,7 +38,20 @@ humble shell script.
    untouched
 * `headset.sh` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
    still crap, so the script repetitively tries to connect before giving up
-* **install/**
+* *i3blocks/*
+    * `battery` - remaining battery, changes the icon according to charge and if 
+      plugged in
+    * `colors` - called by the other i3block scripts for "warning", "error", and 
+      "success" colors, so the color scheme can be easily changed
+    * `cpu` - cumulative cpu utilization across cores. Requires [sysstat](http://sebastien.godard.pagesperso-orange.fr/)
+    * `disk` - disk usage
+    * `email` - Unread email count for Gmail. This one is worth looking at as 
+      it's around 15 SLOC, written pure bash, and only depends on `curl` 
+      (typical implementations require python/ruby/etc and are around 100 SLOC). 
+    * `memory` - RAM utilization
+    * `pkgs` - Number of available updates for Arch Linux 
+    * `volume` - Current volume level, changes icon on mute.
+* *install/*
     * `get-packer.sh` - Install [packer](https://aur.archlinux.org/packages/packer/),
        an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
 * `letsencrypt.sh` - Renew SSL certs for my domains using certbot
@@ -69,13 +82,14 @@ humble shell script.
 * `test-colors.sh` - Show the current terminal color scheme
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
    accurate compared to commercial websites and APIs
-* **wm/**
+* *unmaintained/*
+    * `lemonade.sh` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
+       with useful system info, similar to conky
+* *wm/*
     * `battmon.sh` - Will warn about battery levels with increasing severity and
        then safely shut the system down if the battery gets too low.
     * `dropbox.sh` - Nuke dropbox's buggy auto-update mechanism and run it in a
        firejail sandbox
-    * `lemonade.sh` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
-       with useful system info, similar to conky
     * `lockscreen.sh` - Blurs and locks the screen with *Barney Fife
        Protection&trade;*
        that will make evildoers think twice!
