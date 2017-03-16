@@ -36,11 +36,11 @@ humble shell script.
       plugged in
     * `colors` - called by the other i3block scripts for "warning", "error", and 
       "success" colors, so the color scheme can be easily changed
-    * `cpu` - cumulative cpu utilization across cores. Requires [sysstat](http://sebastien.godard.pagesperso-orange.fr/)
+    * `cpu` - cumulative cpu utilization across cores. Requires [sysstat](http://sebastien.godard.pagesperso-orange.fr/).
     * `disk` - disk usage
-    * `email` - Unread email count for Gmail. This one is worth looking at as 
-      it's around 15 SLOC, written pure bash, and only depends on `curl` 
-      (typical implementations require python/ruby/etc and are around 100 SLOC). 
+    * `email` - Unread email count for Gmail. Around 15 SLOC, written pure bash, 
+      and only depends on `curl`. Other implementations require python/ruby/etc 
+      with additional libraries and are about 100 SLOC.
     * `memory` - RAM utilization
     * `pkgs` - Number of available updates for Arch Linux 
     * `volume` - Current volume level, changes icon on mute.
