@@ -1,16 +1,16 @@
 #!/bin/bash
 
 DIR="${BLOCK_INSTANCE:-$HOME}"
-WARN=10
-CRIT=5
+WARN=90
+CRIT=95
 
-FREE=$(/bin/df -h -P -l "$DIR" | tail -1 | awk '{print $5}' | tr -d %)
+USED=$(df -h -P -l "$DIR" | tail -1 | awk '{print $5}' | tr -d %)
 
-echo -e "<span font='FontAwesome'>\uf0a0</span> ${FREE}%"
-echo -e "<span font='FontAwesome'>\uf0a0</span> ${FREE}%"
+echo -e "<span font='FontAwesome'>\uf0a0</span> ${USED}%"
+echo -e "<span font='FontAwesome'>\uf0a0</span> ${USED}%"
 
-if (( $FREE <= $CRIT )); then
+if (( $USED >= $CRIT )); then
     $HOME/bin/i3blocks/colors error
-elif (( $FREE <= $WARN )); then
+elif (( $USED >= $WARN )); then
     $HOME/bin/i3blocks/colors warn
 fi
