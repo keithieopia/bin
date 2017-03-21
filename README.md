@@ -21,14 +21,18 @@ humble shell script.
 * `cryptfox` - Create and launch an encrypted browser profiles
 * `digests` - List the various hashsums for a file and create or verify a
    SHA256SUMS for a directory.
-* `disco` - Randomly colored lights in the terminal. For a more wholesome
-   experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
-   simultaneously.
 * `encrypt` - Wrapper for GPG symmetric encryption using AES256
 * `extract` - Wrapper to extract from many archives
 * `fehquote` - Sets a random quote on the current background. Reads `feh`'s
    config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
    untouched
+* *fun/*
+    * `busy`  - Look busy to those annoying people who shoulder surf
+	* `disco` - Randomly colored lights in the terminal. For a more 
+	  wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
+	  simultaneously
+	* `quotes` - Random curated quotes in a easy to understand 
+	  all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
 * `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
    still crap, so the script repetitively tries to connect before giving up
 * *i3blocks/*
@@ -64,8 +68,6 @@ humble shell script.
 * `pdf-extract` - Extract pages from a PDF; useful for removing superfluous and
    unofficial cover sheets added by many online repositories. Compare to
    [pdftk](https://linux.die.net/man/1/pdftk).
-* `quotes` - Random curated quotes in a easy to understand all-in-one format 
-   (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)).
 * `rangen` - Create random passwords, MAC addresses, letters, or numbers 
    using /dev/urandom
 * `respawn` - Indefinitely restart a program after it exits
