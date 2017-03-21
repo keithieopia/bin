@@ -90,9 +90,6 @@ humble shell script.
     * `greeting` - Sets the volume to an appropriate level given the time and
        says a greeting
        altogether mutes it depending on if it is too late at night
-* `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
-   password scheme generator. Uses the kernel's CSPRNG, unlike most
-   implementations
 * `zeronet` - Script to run [ZeroNet](https://zeronet.io/), a decentralized
    censorship resistant network, using [Tor](https://www.torproject.org/) for
    anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) 

@@ -6,6 +6,7 @@ Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 
 Usage: $(basename "$0") [OPTION...] FORMAT
 
+Format:
   alpha         uppercase and lowercase letters
   cia           CIA cryptonym; a digraph combinded with a word
   digit         digits
@@ -16,8 +17,11 @@ Usage: $(basename "$0") [OPTION...] FORMAT
   port          random port (1024 - ip_local_port_range)
   upper         uppercase letters
   word          dictionary word
+  xkcd          xkcd "correct horse battery staple" password
 
+Flags:
   -l [NUM]      number of chars to generate (default: 10)
+  -w [NUM]      number of words to generate
   -h            display this help
 
 
@@ -30,6 +34,7 @@ HELP
 
 # Defaults
 LEN=10
+NUM_WORDS=1
 CASE="alpha"
 
 alpha() {
@@ -97,15 +102,47 @@ port() {
 }
 
 word() {
-    words=$(aspell dump master | grep -o -w '\w\{4,8\}')
-    shuf -n 1 --random-source=/dev/urandom <<< "$words"
+    # prefer to use aspell as typically it has the largest dictionary
+    if hash aspell 2>/dev/null; then
+        # sanitize it's dictionary to only words of 4-8 chars long
+        words=$(aspell dump master | grep -o -w '\w\{4,8\}' | tr '[:upper:]' '[:lower:]')
+    else
+        # no aspell, look for dict files in their typical locations
+        files=("/usr/dict/words" "/usr/share/dict/words" "/usr/share/dict/cracklib-small")
+        for file in "${files[@]}"; do
+            if [ -f $file ]; then
+                dict="$file"
+                break
+            fi
+        done
+
+        if [ -z $dict ]; then
+            echo -e "aspell is not installed and no dictionary files where found!"
+            exit 1
+        else
+            # cracklib has numbers and other non-words in its dictionary
+            # so get rid of those along with only using words 4-8 chars long
+            words=$(grep -E '^[a-zA-Z]{4,8}$' "$dict")
+        fi
+    fi
+
+    shuf -n $NUM_WORDS --random-source=/dev/urandom <<< "$words"
 }
 
+xkcd() {
+    if [[ $NUM_WORDS < 4 ]]; then
+        NUM_WORDS=4
+    fi
+
+    WORDS=$(word | paste -s -d ' ')
+    echo "${WORDS// /} ($WORDS)"
+}
 
 while getopts l:c:h option; do
     case $1 in
-        -l) LEN=${OPTARG}  ;;
-        -h) usage && exit  ;;
+        -l) LEN=${OPTARG}   ;;
+        -w) NUM_WORDS=${OPTARG} ;;
+        -h) usage && exit   ;;
     esac
 done
 
@@ -143,6 +180,9 @@ case $1 in
               exit
               ;;
     word)     word
+              exit
+              ;;
+    xkcd)     xkcd
               exit
               ;;
     *)        usage
