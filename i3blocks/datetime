@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo -e "<span font='FontAwesome'>\uf017</span> $(date +'%a, %b %-e %l:%M %P')"
+echo -e "<span font='FontAwesome'>\uf017</span> $(date +'%a, %b %-e %l:%M %P')"
