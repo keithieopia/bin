@@ -1,6 +1,6 @@
 ## ~/bin [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a2be672889a848609315c6173ebd7766)](https://www.codacy.com/app/timothykeith/bin)
 
-<img align="right" alt="Shebang" src="https://raw.githubusercontent.com/keithieopia/bin/master/readme-assets/shebang.png">
+<img align="right" alt="Shebang" src="https://raw.githubusercontent.com/keithieopia/bin/master/.readme-assets/shebang.png">
 
 > Most good programmers do programming not because they expect to get paid or
 > get adulation by the public, but because it is fun to program.
