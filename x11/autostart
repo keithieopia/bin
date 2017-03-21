@@ -1,0 +1,19 @@
+#! /bin/sh
+
+#
+# WM agnostic script for autostarting apps
+#
+
+#~/bin/mount-cache &
+compton &
+#~/.fehbg &
+unclutter &
+urxvtd -q -f -o &
+pcmanfm -d &
+wicd-client --tray &
+#zim --plugin trayicon &
+#autocutsel -fork &
+#~/bin/wm/greeting &
+
+(sleep 60s && ~/bin/dropbox) &
+(sleep 60s && ~/bin/wm/battmon) &
