@@ -21,6 +21,7 @@ borg create -v --compression lz4 --stats --progress  \
     ~/.dosbox                                        \
     ~/.fonts                                         \
     ~/.gnupg                                         \
+    ~/.icons                                         \
     ~/.password-store                                \
     ~/.ssh                                           \
     ~/.wine                                          \
