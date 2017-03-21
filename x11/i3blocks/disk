@@ -6,8 +6,8 @@ CRIT=95
 
 USED=$(df -h -P -l "$DIR" | tail -1 | awk '{print $5}' | tr -d %)
 
-echo -e "<span font='FontAwesome'>\uf0a0</span> ${USED}%"
-echo -e "<span font='FontAwesome'>\uf0a0</span> ${USED}%"
+echo -e "${USED}%"
+echo -e "${USED}%"
 
 if (( $USED >= $CRIT )); then
     $HOME/bin/i3blocks/colors error

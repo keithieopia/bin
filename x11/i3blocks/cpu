@@ -6,8 +6,8 @@ CRIT=80
 MPSTAT=$(mpstat | tail -1 | awk '{print $13}')
 CPU=$(echo "c=100 - $MPSTAT; if (c < 1) print 0; c" | bc -l)
 
-echo -e "<span font='FontAwesome'>\uf085</span> ${CPU}%"
-echo -e "<span font='FontAwesome'>\uf085</span> ${CPU}%"
+echo -e "${CPU}%"
+echo -e "${CPU}%"
 
 if (( $(echo "$CPU >= $CRIT" | bc -l) )); then
     $HOME/bin/i3blocks/colors error
