@@ -90,14 +90,12 @@ be solved in a humble shell script.
 		   easily changed
 		* `cpu` - cumulative cpu utilization across cores. Requires 
 		   [sysstat](http://sebastien.godard.pagesperso-orange.fr/).
-		* `datetime` - simply shows the current date and time
 		* `disk` - disk usage
 		* `email` - Unread email count for Gmail. Around 15 SLOC, 
 		   written pure bash, and only depends on `curl`. Other 
 		   implementations are about 100 SLOC with python/ruby/etc 
 		   and require add-on libraries 
 		* `memory` - RAM utilization
-		* `arch-pkgs` - Number of available updates for Arch Linux 
 		* `volume` - Current volume level, changes icon on mute
     * *lockscreen/*
         * `lockscreen` - Blurs and locks the screen with *Barney Fife
