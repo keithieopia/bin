@@ -1,107 +1,79 @@
 #!/bin/bash
-# Copyright (C) 2012 Stefan Breunig <stefan+measure-net-speed@mathphys.fsk.uni-heidelberg.de>
-# Copyright (C) 2014 kaueraal
-# Copyright (C) 2015 Thiago Perrotta <perrotta dot thiago at poli dot ufrj dot br>
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+BASE_SPEED="193000" # in bytes; default T1 / 1.544Mbps
+WARN="90" # 90% of max rate
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+IFACE=$(route | grep default | awk '{print $8}')
+CACHE_FILE="/tmp/net_$IFACE"
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+human_bytes () {
+    if [[ $1 =~ ^-?[0-9]+$ ]]; then
+        bytes=$1
+        kilobytes=$((bytes >> 10))
+        megabytes=$((bytes >> 20))
+        gigabytes=$((bytes >> 30))
 
-# Get custom IN and OUT labels if provided by command line arguments
-while [[ $# -gt 1 ]]; do
-    key="$1"
-    case "$key" in 
-        -i|--inlabel)
-            INLABEL="$2"
-            shift;;
-        -o|--outlabel)
-            OUTLABEL="$2"
-            shift;;
-    esac
-    shift
-done
+        if [ $gigabytes -gt 1 ]; then
+            echo "$gigabytes gb"
+        elif [ $megabytes -gt 1 ]; then
+            echo "$megabytes mb"
+        elif [ $kilobytes -gt 1 ]; then
+            echo "$kilobytes kb"
+        else
+            echo "$bytes b"
+        fi
+    else
+        # not an integer, just return what was given
+        echo "$@"
+    fi
+}
 
-[[ -z $INLABEL ]] && INLABEL="IN "
-[[ -z $OUTLABEL ]] && OUTLABEL="OUT "
-
-# Use the provided interface, otherwise the device used for the default route.
-if [[ -n $BLOCK_INSTANCE ]]; then
-  INTERFACE=$BLOCK_INSTANCE
+if [[ -z $IFACE ]] || grep -q "down" "/sys/class/net/$IFACE/operstate"; then
+	echo " network down"
+	echo " network down"
+	$HOME/bin/x11/i3blocks/colors error
+	
 else
-  INTERFACE=$(ip route | awk '/^default/ { print $5 ; exit }')
-fi
+	TIME=$(date +%s)
+	TX_TOTAL=$(< /sys/class/net/$IFACE/statistics/tx_bytes)
+	RX_TOTAL=$(< /sys/class/net/$IFACE/statistics/rx_bytes)
 
-# Issue #36 compliant.
-if ! [ -e "/sys/class/net/${INTERFACE}/operstate" ] || ! [ "`cat /sys/class/net/${INTERFACE}/operstate`" = "up" ]
-then
-    echo "$INTERFACE down"
-    echo "$INTERFACE down"
-    echo "#FF0000"
-    exit 0
-fi
+	if [ -f "$CACHE_FILE" ]; then
+		TIME_CACHE=$(stat -c %Y $CACHE_FILE)
+		ELAPSED_TIME=$(bc <<< "$TIME - $TIME_CACHE")
+	
+		read TX_CACHE RX_CACHE TX_MAX RX_MAX < "$CACHE_FILE"
+		
+		if [[ "$ELAPSED_TIME" != 0 ]]; then
+			TX=$(bc <<< "($TX_TOTAL - $TX_CACHE) / $ELAPSED_TIME")
+			RX=$(bc <<< "($RX_TOTAL - $RX_CACHE) / $ELAPSED_TIME")
 
-# path to store the old results in
-path="/dev/shm/$(basename $0)-${INTERFACE}"
+			echo " $(human_bytes $RX)  $(human_bytes $TX)"
+			echo " $(human_bytes $RX)  $(human_bytes $TX)"
+			
+			if (( TX > TX_MAX )); then
+				TX_MAX="$TX"
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( RX > RX_MAX )); then
+				RX_MAX="$RX"
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( $(bc -l <<< "$TX / $TX_MAX >= $WARN / 100") )); then
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( $(bc -l <<< "$RX / $RX_MAX >= $WARN / 100") )); then
+				$HOME/bin/x11/i3blocks/colors warn
+			fi
+		else
+			echo " 0 b  0 b"
+		fi
+	else
+		TX_MAX="$BASE_SPEED"
+		RX_MAX="$BASE_SPEED"
+	
+		echo " collating data"
+		echo " collating data"
+		$HOME/bin/x11/i3blocks/colors info
+	fi
 
-# grabbing data for each adapter.
-read rx < "/sys/class/net/${INTERFACE}/statistics/rx_bytes"
-read tx < "/sys/class/net/${INTERFACE}/statistics/tx_bytes"
-
-# get time
-time=$(date +%s)
-
-# write current data if file does not exist. Do not exit, this will cause
-# problems if this file is sourced instead of executed as another process.
-if ! [[ -f "${path}" ]]; then
-  echo "${time} ${rx} ${tx}" > "${path}"
-  chmod 0666 "${path}"
-fi
-
-# read previous state and update data storage
-read old < "${path}"
-echo "${time} ${rx} ${tx}" > "${path}"
-
-# parse old data and calc time passed
-old=(${old//;/ })
-time_diff=$(( $time - ${old[0]} ))
-
-# sanity check: has a positive amount of time passed
-[[ "${time_diff}" -gt 0 ]] || exit
-
-# calc bytes transferred, and their rate in byte/s
-rx_diff=$(( $rx - ${old[1]} ))
-tx_diff=$(( $tx - ${old[2]} ))
-rx_rate=$(( $rx_diff / $time_diff ))
-tx_rate=$(( $tx_diff / $time_diff ))
-
-# shift by 10 bytes to get KiB/s. If the value is larger than
-# 1024^2 = 1048576, then display MiB/s instead
-
-# incoming
-echo -n "$INLABEL"
-rx_kib=$(( $rx_rate >> 10 ))
-if hash bc 2>/dev/null && [[ "$rx_rate" -gt 1048576 ]]; then
-  printf '%sM' "`echo "scale=1; $rx_kib / 1024" | bc`"
-else
-  echo -n "${rx_kib}K"
-fi
-
-echo -n " "
-
-# outgoing
-echo -n "$OUTLABEL"
-tx_kib=$(( $tx_rate >> 10 ))
-if hash bc 2>/dev/null && [[ "$tx_rate" -gt 1048576 ]]; then
-  printf '%sM' "`echo "scale=1; $tx_kib / 1024" | bc`"
-else
-  echo -n "${tx_kib}K"
+	# Write the cache file
+	echo "$TX_TOTAL $RX_TOTAL $TX_MAX $RX_MAX" > "$CACHE_FILE"
 fi
