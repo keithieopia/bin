@@ -13,23 +13,23 @@ humble shell script.
 
 ## Table of Contents:
 
-* `backup.sh` - Automatically backup using [borg](https://borgbackup.readthedocs.io/en/stable/),
+* `backup` - Automatically backup using [borg](https://borgbackup.readthedocs.io/en/stable/),
    which encrypts, uses differentials, and deduplicates stored data
-* `cheese.sh` - Take a picture of yourself using the webcam
-* `clean.sh` - Erases files, directories, browser cache, junk files, history 
+* `cheese` - Take a picture of yourself using the webcam
+* `clean` - Erases files, directories, browser cache, junk files, history 
    files, and slack space
-* `cryptfox.sh` - Create and launch an encrypted browser profiles
-* `digests.sh` - List the various hashsums for a file and create or verify a
+* `cryptfox` - Create and launch an encrypted browser profiles
+* `digests` - List the various hashsums for a file and create or verify a
    SHA256SUMS for a directory.
-* `disco.sh` - Randomly colored lights in the terminal. For a more wholesome
+* `disco` - Randomly colored lights in the terminal. For a more wholesome
    experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
    simultaneously.
-* `encrypt.sh` - Wrapper for GPG symmetric encryption using AES256
-* `extract.sh` - Wrapper to extract from many archives
-* `fehquote.sh` - Sets a random quote on the current background. Reads `feh`'s
+* `encrypt` - Wrapper for GPG symmetric encryption using AES256
+* `extract` - Wrapper to extract from many archives
+* `fehquote` - Sets a random quote on the current background. Reads `feh`'s
    config and uses a quote from `fortune -s`, while leaving your `.fehbg` is
    untouched
-* `headset.sh` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
+* `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux is
    still crap, so the script repetitively tries to connect before giving up
 * *i3blocks/*
     * `battery` - remaining battery, changes the icon according to charge and if 
@@ -45,55 +45,55 @@ humble shell script.
     * `pkgs` - Number of available updates for Arch Linux 
     * `volume` - Current volume level, changes icon on mute.
 * *install/*
-    * `get-packer.sh` - Install [packer](https://aur.archlinux.org/packages/packer/),
+    * `arch-get-packer` - Install [packer](https://aur.archlinux.org/packages/packer/),
        an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
-* `letsencrypt.sh` - Renew SSL certs for my domains using certbot
-* `local-wiki.sh` - Starts PHP's built-in webserver and Firefox to access 
+* `letsencrypt` - Renew SSL certs for my domains using certbot
+* `local-wiki` - Starts PHP's built-in webserver and Firefox to access 
    a local [dokuwiki](https://www.dokuwiki.org) install. After Firefox is 
    closed, the PHP webserver is automatically stopped.
-* `mirror.sh` - Mirror a website sanely with wget
-* `mount-cache.sh` - Create folders and files expected to be in ~/.cache normally,
+* `mirror` - Mirror a website sanely with wget
+* `mount-cache` - Create folders and files expected to be in ~/.cache normally,
    useful if mounted as tmpfs
-* `mount-cd.sh` - Mounts an .iso CD/DVD image to /mnt/cdrom
-* `net-status.sh` - Show the network status as well as the Gateway and local/public
+* `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
+* `net-status` - Show the network status as well as the Gateway and local/public
    IP addresses
-* `net-wait.sh` - Wait for the network to come up, then start the given app
-* `nullcrypt.sh` - Creates and opens encrypted LUKS containers with sane settings
-* `optimize-images.sh` - Optimize images for the web by reduces image size and fixing
+* `net-wait` - Wait for the network to come up, then start the given app
+* `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
+* `optimize-images` - Optimize images for the web by reduces image size and fixing
    file names
-* `pdf-extract.sh` - Extract pages from a PDF; useful for removing superfluous and
+* `pdf-extract` - Extract pages from a PDF; useful for removing superfluous and
    unofficial cover sheets added by many online repositories. Compare to
    [pdftk](https://linux.die.net/man/1/pdftk).
-* `quotes.sh` - Random curated quotes in a easy to understand all-in-one format 
+* `quotes` - Random curated quotes in a easy to understand all-in-one format 
    (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29)).
-* `rangen.sh` - Create random passwords, MAC addresses, letters, or numbers 
+* `rangen` - Create random passwords, MAC addresses, letters, or numbers 
    using /dev/urandom
-* `respawn.sh` - Indefinitely restart a program after it exits
-* `say.sh` - Use Pico TTS to speak the given text
-* `steam-preload.sh` - Quirks fixes for Steam under bspwm with an Intel graphics
+* `respawn` - Indefinitely restart a program after it exits
+* `say` - Use Pico TTS to speak the given text
+* `steam-preload` - Quirks fixes for Steam under bspwm with an Intel graphics
    card
-* `test-colors.sh` - Show the current terminal color scheme
+* `test-colors` - Show the current terminal color scheme
 * `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
    accurate compared to commercial websites and APIs
 * *unmaintained/*
-    * `lemonade.sh` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
+    * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
        with useful system info, similar to conky
 * *wm/*
-    * `battmon.sh` - Will warn about battery levels with increasing severity and
+    * `battmon` - Will warn about battery levels with increasing severity and
        then safely shut the system down if the battery gets too low.
-    * `dropbox.sh` - Nuke dropbox's buggy auto-update mechanism and run it in a
+    * `dropbox` - Nuke dropbox's buggy auto-update mechanism and run it in a
        firejail sandbox
-    * `lockscreen.sh` - Blurs and locks the screen with *Barney Fife
+    * `lockscreen` - Blurs and locks the screen with *Barney Fife
        Protection&trade;*
        that will make evildoers think twice!
-    * `firefox.sh` - Run Firefox in a firejail sandbox
-    * `greeting.sh` - Sets the volume to an appropriate level given the time and
+    * `firefox` - Run Firefox in a firejail sandbox
+    * `greeting` - Sets the volume to an appropriate level given the time and
        says a greeting
        altogether mutes it depending on if it is too late at night
-* `xkcd-pass.sh` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
+* `xkcd-pass` - [xkcd's "correct horse battery staple"](https://xkcd.com/936/)
    password scheme generator. Uses the kernel's CSPRNG, unlike most
    implementations
-* `zeronet.sh` - Script to run [ZeroNet](https://zeronet.io/), a decentralized
+* `zeronet` - Script to run [ZeroNet](https://zeronet.io/), a decentralized
    censorship resistant network, using [Tor](https://www.torproject.org/) for
    anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) 
    [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
@@ -106,16 +106,16 @@ be invoked by passing the typical `-h` flag.
 
 ## Credits
 
-* `disco.sh` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
+* `disco` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
   License: *public domain*
-* `extract.sh` - Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
+* `extract` - Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
-* `lemonade.sh` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-* `lockscreen.sh` - Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
+* `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
+* `lockscreen` - Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
 which in turn is based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy).  
 License: [MIT](https://opensource.org/licenses/MIT)
-* `test-colors.sh` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
+* `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 
 
