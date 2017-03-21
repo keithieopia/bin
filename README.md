@@ -68,7 +68,12 @@ be solved in a humble shell script.
    accurate compared to commercial websites and APIs
 * *unmaintained/*
     * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
-       with useful system info, similar to conky
+       with useful system info, similar to conky 
+    * `steam-preload` - Quirks fixes for Steam under bspwm with an Intel 
+       graphics card
+    * `xkcd-pass` - xkcd's [correct horse battery staple](https://xkcd.com/936/) 
+       password scheme generator. Uses the kernel's CSPRNG, unlike most 
+       implementations
 * *x11/*
     * `autostart` - wm agnostic way to autostart some programs
     * `cryptfox` - Create and launch an encrypted browser profiles
