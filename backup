@@ -23,6 +23,7 @@ borg create -v --compression lz4 --stats --progress  \
     ~/.gnupg                                         \
     ~/.icons                                         \
     ~/.password-store                                \
+    ~/.sounds                                        \
     ~/.ssh                                           \
     ~/.wine                                          \
     --exclude '*/.git'                               \

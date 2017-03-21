@@ -32,5 +32,5 @@ else
     GREETING="Good morning"
 fi
 
-paplay "$HOME/bin/assets/sounds/startup.ogg"
+paplay "$HOME/.sounds/startup.ogg"
 $HOME/bin/say.sh "$GREETING. Today is $DATE. It is $TIME"
