@@ -1,7 +1,8 @@
 [user]
     email = timothykeith@gmail.com
     name = Timothy Keith
-    signingkey = 4135C5931D89368E7F32C8EDF4F4A135C022EE12
+#    signingkey = 4135C5931D89368E7F32C8EDF4F4A135C022EE12
+    signingkey = 9B9B704B1DEFF6C64F4672FC57801331E79295BD
 
 [color]
     diff = auto
@@ -18,3 +19,5 @@
     
 [alias]
     history = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --branches --date-order
+[gpg]
+	program = /usr/bin/gpg2
