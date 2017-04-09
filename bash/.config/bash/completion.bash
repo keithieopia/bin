@@ -8,8 +8,8 @@ shopt -s dirspell                    # same as above, but with dirs
 shopt -s progcomp                    # Programmable completion is FUN
 shopt -s no_empty_cmd_completion
 
-if [ -f /usr/share/git/completion/git-completion.bash ]; then
-  source /usr/share/git/completion/git-completion.bash
+if [ -f /etc/bash_completion ]; then
+  . /etc/bash_completion
 fi
 
 complete -cf sudo
