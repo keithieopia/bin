@@ -16,13 +16,13 @@ shopt -s checkhash                       # check cache before finding full path
 
 # Source files (comments denote dependencies that have to come before it)
 source "$HOME/.config/bash/functions.bash"
-source "$HOME/.config/bash/alias.bash"      # needs functions.bash
-source "$HOME/.config/bash/exports.bash"    # needs functions.bash
+source "$HOME/.config/bash/alias.bash"
+source "$HOME/.config/bash/exports.bash"
 source "$HOME/.config/bash/completion.bash"
 source "$HOME/.config/bash/agent.bash"
 source "$HOME/.config/bash/prompt.bash"
 source "$HOME/.config/bash/history.bash"    # needs prompt.bash
-
+source "$HOME/.config/bash/theme.bash"
 
 ##
 ## Security
