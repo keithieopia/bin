@@ -29,7 +29,7 @@ source "$HOME/.config/bash/history.bash"    # needs prompt.bash
 ##
 
 # If root, set a timeout for the bash session
-if [ `/usr/bin/id -u` -eq 0 ]; then
+if [ $(/usr/bin/id -u) -eq 0 ]; then
     TMOUT=600
 fi
 
@@ -49,12 +49,12 @@ if [ -d ~/bin ]; then
 fi
 
 # ccache pre-processor for C/C++
-if have ccache; then
+if type ccache &> /dev/null; then
     PATH="/usr/lib/ccache/bin:$PATH"
 fi
 
 # ruby
-if have ruby; then
+if type ruby &> /dev/null; then
     PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 fi
 
@@ -66,7 +66,7 @@ fi
 # don't display quotes on tty1, because Xorg is set to autostart
 # on that term and fortune will cause a noticable delay
 
-if have fortune && ! $(tty | grep -q tty1); then
+if type fortune &> /dev/null && ! $(tty | grep -q tty1); then
     echo -e "\033[0;35m$(fortune -sa)\033[0m\n"
 fi
 
