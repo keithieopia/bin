@@ -20,20 +20,16 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 ##
 ## Default Programs
 ##
-export EDITOR="/usr/bin/nano"
+export EDITOR="/bin/nano"
 export VISUAL="$EDITOR"
 
 # Xorg programs
 if [ -n "$DISPLAY" ]; then
-    export BROWSER="firefox"
+    export BROWSER="chromium"
     #export WINEARCH=win32
 fi
 
 # Pager
-if have less; then
-    export PAGER='less'
-    unset LESSCHARSET # Fix manpages looking funky
-    export LESS='--ignore-case --line-numbers --hilite-unread  -z-4 --hilite-search --LONG-PROMPT --no-init --quit-if-one-screen --quit-on-intr --RAW-CONTROL-CHARS'
-else
-    export PAGER='more'
-fi
+export PAGER='less'
+export LESS='--ignore-case --line-numbers --hilite-unread  -z-4 --hilite-search --LONG-PROMPT --no-init --quit-if-one-screen --quit-on-intr --RAW-CONTROL-CHARS'
+unset LESSCHARSET # Fix manpages looking funky
