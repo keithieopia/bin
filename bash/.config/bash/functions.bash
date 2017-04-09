@@ -1,6 +1,5 @@
-have() { type "$1" &> /dev/null; } # determine if a program in installed
-quietly() { "$@" &>/dev/null; } # Run a command quietly
-
+# make directory and cd into it
+md() { mkdir -p "$@" && cd "$@"; }
 
 # Calculate size of directories
 dudir() {
@@ -14,6 +13,10 @@ dudir() {
     fi
 }
 
+# lesspipe for non-text input files
+if type lesspipe &> /dev/null; then
+	eval "$(SHELL=/bin/sh lesspipe)"
+fi
 
 ##
 ## Archiving
@@ -21,7 +24,7 @@ dudir() {
 mktar()  { tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
 
 mktbz2() {
-    if have pbzip2; then
+    if type pbzip2 &> /dev/null; then
         echo -e "\033[1;37mUsing parallel pbzip2...\033[00m"
         tar -Ipbzip2 -cvf "${1%%/}.tbz2" "${1%%/}/"
     else
@@ -30,7 +33,7 @@ mktbz2() {
 }
 
 mktgz() {
-    if have pigz; then
+    if type pigz &> /dev/null; then
         echo -e "\033[1;37mUsing parallel pigz...\033[00m"
         tar -Ipigz -cvf "${1%%/}.tgz" "${1%%/}/"
     else
@@ -39,7 +42,7 @@ mktgz() {
 }
 
 mktxz() {
-    if have pixz; then
+    if type pixz &> /dev/null; then
         echo -e "\033[1;37mUsing parallel pixz...\033[00m"
         tar -Ipixz -cvf "${1%%/}.txz" "${1%%/}/"
     else
