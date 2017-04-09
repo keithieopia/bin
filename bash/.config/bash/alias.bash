@@ -16,29 +16,54 @@ alias ping='ping -c 5'
 alias ssh="TERM=linux ssh" # SSH terminal fix
 
 # defaults to optional programs
-have shred && alias shred='shred -fuzvn 1'
-have unclutter && alias unclutter='unclutter -idle 1 -root -grab -visible'
+if type shred &> /dev/null; then 
+	alias shred='shred -fuzvn 1'
+fi
+
+if type unclutter &> /dev/null; then 
+	alias unclutter='unclutter -idle 1 -root -grab -visible'
+fi
 
 # replace built-ins with better programs if we have them
-have dcfldd && alias dd='dcfldd'
-have htop && alias top='htop'
-have colordiff && alias diff='colordiff'
-have pydf && alias df='pydf'
+if type colordiff &> /dev/null; then 
+	alias diff='colordiff'
+fi
+
+if type dcfldd &> /dev/null; then
+	alias dd='dcfldd'
+fi
+
+if type htop &> /dev/null; then
+	alias top='htop'
+fi
+
+if type pydf &> /dev/null; then
+	alias df='pydf'
+fi
+
+if type xstow &> /dev/null; then
+	alias stow='xstow'
+fi
+
+if type gpg2 &> /dev/null; then
+	alias gpg='gpg2'
+fi
 
 # new commands
 alias ..="cd .."
+alias ...="cd ..."
+alias ....="cd ...."
 alias ~='cd ~ && clear'
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
-
-
 alias epoch='date +%s'
-alias fuck='sudo $(history -p !!)' # some people are nice and instead call this "please"
+alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias copy='rsync -ah --progress' # cp with progress indicator
+alias copy='rsync -WavPh $1 $2' # cp with progress indicator
 alias lsd='ls -l | grep "^d"' # list only dirs
 alias ll='ls -lhA --color | less -R'
 alias ports='sudo lsof -i -n -P' # list open ports / running network services
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Websites
 alias google="firefox -P Browsing http://www.google.com"
