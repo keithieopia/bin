@@ -85,12 +85,15 @@ set wordbounds
 set speller "aspell -x -c"
 
 ## Syntax Highlighting
-include /usr/share/nano/changelog.nanorc
+
+# Ubuntu has these, but not Debian, so they're in this repo:
+include ~/.config/nano/default.nanorc
+include ~/.config/nano/javascript.nanorc
+include ~/.config/nano/json.nanorc
+include ~/.config/nano/changelog.nanorc
+
 include /usr/share/nano/css.nanorc
-include /usr/share/nano/default.nanorc
 include /usr/share/nano/html.nanorc
-include /usr/share/nano/javascript.nanorc
-include /usr/share/nano/json.nanorc
 include /usr/share/nano/man.nanorc
 include /usr/share/nano/nanorc.nanorc
 include /usr/share/nano/php.nanorc
