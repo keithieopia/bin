@@ -17,4 +17,5 @@ case "$-" in
         if [[ -z "$DISPLAY" && "$(fgconsole)" -eq 1 ]]; then
 			exec startx -- vt1 -keeptty -nolisten tcp > ~/.xorg.log 2>&1
 		fi
+		;;
 esac
