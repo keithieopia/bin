@@ -1,7 +1,7 @@
 # ~/.bashrc
 
 # don't run if the shell not interactive
-if [[ $- != *i* ]] && return
+[ -z "$PS1" ] && return
 
 # Bash Options
 shopt -s extglob                         # necessary for programmable completion
