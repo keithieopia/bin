@@ -32,7 +32,7 @@ fi
 
 # Xorg stuff:
 xset -b                        # no friggen beep
-xsetroot -cursor_name left_ptr # set cursor so it's not an X
 
-# launch bspwm
-exec bspwm > .xorg-wm.log 2>&1
+## launch bspwm
+#exec bspwm > .xorg-wm.log 2>&1
+exec ck-launch-session dbus-launch --sh-syntax --exit-with-session i3 -V > .xorg-i3.log 2>&1

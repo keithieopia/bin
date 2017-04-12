@@ -2,7 +2,7 @@
 !   Xorg Defaults                               !
 !===============================================!
 
-Xcursor.theme: Gruppled White
+Xcursor.theme: ATER_Blue
 
 
 !===============================================!
@@ -19,5 +19,6 @@ Xft.hintstyle: hintslight
 !  URxvt                                        !
 !===============================================!
 
-#include ".config/rxvt/urxvt"
-#include ".config/rxvt/color-schemes/base16-darktooth-256"
+! path relative to ~/dotfiles
+#include "../rxvt/.config/rxvt/urxvt"
+#include "../rxvt/.config/rxvt/color-schemes/base16-darktooth-256"
