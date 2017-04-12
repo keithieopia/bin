@@ -1,12 +1,7 @@
 # ~/.bashrc
-#    read by Bash on start, if the shell is interactive.
-#
-#    DO NOT USE interactivity checks such as: [[ "$-" != *i* ]] && return
-#    Rather, interactivity should be preformed in .bash_profile which then
-#    sources .bashrc
-#
-#    Recommended reading:
-#    https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980
+
+# don't run if the shell not interactive
+if [[ $- != *i* ]] && return
 
 # Bash Options
 shopt -s extglob                         # necessary for programmable completion
