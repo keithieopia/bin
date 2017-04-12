@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for DIR in *; do
+    if [ -d "${DIR}" ]; then
+        sudo stow -t / "$DIR"
+    fi
+done
