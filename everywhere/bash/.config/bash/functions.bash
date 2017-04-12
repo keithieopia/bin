@@ -76,35 +76,3 @@ ascii2hex() { echo $(hexdump -e '"%X"' <<< "$1"); }
 
 calc() { echo "scale=4;$*" | bc -l; }
 
-
-##
-## Arch Linux's pacman package manager
-##
-if [[ -e /etc/arch-release ]]; then
-    upgrade() {
-        echo "$HOSTNAME: Updating system..."
-        sudo pacman -Syu "$@"
-    }
-
-    update() {
-        echo "$HOSTNAME: Updating package lists..."
-        sudo pacman -Sy "$@"
-    }
-
-    purge() {
-        echo "$HOSTNAME: Removing package..."
-        sudo pacman -Rsnc "$@"
-    }
-
-    browse() {
-        pacman -Qs "$@"
-    }
-
-    consider() {
-        (pacman -Si ${*} || packer -Si ${*}) | $PAGER;
-    }
-
-    hunt() {
-        packer -Ss "${@}" | $PAGER
-    }
-fi
