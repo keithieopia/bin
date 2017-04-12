@@ -14,7 +14,7 @@ case "$-" in
         fi
         
         # Start X on login if we're on TTY 1 (the default TTY)
-        if [[ -z "$DISPLAY" && "$(fgconsole)" -eq 1 ]]; then
+        if [[ -z "$DISPLAY" && "$(tty)" -eq "/dev/tty1" ]]; then
 			exec startx -- vt1 -keeptty -nolisten tcp > ~/.xorg.log 2>&1
 		fi
 		;;
