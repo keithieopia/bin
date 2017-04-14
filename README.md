@@ -17,7 +17,7 @@ related programs.
 * [Author](#author)
 
 
-<img alt="Mad Madam Mim as a Dragon" style="padding-right: 8px" align="left" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.assets/mad_madam_min.png">
+<img alt="Mad Madam Mim as a Dragon" style="padding-right: 8px" align="left" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.readme-assets/mad_madam_min.png">
 
 **Obligatory Warning**  
 You should first fork this repository, review the code, and remove 
