@@ -10,7 +10,7 @@ These are various config files I use for my Linux environment and
 related programs.
 
 #### Table of Contents
-* [Overview](#overview):
+* [Overview](#overview)
 * [Directory Layout](#layout)
 * [Installing](#stow)
 * [Feedback](#feedback)
@@ -50,8 +50,7 @@ meant for `/etc`, not `$HOME`.
 **TIP**: Running the `stow-all` script will install everything in that 
 respective folder. 
 
-### Machines:
-
+#### Machines
 * [desktop](https://github.com/keithieopia/dotfiles/blob/master/desktop/): 
   Geany, mpv, youtube-dl, etc
 * [desktop-etc](https://github.com/keithieopia/dotfiles/blob/master/desktop-etc/): 
