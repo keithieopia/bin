@@ -1,4 +1,4 @@
-# dotfiles: unmaintained-etc
+# dotfiles: unmaintained (system-wide)
 These are old, slightly worn and dusty configs. They may not work 
 anymore, so use caution.
 
