@@ -51,19 +51,17 @@ meant for `/etc`, not `$HOME`.
 respective folder. 
 
 ### Machines:
-These link directly to each directories README, which gives more 
-information about each application.
 
-* [desktop](https://github.com/keithieopia/dotfiles/blob/master/desktop/README.md): 
+* [desktop](https://github.com/keithieopia/dotfiles/blob/master/desktop/): 
   Geany, mpv, youtube-dl, etc
-* [desktop-etc](https://github.com/keithieopia/dotfiles/blob/master/desktop-etc/README.md): 
+* [desktop-etc](https://github.com/keithieopia/dotfiles/blob/master/desktop-etc/): 
   Grub2, TLP, quirk fixes, etc
-* [server-etc](https://github.com/keithieopia/dotfiles/blob/master/server-etc/README.md): 
+* [server-etc](https://github.com/keithieopia/dotfiles/blob/master/server-etc/): 
   LEMP stack, OpenSSH server, etc
-* [unmaintained](https://github.com/keithieopia/dotfiles/blob/master/unmaintained/README.md): 
+* [unmaintained](https://github.com/keithieopia/dotfiles/blob/master/unmaintained/): 
   Old stuff I don't use anymore
-* [unmaintained-etc](https://github.com/keithieopia/dotfiles/blob/master/unmaintained-etc/README.md): 
-  Old stuff I don't use anymore (`/etc` edition)
+* [unmaintained-etc](https://github.com/keithieopia/dotfiles/blob/master/unmaintained-etc/): 
+  Old stuff I don't use anymore (system-wide edition)
 
 
 ## Installation / Managing
