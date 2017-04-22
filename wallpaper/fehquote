@@ -1,0 +1,28 @@
+#!/bin/bash
+
+BACKGROUND="#293132"     # dark slate gray
+TEXT_FILL="$BACKGROUND"  # causes a neat piped/outline effect
+TEXT_OUTLINE="#f98766"   # orange red
+
+
+# generate the quote from fortune (only short ones)
+# remove tabs from fortune due to imagemagick's lack of support
+# convert -- used for quotation attributes to Em Dash
+QUOTE="$(fortune -s | sed -e 's/[ \t]*//' | sed 's/--/—/')"
+
+convert -size 1920x1080 \
+	-background "$BACKGROUND" \
+	-fill "$TEXT_FILL" -stroke "$TEXT_OUTLINE" \
+	-font Dejavu-Sans -pointsize 48 \
+    -gravity center label:"$QUOTE" \
+    /tmp/quote.png
+
+# Append a hash to the image's filename; to prevent GNOME from caching
+# Otherwise, we get the same quote on each run even though the image
+# has changed
+
+hash=$(sha1sum /tmp/quote.png | awk '{print $1}')		
+mv /tmp/quote.png "/tmp/quote-${hash}.png"
+
+# set the background
+gsettings set org.gnome.desktop.background picture-uri "file:///tmp/quote-${hash}.png"
