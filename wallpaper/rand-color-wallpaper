@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# rand-color-wallpaper
+# --------------------
+# Sets the wallpaper to a solid random color. For GNOME and GNOME-like
+# desktops
+#  
+# https://github.com/keithieopia/bin/blob/master/wallpaper/rand-color-wallpaper
+#
+#
+# Seeing this is remarkably trivial, I hereby dedicate this to the 
+# public domain and waive any rights I may have to it.
+#
+# I know some areas do not legally recognize public domain dedications, 
+# like European civil law. If you live in one of those countries, 
+# you may:
+#   (a) do whatever you want with it (WTFPL)
+#   (b) steal this as your own and pretend you didn't get it from me
+
+HEX=$(openssl rand -hex 3)
+
+# Blank out any picture that may already be in place
+gsettings set org.gnome.desktop.background picture-uri ""
+
+gsettings set org.gnome.desktop.background primary-color "#${HEX}"
