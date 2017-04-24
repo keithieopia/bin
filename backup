@@ -1,71 +1,105 @@
 #!/bin/bash
 
-REPO="/run/media/timothy/backups/home"
+REPO="/media/$(whoami)/Backups"
 
-borg create -v --compression lz4 --stats --progress  \
-    $REPO::$(hostname)-$(date +%Y-%m-%d)             \
-    ~/backups                                        \
-    ~/bin                                            \
-    ~/books                                          \
-    ~/docs                                           \
-    ~/dotfiles                                       \
-    ~/downloads                                      \
-    ~/Dropbox                                        \
-    ~/installs                                       \
-    ~/pics                                           \
-    ~/programming                                    \
-    ~/projects                                       \
-    ~/sounds                                         \
-    ~/vm                                             \
-    ~/.bash_secrets                                  \
-    ~/.dosbox                                        \
-    ~/.fonts                                         \
-    ~/.gnupg                                         \
-    ~/.icons                                         \
-    ~/.password-store                                \
-    ~/.sounds                                        \
-    ~/.ssh                                           \
-    ~/.wine                                          \
-    --exclude '*/.git'                               \
-    --exclude '~/.wine/dosdevices'                   \
-    --exclude ~/Dropbox/.dropbox                     \
-    --exclude ~/Dropbox/.dropbox.cache
+if [ ! -d "$REPO" ]; then
+	echo "backup drive not mounted!"
+	exit 1
+fi
 
+usage() {
+cat <<HELP
+Incremental backups using Borg Backup
 
-##
-## UNENCRYPTED BACKUPS
-##      Borg does encryption by default, which is a good thing. However,
-##      there are some cases where encryption doesn't make sense.
-##      Fortunately, you can turn encryption off when creating a repo:
-##
-##      borg init --encryption=none
-##
-#############################################################################
+Usage: $(basename "$0") [TARGET]
+   -h : backup user's home
+   -m : backup external media drive
+   -a : backup all targets (implys -h and -m)
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2017 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+backup_home() {
+	borg create -v --compression lz4 --stats --progress  \
+		"${REPO}/home::$(hostname)-$(date +%Y-%m-%d)"    \
+		~/bin                                            \
+		~/Books                                          \
+		~/Documents                                      \
+		~/dotfiles                                       \
+		~/Downloads                                      \
+		~/Dropbox                                        \
+		~/Installs                                       \
+		~/Music                                          \
+		~/Pictures                                       \
+		~/Public                                         \
+		~/Videos                                         \
+		~/.bash_secrets                                  \
+		~/.config/chromium/Default                       \
+		~/.dosbox                                        \
+		~/.fonts                                         \
+		~/.gnupg                                         \
+		~/.icons                                         \
+		~/.password-store                                \
+		~/.private                                       \
+		~/.ssh                                           \
+		~/.wine                                          \
+		--exclude '*/.git'                               \
+		--exclude '~/.wine/dosdevices'                   \
+		--exclude ~/Dropbox/.dropbox                     \
+		--exclude ~/Dropbox/.dropbox.cache
+}
+
+backup_media() {
+	# Media Drive (unencrypted)
+	# It's an average external drive with no sensitive data (Movies,
+	# TV Shows, Clips, etc). Since the files are generally large,
+	# encrypting would be a waste of time.
+
+	MEDIA_DRIVE="/media/timothy/TV & Movies"
+
+	if [ -d "$MEDIA_DRIVE" ]; then
+		borg create -v --compression lz4 --stats --progress \
+			"${REPO}/media::media-$(date +%Y-%m-%d)"        \
+			"$MEDIA_DRIVE"                                  \
+			--exclude "${MEDIA_DRIVE}/.Trash-1000"          \
+			--exclude '${MEDIA_DRIVE}/lost+found'
+	else
+		echo "Could not find media drive!"
+		exit 1
+	fi
+}
+
+while getopts ":mh" opt; do
+	case $opt in
+		# TODO getopts doesn't do long options, switch to getopt instead
+		m|media|videos|movies|tv) 
+			backup_media 
+			;;
+		h|home) 
+			backup_home
+			;;
+		a|all)
+			backup_home
+			backup_media
+			;;
+		*) 
+			usage 
+			;;
+	esac
+done
 
 ## ~/.private
 ##     Already encrypted files and containers. Encrypting backups would be
 ##     basically double encrypting which is slightly more paranoid than my
 ##     current threat model.
 
-PRIVATE_DRIVE="/home/timothy/.private"
-PRIVATE_REPO="/run/media/timothy/backups/private"
-
-borg create -v --compression lz4 --stats --progress \
-     $PRIVATE_REPO::private-$(date +%Y-%m-%d)       \
-     $PRIVATE_DRIVE
-
-
-## Media Drive (unencrypted)
-##     It's an average external drive with no sensitive data (Movies,
-##     TV Shows, Clips, etc). Since the files are generally large,
-##     encrypting would be a waste of time.
-
-MEDIA_DRIVE="/run/media/timothy/media"
-MEDIA_REPO="/run/media/timothy/backups/media"
-
-if [ -d "$MEDIA_DRIVE" ]; then
-    borg create -v --compression lz4 --stats --progress \
-        $MEDIA_REPO::media-$(date +%Y-%m-%d)            \
-        $MEDIA_DRIVE                                    \
-        --exclude '*/lost+found'
-fi
+#PRIVATE_DRIVE="/home/timothy/.private"
+#PRIVATE_REPO="/run/media/timothy/backups/private"
+#
+#borg create -v --compression lz4 --stats --progress \
+#     $PRIVATE_REPO::private-$(date +%Y-%m-%d)       \
+#     $PRIVATE_DRIVE
