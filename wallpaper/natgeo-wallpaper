@@ -5,10 +5,10 @@
 # natgeo-wallpaper
 # -----------------
 # Grabs the "Photo of the Day" from National Geographic and sets it as
-# the wallpaper scaling it while fixing the aspect ratio in an elegant 
+# the wallpaper scaling it while fixing the aspect ratio in an elegant
 # manner. The old photos are preserved in the cache in case you find
 # a photo you like. See their site for the current and past photos:
-# 
+#
 # http://www.nationalgeographic.com/photography/photo-of-the-day
 #
 # REPO
@@ -19,24 +19,24 @@
 # -------
 # Copyright (c) 2017 Timothy Keith
 #
-# Permission is hereby granted, free of charge, to any person 
+# Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
-# (the "Software"), to deal in the Software without restriction, 
+# (the "Software"), to deal in the Software without restriction,
 # including without limitation the rights to use, copy, modify, merge,
 # publish, distribute, sublicense, and/or sell copies of the Software,
-# and to permit persons to whom the Software is furnished to do so, 
+# and to permit persons to whom the Software is furnished to do so,
 # subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be 
+# The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
-# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
 ########################################################################
@@ -45,8 +45,8 @@
 # CONFIGURATION
 #=======================================================================
 
-# This is where all photos will be stored. Originals are preserved in 
-# the $CACHE/originals with the wallpaper converted ones in the parent 
+# This is where all photos will be stored. Originals are preserved in
+# the $CACHE/originals with the wallpaper converted ones in the parent
 # $CACHE directory
 CACHE="$HOME/.cache/natgeo"
 
@@ -59,7 +59,7 @@ json_get_value() {
 	# json_get_value [KEY TO FIND] [JSON STRING]
 	# given a key, return it's value from a json encoded string
 	#
-	# there's better ways of doing this like using jshon or jq, but 
+	# there's better ways of doing this like using jshon or jq, but
 	# those usually are not installed by default. This only requires
 	# grep and perl which are commonly available
 	#
@@ -67,7 +67,7 @@ json_get_value() {
 	#         such as {"key": "value"}
 	#                        ^-- note this space
 	#
-	#         NATGEO's json feed doesn't do this so I'm not bothering 
+	#         NATGEO's json feed doesn't do this so I'm not bothering
 	#         with fixing the perl regex
 
 	grep -Po  '"'"$1"'":.*?[^\\]",' <<< "$2" | perl -pe 's/"'"$1"'"://; s/^"//; s/",$//'
@@ -76,9 +76,9 @@ json_get_value() {
 scale_image() {
 	# resize_image [ORIGINAL IMAGE] [SAVE AS IMAGE]
 	# This scales an image to full HD, and fills empty space with the
-	# same image blurred, preventing ugly bars caused by images not 
+	# same image blurred, preventing ugly bars caused by images not
 	# intended to be used as desktop wallpaper (wrong aspect ratio)
-	
+
 	convert "$1" \
 	\( -clone 0 -blur 0x6 -resize 1920 -crop 1920x1080+0+0 +repage -fill "white" -colorize 20% \) \
 	\( -clone 0 -resize x1080 \) \
@@ -98,9 +98,9 @@ if [ ! -f "$LOCAL_NATGEO_FILE" ]; then
 	if [ ! -d "$CACHE/originals" ]; then
 		mkdir -p "$CACHE/originals"
 	fi
-	
-	# We could just use NATGEO's HTML, but why bother since JSON is more 
-	# friendly to parse.-gravity center 
+
+	# We could just use NATGEO's HTML, but why bother since JSON is more
+	# friendly to parse.-gravity center
 	JSON=$(curl http://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.gallery.json -s)
 
 	# Example of NATGEO's json (trimmed):
