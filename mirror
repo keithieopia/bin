@@ -14,8 +14,6 @@
 # fgrep -> list slashes
 # wc    -> count slashes
 subdirs=$(sed 's~http[s]*://~~g' <<< "$1" | sed 's,/$,,' | fgrep -o / | wc -l)
-echo "subdirs: $subdirs"
-exit
 
 # EXPLAINATION OF OPTIONS:
 #   --mirror                  : recursive downloads
