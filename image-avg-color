@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# prints the average hex color of the image
+
+if [ ! -f "$1" ]; then
+	echo "file \"$1\" not found!"
+	exit 1
+fi
+
+convert "$1" -resize 1x1 txt: | tail -1 | awk '{print $3}'
