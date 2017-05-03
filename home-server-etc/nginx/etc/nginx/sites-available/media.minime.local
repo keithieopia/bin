@@ -1,0 +1,10 @@
+server {
+    listen 80;
+    server_name media.minime.local;
+
+    proxy_set_header X-Real-IP  $remote_addr; # pass on real client IP
+
+    location / {
+        proxy_pass http://localhost:8096;
+    }
+}
