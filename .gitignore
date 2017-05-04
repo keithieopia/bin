@@ -1,1 +1,3 @@
 ~/.bash_secrets
+desktop-etc/tinc/etc/tinc/vpn/rsa_key.priv
+server-etc/tinc/etc/tinc/vpn/rsa_key.priv
