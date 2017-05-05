@@ -1,0 +1,1 @@
+../../../../desktop-etc/tinc/etc/tinc/nets.boot
