@@ -1,0 +1,78 @@
+#!/bin/bash
+
+LOCAL_PORT=50080
+SERVER="keithieopia.com"
+
+#
+# Sanity checking
+#
+
+# if user gave a server, can we access it?
+if [ ! -z "$1" ]; then
+	if ping -c 1 "$1" &> /dev/null; then
+		SERVER="$1"
+	else
+		echo "Can't ping given server"
+		exit 1
+	fi
+fi
+
+# Chromium won't allow multiple instances of the same profile, which 
+# is a problem since we change the proxy settings below
+if [ $(pgrep -cf chromium-browser) -gt 0 ]; then
+	echo "Chromium is already running, please exit out of it first..."
+	exit 1
+fi
+
+
+#
+# Start SSH tunnel if needed
+#
+
+if ! lsof -i tcp:$LOCAL_PORT > /dev/null; then
+	# if nothing is listening on the port, start ssh 
+
+	# Given flags breakdown:
+	#   -f        -> fork in background
+	#   -C        -> enable compression for slow connections
+	#   -N        -> no remote commands, just forward ports
+	#   -D [PORT] -> bind to local port as a local SOCKS server
+
+	ssh -fCN -D $LOCAL_PORT "$(whoami)@${SERVER}" 2>/dev/null 1>&2
+else
+	# port is already in use by something. If it's ssh, we silently 
+	# continue and use it. If not, throw an error
+	if ! lsof -i tcp:$LOCAL_PORT | grep -q ssh; then
+		echo "Something other than SSH is using port $LOCAL_PORT"
+		exit 1
+	fi
+fi
+
+# in case our connection is slow, retry a few times waiting in between
+# for the connection to come up
+while ! lsof -i tcp:$LOCAL_PORT > /dev/null; do
+    ((c++)) && ((c==10)) && break
+    sleep 1
+done
+
+# the above waiting didn't work, we can't continue without a ssh tunnel
+if [[ "$c" -eq 10 ]]; then
+	echo "Could not setup SSH tunnel!"
+	exit 1
+fi
+
+
+#
+# Start browser 
+#
+
+# close our forked ssh process when the browser (and this script) exits. 
+# Otherwise, ssh will continue to run in the background
+close_ssh() {
+	if lsof -t -i tcp:$LOCAL_PORT > /dev/null; then
+		kill $(lsof -t -i tcp:$LOCAL_PORT)
+	fi
+}
+trap "close_ssh" INT TERM EXIT
+
+chromium-browser --proxy-server="socks5://localhost:${LOCAL_PORT}"
