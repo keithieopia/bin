@@ -1,21 +1,58 @@
 #!/bin/bash
 
+# port to use on the client for the SOCKS proxy 
 LOCAL_PORT=50080
-SERVER="keithieopia.com"
 
-#
-# Sanity checking
-#
+usage() {
+cat <<HELP
+Setup a proxy for Chromium using nothing more than a SSH server
 
-# if user gave a server, can we access it?
-if [ ! -z "$1" ]; then
-	if ping -c 1 "$1" &> /dev/null; then
-		SERVER="$1"
-	else
-		echo "Can't ping given server"
-		exit 1
+usage: $(basename "$0") [SSH SERVER ADDRESS]
+
+You will need to exchange SSH keys beforehand, as any prompts by SSH 
+are currently not supported. You can still protect your keys with a 
+password if you use ssh-agent 
+
+
+https://github.com/keithieopia/bin
+
+Copyright (c) 2017 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+# kill only ssh clients that are running on the specified port
+# changing this might cause collateral damage to other ssh sessions
+close_ssh() {
+	if lsof -t -i tcp:$LOCAL_PORT > /dev/null; then
+		kill $(lsof -t -i tcp:$LOCAL_PORT)
 	fi
+}
+
+# close our forked ssh process when the browser (and this script) exits. 
+# Otherwise, ssh will continue to run in the background
+trap "close_ssh" INT TERM EXIT
+
+
+# Process args
+if [ ! -z "$1" ]; then
+	if [ "$1" == "-h" ]; then
+		# display help
+		usage
+		exit 0
+	else
+		if ping -c 1 "$1" &> /dev/null; then
+			SERVER="$1"
+		else
+			echo "Can't ping given server"
+			exit 1
+		fi
+	fi
+else
+	usage
+	exit 1
 fi
+
 
 # Chromium won't allow multiple instances of the same profile, which 
 # is a problem since we change the proxy settings below
@@ -25,10 +62,7 @@ if [ $(pgrep -cf chromium-browser) -gt 0 ]; then
 fi
 
 
-#
 # Start SSH tunnel if needed
-#
-
 if ! lsof -i tcp:$LOCAL_PORT > /dev/null; then
 	# if nothing is listening on the port, start ssh 
 
@@ -48,8 +82,7 @@ else
 	fi
 fi
 
-# in case our connection is slow, retry a few times waiting in between
-# for the connection to come up
+# wait for the ssh tunnel to come up in case our connection is slow
 while ! lsof -i tcp:$LOCAL_PORT > /dev/null; do
     ((c++)) && ((c==10)) && break
     sleep 1
@@ -61,18 +94,5 @@ if [[ "$c" -eq 10 ]]; then
 	exit 1
 fi
 
-
-#
 # Start browser 
-#
-
-# close our forked ssh process when the browser (and this script) exits. 
-# Otherwise, ssh will continue to run in the background
-close_ssh() {
-	if lsof -t -i tcp:$LOCAL_PORT > /dev/null; then
-		kill $(lsof -t -i tcp:$LOCAL_PORT)
-	fi
-}
-trap "close_ssh" INT TERM EXIT
-
 chromium-browser --proxy-server="socks5://localhost:${LOCAL_PORT}"
