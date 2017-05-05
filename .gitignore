@@ -2,4 +2,4 @@
 desktop-etc/tinc/etc/tinc/server-bridge/rsa_key.priv
 desktop-etc/tinc/etc/tinc/home-bridge/rsa_key.priv
 server-etc/tinc/etc/tinc/server-bridge/rsa_key.priv
-server-etc/tinc/etc/tinc/home-bridge/rsa_key.priv
+home-server-etc/tinc/etc/tinc/home-bridge/rsa_key.priv
