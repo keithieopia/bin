@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ifconfig vpn down
+ifconfig server-bridge down
