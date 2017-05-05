@@ -1,5 +1,5 @@
 ~/.bash_secrets
 desktop-etc/tinc/etc/tinc/server-bridge/rsa_key.priv
-desktop-etc/tinc/etc/tinc/server-tunnel/rsa_key.priv
+desktop-etc/tinc/etc/tinc/home-bridge/rsa_key.priv
 server-etc/tinc/etc/tinc/server-bridge/rsa_key.priv
-server-etc/tinc/etc/tinc/server-tunnel/rsa_key.priv
+server-etc/tinc/etc/tinc/home-bridge/rsa_key.priv
