@@ -52,6 +52,13 @@ first, if you came here directly from somewhere else.
   stupid to detect the correct sound card, resulting in no sound. This 
   is the `~/.asoundrc` fix
 * quirks-nobeep: stop annoying PC Speaker beeping
+* [quirks-slow-system-with-usb-drives](http://lwn.net/Articles/572911/): 
+  fixes freezing found across Linux distros while copying a large amount 
+  of date to and from USB drives
+* quirks-ubuntu-wifi-killed-on-batt: Ubuntu will turn off the wifi 
+  adapter on battery, while using wifi, even when this is disabled in 
+  Settings or in NetworkManager. This nukes the adapter's power feature 
+  so Ubuntu can't touch it
 * [remind](https://www.roaringpenguin.com/products/remind): a easy to 
   use console calendar, alarm, and reminder program
 * [rxvt](http://software.schmorp.de/pkg/rxvt-unicode.html): a terminal 
