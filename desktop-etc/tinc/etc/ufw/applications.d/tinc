@@ -1,4 +1,0 @@
-[tinc]
-title=Tinc
-description=Tinc is a mesh VPN server
-ports=655/any
