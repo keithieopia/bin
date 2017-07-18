@@ -68,6 +68,8 @@ first, if you came here directly from somewhere else.
 * [samba](https://www.samba.org/): share home directories and mount 
   points with Windows. Also enables [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS) 
   .local hostname resolution via [Avahi](https://github.com/lathiat/avahi)
+* [tlp](http://linrunner.de/en/tlp/tlp.html): simple power management 
+  for laptops
 * [unbound](https://unbound.net/): A local DNS resolver. Uses [named.cache](https://www.internic.net/domain/named.cache) 
   instead of querying a DNS server for each domain. Also implement low 
   level ad blocking
