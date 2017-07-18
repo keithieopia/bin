@@ -21,7 +21,10 @@ fi
 ##
 ## Archiving
 ##
-mktar()  { tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
+
+mkzip() { zip -r "${1%%/}.zip" "${1%%/}/"; }
+
+mktar() { tar cvf  "${1%%/}.tar" "${1%%/}/"; }
 
 mktbz2() {
     if type pbzip2 &> /dev/null; then
