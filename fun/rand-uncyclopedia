@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# From /r/linux: "A simple and hilarious replacement for fortune" by /u/TheAviator1101
+# https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/
+
+#curl -m 2 -Ls http://uncyclopedia.wikia.com/wiki/Special:Random/ | \
+#    sed -n '/<p>/,/<\/p>/p' | \
+#    sed -e 's/<[^>]*>//g' -e '/^*$/d' -e '/article/g' | \
+#    perl -MList::Util=shuffle -e 'print shuffle(<STDIN>);' | \
+#    sed -n '/^.\{35\}/p' | \
+#    head -n1
+
+# /u/keenerd's version is a little bit cleaner and faster:
+# https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/djyqg0h/
+curl -m 2 -Ls http://uncyclopedia.wikia.com/wiki/Special:Random/ | \
+    xmllint --html --nowarning --xpath "//p" - 2> /dev/null | \
+    sed -e 's/<[^>]*>//g' -e '/^$/d' | shuf -n 1
