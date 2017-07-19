@@ -33,10 +33,10 @@ backup_home() {
 		~/Downloads                                      \
 		~/Dropbox                                        \
 		~/Installs                                       \
-		~/Music                                          \
 		~/Pictures                                       \
-		~/Public                                         \
-		~/Videos                                         \
+		~/Projects                                       \
+		~/Sounds                                         \
+		~/.aqemu                                         \
 		~/.bash_secrets                                  \
 		~/.config/chromium/Default                       \
 		~/.dosbox                                        \
@@ -47,8 +47,10 @@ backup_home() {
 		~/.private                                       \
 		~/.ssh                                           \
 		~/.wine                                          \
+		/mnt/music                                       \
+		--exclude '/mnt/music/System Volume Information' \
 		--exclude '*/.git'                               \
-		--exclude '~/.wine/dosdevices'                   \
+		--exclude ~/.wine/dosdevices                     \
 		--exclude ~/Dropbox/.dropbox                     \
 		--exclude ~/Dropbox/.dropbox.cache
 }
@@ -76,18 +78,18 @@ backup_media() {
 while getopts ":mh" opt; do
 	case $opt in
 		# TODO getopts doesn't do long options, switch to getopt instead
-		m|media|videos|movies|tv) 
-			backup_media 
+		m|media|videos|movies|tv)
+			backup_media
 			;;
-		h|home) 
+		h|home)
 			backup_home
 			;;
 		a|all)
 			backup_home
 			backup_media
 			;;
-		*) 
-			usage 
+		*)
+			usage
 			;;
 	esac
 done
