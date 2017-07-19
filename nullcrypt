@@ -17,7 +17,7 @@ Note:
 
 https://github.com/keithieopia/bin/
 
-Copyright (c) 2016 Timothy Keith
+Copyright (c) 2016-2017 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
@@ -37,18 +37,6 @@ colorize () {
     cat
     echo -ne "${ESC}0m"
 }
-
-
-have() { type "$1" &> /dev/null; }
-if ! have cryptsetup; then
-    echo "$0 requires 'cryptsetup' to be installed!" | colorize ERROR
-    exit 1
-fi
-if ! have sudo; then
-    echo "$0 requires 'sudo' to be installed!" | colorize ERROR
-    exit 1
-fi
-
 
 function unlockContainer() {
     echo -n "Password?: " | colorize PROMPT
