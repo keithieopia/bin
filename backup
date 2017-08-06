@@ -1,107 +1,164 @@
-#!/bin/bash
+#!/bin/sh
 
-REPO="/media/$(whoami)/Backups"
+DRIVE="/media/$(whoami)/Backups"
+DATE="$(date +%Y%m%d)"
 
-if [ ! -d "$REPO" ]; then
-	echo "backup drive not mounted!"
-	exit 1
+# run with low priority
+#ionice -c 3 -p $$
+#renice +12 -p $$
+
+# Ensure the target exists
+if [ ! -d "$DRIVE" ]; then
+    if [ -d "/mnt/backup" ]; then
+        # sane fallback location
+        DRIVE="/mnt/backup"
+    else
+        echo "Backup drive not mounted!"
+        exit 1
+    fi
 fi
 
-usage() {
-cat <<HELP
-Incremental backups using Borg Backup
-
-Usage: $(basename "$0") [TARGET]
-   -h : backup user's home
-   -m : backup external media drive
-   -a : backup all targets (implys -h and -m)
-
-https://github.com/keithieopia/bin/
-
-Copyright (c) 2017 Timothy Keith
-Licensed under the MIT license.
-HELP
-}
 
 backup_home() {
-	borg create -v --compression lz4 --stats --progress  \
-		"${REPO}/home::$(hostname)-$(date +%Y-%m-%d)"    \
-		~/bin                                            \
-		~/Books                                          \
-		~/Documents                                      \
-		~/dotfiles                                       \
-		~/Downloads                                      \
-		~/Dropbox                                        \
-		~/Installs                                       \
-		~/Pictures                                       \
-		~/Projects                                       \
-		~/Sounds                                         \
-		~/.aqemu                                         \
-		~/.bash_secrets                                  \
-		~/.config/chromium/Default                       \
-		~/.dosbox                                        \
-		~/.fonts                                         \
-		~/.gnupg                                         \
-		~/.icons                                         \
-		~/.password-store                                \
-		~/.private                                       \
-		~/.ssh                                           \
-		~/.wine                                          \
-		/mnt/music                                       \
-		--exclude '/mnt/music/System Volume Information' \
-		--exclude '*/.git'                               \
-		--exclude ~/.wine/dosdevices                     \
-		--exclude ~/Dropbox/.dropbox                     \
-		--exclude ~/Dropbox/.dropbox.cache
+    BACKUP_FREE=$(/bin/df $DRIVE | tail -1 | awk '{print $4}')
+    HOME_USED=$(/usr/bin/du -s $HOME | awk '{print $1}')
+
+    if [ "$BACKUP_FREE" -lt "$HOME_USED" ]; then
+        echo "There is not enough free space on backup drive!"
+        exit 1
+    fi
+
+    if [ ! -d "${DRIVE}/$(hostname)-home" ]; then
+        mkdir -p "${DRIVE}/$(hostname)-home"
+    fi
+
+    rsync -Sratgv --delay-updates --log-file="${DRIVE}/$(hostname)-home/${DATE}.log" \
+        --exclude ".antigen"                        \
+        --exclude ".cache"                          \
+        --exclude ".config/chromium"                \
+        --exclude ".config/dconf"                   \
+        --exclude ".config/dolphinrc"               \
+        --exclude ".config/konsolerc"               \
+        --exclude ".config/pulse"                   \
+        --exclude ".config/session"                 \
+        --exclude ".dbus"                           \
+        --exclude ".kde/cache-$(hostname)"          \
+        --exclude ".kde/socket-$(hostname)"         \
+        --exclude ".kde/tmp-$(hostname)"            \
+        --exclude ".kde/share/apps/RecentDocuments" \
+        --exclude ".pki"                            \
+        --exclude ".private"                        \
+        --exclude ".steam*"                         \
+        --exclude ".local/share/kcookiejar"         \
+        --exclude ".local/share/klipper"            \
+        --exclude ".local/share/Steam"              \
+        --exclude ".local/share/RecentDocuments"    \
+        --exclude ".local/share/Trash"              \
+        --exclude ".local/share/vulkan"             \
+        --exclude ".wine/dosdevices"                \
+        --exclude ".wine/drive_c/windows"           \
+        --exclude ".zsh_history"                    \
+        --exclude "Dropbox/.dropbox"                \
+        --exclude "Dropbox/.dropbox.cache"          \
+        "$HOME" "${DRIVE}/$(hostname)-home/${DATE}"
+
+    ##
+    ## Create tar.gz
+    ##
+    BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
+    BACKUP_USED=$(/usr/bin/du -s "${DRIVE}/$(hostname)-home/${DATE}" | awk '{print $1}')
+
+    if [ "$BACKUP_FREE" -lt "$BACKUP_USED" ]; then
+        echo "Skipping gzip, not enough free space on drive"
+    else
+        if hash pigz 2>/dev/null; then
+            tar -I pigz -cpvSf "${DRIVE}/$(hostname)-home/${DATE}.tgz" "${DRIVE}/$(hostname)-home/${DATE}"
+        else
+            tar -czpvSf "${DRIVE}/$(hostname)-home/${DATE}.tgz" "${DRIVE}/$(hostname)-home/${DATE}"
+        fi
+
+        echo ""
+        echo "Generating archive checksum..."
+        md5sum "${DRIVE}/$(hostname)-home/${DATE}.tgz" > "${DRIVE}/$(hostname)-home/${DATE}.sum"
+
+        # Remove rsync dir, but do it safely...
+        if [ ! -z "$DRIVE"] && [ ! -z "$DATE" ]; then 
+            rm -rf "${DRIVE}/$(hostname)-home/${DATE}"
+        fi
+    fi
+}
+
+backup_private() {
+    if [ ! -d "${DRIVE}/$(hostname)-private" ]; then
+        mkdir -p "${DRIVE}/$(hostname)-private"
+    fi
+
+    for CONTAINER in $HOME/.private/*; do
+        CONTAINER_NAME=$(basename $CONTAINER)
+
+        BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
+        CONTAINER_SIZE=$(ls -l "$CONTAINER" --block-size=K | awk '{print $5}' | sed 's/.$//')
+
+        if [ "$BACKUP_FREE" -lt "$CONTAINER_SIZE" ]; then
+            echo "Not enough free space to backup container $CONTAINER_NAME"
+        else
+
+            if mount | grep -q "/dev/mapper/$CONTAINER_NAME"; then
+                echo "Skipping mounted container $CONTAINER_NAME"
+            else
+                rsync -Satgv "$CONTAINER" "${DRIVE}/$(hostname)-private"
+            fi
+        fi
+    done
 }
 
 backup_media() {
-	# Media Drive (unencrypted)
-	# It's an average external drive with no sensitive data (Movies,
-	# TV Shows, Clips, etc). Since the files are generally large,
-	# encrypting would be a waste of time.
 
-	MEDIA_DRIVE="/media/timothy/TV & Movies"
+    MEDIA="/mnt/tv-movies"
 
-	if [ -d "$MEDIA_DRIVE" ]; then
-		borg create -v --compression lz4 --stats --progress \
-			"${REPO}/media::media-$(date +%Y-%m-%d)"        \
-			"$MEDIA_DRIVE"                                  \
-			--exclude "${MEDIA_DRIVE}/.Trash-1000"          \
-			--exclude '${MEDIA_DRIVE}/lost+found'
-	else
-		echo "Could not find media drive!"
-		exit 1
-	fi
+    if [ -d "$MEDIA" ]; then
+        BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
+        MEDIA_SIZE=$(/usr/bin/du -s "$MEDIA" | awk '{print $1}')
+
+        if [ "$BACKUP_FREE" -lt "$MEDIA_SIZE" ]; then
+            echo "Not enough free space to backup media!"
+            exit 1
+        else
+            rsync -Sratgv --delay-updates               \
+                --exclude "lost+found"                  \
+                --exclude ".Trash-1000"                 \
+                "$MEDIA" "${DRIVE}/$(hostname)-media"
+        fi
+    else
+        echo "Could not find media drive!"
+        exit 1
+    fi
+
 }
 
-while getopts ":mh" opt; do
-	case $opt in
-		# TODO getopts doesn't do long options, switch to getopt instead
-		m|media|videos|movies|tv)
-			backup_media
-			;;
-		h|home)
-			backup_home
-			;;
-		a|all)
-			backup_home
-			backup_media
-			;;
-		*)
-			usage
-			;;
-	esac
-done
 
-## ~/.private
-##     Already encrypted files and containers. Encrypting backups would be
-##     basically double encrypting which is slightly more paranoid than my
-##     current threat model.
+if [ -z "$@" ]; then
+    case "$(hostname)" in
+        "deli")
+            backup_home
+            backup_private
+            ;;
 
-#PRIVATE_DRIVE="/home/timothy/.private"
-#PRIVATE_REPO="/run/media/timothy/backups/private"
-#
-#borg create -v --compression lz4 --stats --progress \
-#     $PRIVATE_REPO::private-$(date +%Y-%m-%d)       \
-#     $PRIVATE_DRIVE
+        "minime")
+            backup_media
+            ;;
+
+        *)
+            echo "I'm not programmed to automatically backup this host. Please specify a target instead!"
+            exit 1
+            ;;
+    esac
+else
+    for target in "$@"; do
+        if [ -n "$(type -t backup_${target})" ] && [ "$(type -t backup_${target})" = function ]; then
+            backup_${target}
+        else
+            echo "Unknown target: $target"
+        fi
+    done
+fi
