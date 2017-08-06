@@ -118,7 +118,7 @@ backup_media() {
 
     if [ -d "$MEDIA" ]; then
         BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
-        MEDIA_SIZE=$(/usr/bin/du -s "$MEDIA" | awk '{print $1}')
+        MEDIA_SIZE=$(/usr/bin/du -s "$MEDIA" --exclude "lost+found" | awk '{print $1}')
 
         if [ "$BACKUP_FREE" -lt "$MEDIA_SIZE" ]; then
             echo "Not enough free space to backup media!"
