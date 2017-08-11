@@ -19,8 +19,14 @@ desktop: everywhere
 servers: everywhere
 > sudo stow -t / quirk-oom-killer-reboot sshd
 
-home_server: everywhere servers
+web_server: everywhere servers
+> sudo stow -t / lighttpd php
+
+home_server: everywhere servers web_server
 > sudo stow -t / quirk-no-lid-suspend
+
+git_server: everywhere servers
+> sudo stow -t / cgit
 
 ##
 ## hostnames
@@ -30,7 +36,7 @@ home_server: everywhere servers
 deli: desktop
 
 # this is a VPS on linode
-linda: servers
+linda: web_server git_server
 
 # this is my home media server
 minime: home_server
