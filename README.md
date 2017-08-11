@@ -89,7 +89,7 @@ $ cd ~/dotfiles
 $ stow bash
 ```
 
-System config files are marked with a <sup>r</sup> in the above [application list](#apps). You will need to tell stow to put it in the root directory, by passing the `-t /` flag, like so:
+System config files are marked with <sup>r</sup> in the above [application list](#apps). You will need to tell stow to put it in the root directory, by passing the `-t /` flag, like so:
 
 ```console
 $ sudo stow -t / sshd
@@ -97,14 +97,13 @@ $ sudo stow -t / sshd
 
 ### This seems to be a pain... how do you *really* manage it?
 
-With a Makefile, believe it or not. It has targets for all my machines by hostname, which subsequently run all of the relevant stow targets. It sounds complicated, but it's rather simple. So simple that all I run is:
+With a Makefile, believe it or not. It has targets for all my machines by hostname, which auto installs all of the relevant stow targets. It sounds more complicated than it is, but makes installation a breeze. All I end up running is:
 
 ```console
-$ cd ~/dotfiles
-$ make
+$ cd ~/dotfiles && make
 ```
 
-and I'm all setup! For new hosts, I have some default make targets such as "desktop" or "servers" that usually work fine. If you have several hosts that need different stow targets, I recommend you tryout using `make` instead of overthinking the problem.
+...and I'm all setup! For new hosts not in the Makefile, I have some default targets, like "desktop" or "servers" that I can use. If you have several hosts with different stow targets, I recommend you tryout using `make` instead of overthinking the problem.
 
 ## Feedback
 <a name="feedback"></a>
