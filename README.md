@@ -44,9 +44,12 @@ Here's a high level overview if you just want to see what I use:
 This is a list of all the applications managed in this repo. Each link to the respective project's homepage. The superscript letters have [special meaning](#apps-legend), <sup>h</sup> and <sup>r</sup> are the most important.
 
 - [bash](https://www.gnu.org/software/bash/) <sup>ah</sup>: classic Bourne shell
+- [cgit](https://git.zx2c4.com/cgit/) <sup>vr</sup>: a fast web interface for git repos
 - [git](https://git-scm.com/) <sup>ah</sup>: distributed version control
+- [lighttpd](http://www.lighttpd.net/) <sup>svr</sup>: a lightweight webserver that's easy to configure
 - [nano](https://www.nano-editor.org/) <sup>a</sup>: an easy to use CLI editor
 - [mpv](https://mpv.io/) <sup>dh</sup>: a media player on par with VLC's extensive codecs
+- [php](http://php.net/) <sup>svr</sup>: a scripting language for interactive websites
 - [quirk-no-lid-suspend](https://wiki.debian.org/Suspend) <sup>sr</sup>: don't suspend when the laptop lid is closed
 - [quirk-oom-killer-reboot](https://www.debuntu.org/how-to-reboot-on-oom/) <sup>svr</sup>: reboot when out of memory instead of killing processes
 - [smplayer](http://www.smplayer.info/) <sup>dh</sup>: A frontend for mpv
