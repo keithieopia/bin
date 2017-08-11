@@ -32,9 +32,9 @@ Here's a high level overview if you just want to see what I use:
 | ------------------ | ------------------------------------------------------------------------------------ |
 | **Distro**:        | [Debian](https://www.debian.org/)                                                    |
 | **Browser**:       | [Chromium](https://www.chromium.org)                                                 |
-| **Shell**:         | [Zsh](http://zsh.sourceforge.net/) (with  )                                          |
-| **Shell Theme**:   | [Sunrise](https://github.com/robbyrussell/oh-my-zsh/wiki/themes#sunrise) (modified)  |
+| **Shell**:         | [Zsh](http://zsh.sourceforge.net/)                                                   |
 | **Shell Plugins**: | [Antigen](http://antigen.sharats.me/) & [Oh-My-Zsh](http://ohmyz.sh/)                |
+| **Shell Theme**:   | [Sunrise](https://github.com/robbyrussell/oh-my-zsh/wiki/themes#sunrise) (modified)  |
 | **Editor**:        | [nano](http://www.nano-editor.org)                                                   |
 | **IDE**:           | [Kate](https://kate-editor.org/)                                                     |
 | **Media player**:  | [SMPlayer](http://www.smplayer.info/) ([mpv](https://mpv.io) backend)                |
