@@ -41,7 +41,7 @@ Here's a high level overview if you just want to see what I use:
 
 ## Applications
 <a name="apps"></a>
-This is a list of all the applications managed in this repo. Each link to the respective project's homepage. The superscript letters have [special meaning](#apps-keys), <sup>h</sup> and <sup>r</sup> are the most important.
+This is a list of all the applications managed in this repo. Each link to the respective project's homepage. The superscript letters have [special meaning](#apps-legend), <sup>h</sup> and <sup>r</sup> are the most important.
 
 - [bash](https://www.gnu.org/software/bash/) <sup>ah</sup>: classic Bourne shell
 - [git](https://git-scm.com/) <sup>ah</sup>: distributed version control
@@ -67,7 +67,7 @@ The superscript letters after application names shows which machines each config
 
 #### Machines: <sup>a d s v</sup>
 - <sup>a</sup> (**a**ll): bash, git, zsh, wget, ssh, nano
-- <sup>d</sup> (**d**esktop*): smplayer, mpv, xdg-user-dirs, youtube-dl
+- <sup>d</sup> (**d**esktop): smplayer, mpv, xdg-user-dirs, youtube-dl
 - <sup>s</sup> (home **s**erver): quick-no-lid-suspend, quirk-oom-killer-reboot, sshd
 - <sup>v</sup> (**V**PS): quirk-oom-killer-reboot, sshd
 
