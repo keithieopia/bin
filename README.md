@@ -58,7 +58,7 @@ This is a list of all the applications managed in this repo. Each link to the re
 - [xdg-user-dirs](https://www.freedesktop.org/wiki/Software/xdg-user-dirs/) <sup>dh</sup>: control the location of default directories like ~/Desktop and ~/Downloads
 - [zsh](http://zsh.sourceforge.net/) <sup>ah</sup>: a shell that's slightly easier to configure
 - *attic/*
-  - Previously used applications and experiments. Your mileage may vary, but for some they may be useful.
+  - Previously used applications and experiments. Your mileage may vary, but some may find them useful.
 
 ### Superscript Legend
 <a name="apps-legend"></a>
