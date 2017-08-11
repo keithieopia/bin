@@ -23,7 +23,7 @@ zstyle ':completion:*' rehash true
 
 # Use modern completion system
 autoload -Uz compinit
-compinit
+compinit 2&>/dev/null # TODO: fix compaudit 150 error, whatever that means
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
