@@ -51,3 +51,8 @@ source ~/.config/zsh/functions.zsh
 if [ -d ~/bin ]; then
     PATH=~/bin:"${PATH}"
 fi
+
+# Include pip install path
+if [ -d ~/.local/bin ]; then
+    PATH=~/.local/bin:"${PATH}"
+fi
