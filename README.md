@@ -11,7 +11,6 @@ These are various config files I use for my Linux environment and related progra
 #### Table of Contents
 - [Overview](#overview)
 - [Applications](#apps)
-  - [Key](#apps-key)
 - [Installing](#stow)
 - [Feedback](#feedback)
 - [Author](#author)
@@ -44,37 +43,37 @@ Here's a high level overview if you just want to see what I use:
 <a name="apps"></a>
 This is a list of all the applications managed in this repo. Each link to the respective project's homepage. The superscript letters have [special meaning](#apps-keys), <sup>h</sup> and <sup>r</sup> are the most important.
 
-- [bash](https://www.gnu.org/software/bash/)<sup>a</sup>: classic Bourne shell
-- [git](https://git-scm.com/)<sup>a</sup>: distributed version control
+- [bash](https://www.gnu.org/software/bash/) <sup>ah</sup>: classic Bourne shell
+- [git](https://git-scm.com/) <sup>ah</sup>: distributed version control
 - [nano](https://www.nano-editor.org/)<sup>a</sup>: an easy to use CLI editor
-- [mpv](https://mpv.io/)<sup>d</sup>: a media player on par with VLC's extensive codecs
-- [quirk-no-lid-suspend](https://wiki.debian.org/Suspend)<sup>s</sup>: don't suspend when the laptop lid is closed
-- [quirk-oom-killer-reboot](https://www.debuntu.org/how-to-reboot-on-oom/)<sup>sv</sup>: reboot when out of memory instead of killing processes
-- [smplayer](http://www.smplayer.info/)<sup>d</sup>: A frontend for mpv
-- [ssh](http://www.openssh.com/)<sup>a</sup>: secure remote shell
-- [sshd](http://www.openssh.com/)<sup>sv</sup>: secure shell server
-- [ufw](https://wiki.debian.org/Uncomplicated%20Firewall%20%28ufw%29)<sup>a</sup>: a frontend to simplify iptables
-- [wget](https://www.gnu.org/software/wget/)<sup>a</sup>: console download manager
-- [youtube-dl](https://rg3.github.io/youtube-dl/)<sup>d</sup>: download videos from almost any site
-- [xdg-user-dirs](https://www.freedesktop.org/wiki/Software/xdg-user-dirs/)<sup>d</sup>: control the location of default directories like ~/Desktop and ~/Downloads
-- [zsh](http://zsh.sourceforge.net/)<sup>a</sup>: a shell that's slightly easier to configure
+- [mpv](https://mpv.io/) <sup>dh</sup>: a media player on par with VLC's extensive codecs
+- [quirk-no-lid-suspend](https://wiki.debian.org/Suspend) <sup>sr</sup>: don't suspend when the laptop lid is closed
+- [quirk-oom-killer-reboot](https://www.debuntu.org/how-to-reboot-on-oom/) <sup>svr</sup>: reboot when out of memory instead of killing processes
+- [smplayer](http://www.smplayer.info/) <sup>dh</sup>: A frontend for mpv
+- [ssh](http://www.openssh.com/) <sup>ah</sup>: secure remote shell
+- [sshd](http://www.openssh.com/) <sup>svr</sup>: secure shell server
+- [ufw](https://wiki.debian.org/Uncomplicated%20Firewall%20%28ufw%29) <sup>ar</sup>: a frontend to simplify iptables
+- [wget](https://www.gnu.org/software/wget/) <sup>ah</sup>: console download manager
+- [youtube-dl](https://rg3.github.io/youtube-dl/) <sup>dh</sup>: download videos from almost any site
+- [xdg-user-dirs](https://www.freedesktop.org/wiki/Software/xdg-user-dirs/) <sup>dh</sup>: control the location of default directories like ~/Desktop and ~/Downloads
+- [zsh](http://zsh.sourceforge.net/) <sup>ah</sup>: a shell that's slightly easier to configure
 - *attic/*
   - Previously used applications and experiments. Your mileage may vary, but for some they may be useful.
 
-### Superscript Key
-<a name="apps-key"></a>
+### Superscript Legend
+<a name="apps-legend"></a>
 
 The superscript letters after application names shows which machines each configuration is used on and if you need to tell stow to place the configuration in the root directory.
 
 #### Machines: <sup>a d s v</sup>
-- <sup>a</sup> - **a**ll: bash, git, zsh, wget, ssh, nano
-- <sup>d</sup> - **d**esktop: smplayer, mpv, xdg-user-dirs, youtube-dl
-- <sup>s</sup> - home **s**erver: quick-no-lid-suspend, quirk-oom-killer-reboot, sshd
-- <sup>v</sup> - **V**PS: quirk-oom-killer-reboot, sshd
+- <sup>a</sup> (**a**ll): bash, git, zsh, wget, ssh, nano
+- <sup>d</sup> (**d**esktop*): smplayer, mpv, xdg-user-dirs, youtube-dl
+- <sup>s</sup> (home **s**erver): quick-no-lid-suspend, quirk-oom-killer-reboot, sshd
+- <sup>v</sup> (**V**PS): quirk-oom-killer-reboot, sshd
 
 #### Targets: <sup>h r</sup>
-- <sup>h</sup> - **h**ome; a typical dotfile meant for $HOME, run stow as usual (e.g. `stow bash`)
-- <sup>r</sup> - **r**oot; system configuration, such as those found in /etc. Use the target flag for the root directory (e.g. `stow -t / sshd`)
+- <sup>h</sup> (**h**ome): a typical dotfile meant for $HOME, run stow as usual (e.g. `stow bash`)
+- <sup>r</sup> (**r**oot): system configuration, such as those found in /etc. Use the target flag for the root directory (e.g. `stow -t / sshd`)
 
 
 ## Installation / Managing
