@@ -9,7 +9,7 @@ alias mv="mv -iv"
 
 # defaults to built-in programs
 alias ps='ps auxf'
-alias du='du -ch | sort -h'
+alias du='du -ch'
 alias mkdir='mkdir -p -v'
 alias dir='dir --color=auto'
 alias ls='ls --color=auto --group-directories-first'
@@ -17,6 +17,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
+alias kate='kate >/dev/null 2>&1' # kate editor is noisy, make it be silent
 
 # defaults to optional programs
 if type shred &> /dev/null; then 
