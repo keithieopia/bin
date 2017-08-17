@@ -30,6 +30,7 @@ be solved in a humble shell script.
 - `nullcrypt`: Creates and opens encrypted LUKS containers with sane settings
 - `optimize-images`: Optimize images for the web by reduces image size and fixing file names
 - `pdf-extract`: Extract pages from a PDF; useful for removing superfluous and unofficial cover sheets added by many online repositories. Compare to [pdftk](https://linux.die.net/man/1/pdftk).
+- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
 - `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
