@@ -119,4 +119,8 @@ if [ ! -f "$LOCAL_NATGEO_WALLPAPER" ]; then
 fi
 
 # set the wallpaper
-gsettings set org.gnome.desktop.background picture-uri "file://$LOCAL_NATGEO_WALLPAPER"
+if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
+    (cd $(dirname $0) && change-wallpaper "$LOCAL_NATGEO_WALLPAPER")
+else
+    gsettings set org.gnome.desktop.background picture-uri "file://$LOCAL_NATGEO_WALLPAPER"
+fi

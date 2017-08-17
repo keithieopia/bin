@@ -68,11 +68,6 @@ FRAME_RATE=2
 # A alternative folder like /tmp/weather also makes sense for the cache  
 CACHE="$HOME/.cache/weather"
 
-# we resize the images to full HD, but just in case, set the wallpaper 
-# to scale so it fits regardless; this prevents possible problems with
-# older non-HD resolutions
-gsettings set org.gnome.desktop.background picture-options "scaled"
-
 
 #=======================================================================
 # YOU PROBABLY SHOULDN'T CHANGE ANYTHING BELOW
@@ -140,16 +135,12 @@ dissect_radar() {
 }
 
 append_hash() {
-	# Gnome caches wallpapers, which is a problem for us since radar 
-	# images inherently change, but their filenames do not. The 
-	# bugtracker's guidance is that different pictures should have 
-	# different filenames
+	# DEs tend to cache wallpapers, which is a problem for us since 
+	# radar images inherently change, but their filenames do not. 
 	#
 	# Therefore, this appends the sha1 hash of each file to it's 
 	# filename; still preserving the order of the frames but making each
 	# image unique 
-	#	
-	# tl;dr: kludge for Gnome
 	
 	for file in ${CACHE}/gif/*
 	do
@@ -167,8 +158,16 @@ append_hash() {
 }
 
 animate_wallpaper() {
+    NUM_FRAMES=$(ls ${CACHE}/gif/radar-*.png | wc -l)
+
 	for FRAME in ${CACHE}/gif/radar-*.png; do
-		gsettings set org.gnome.desktop.background picture-uri "file://$FRAME"
+        echo "frame: $(awk -F '-' '{print $2}' <<< $FRAME) of $NUM_FRAMES"
+	
+		if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
+            (cd $(dirname $0) && change-wallpaper "$FRAME")
+		else
+            gsettings set org.gnome.desktop.background picture-uri "file://$FRAME"
+		fi
 		sleep "${FRAME_RATE}s"
 	done
 }
