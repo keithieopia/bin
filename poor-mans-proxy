@@ -72,7 +72,7 @@ if ! lsof -i tcp:$LOCAL_PORT > /dev/null; then
 	#   -N        -> no remote commands, just forward ports
 	#   -D [PORT] -> bind to local port as a local SOCKS server
 
-	ssh -fCN -D $LOCAL_PORT "$(whoami)@${SERVER}" 2>/dev/null 1>&2
+	ssh -fCNq -D $LOCAL_PORT "$(whoami)@${SERVER}" 2>/dev/null 1>&2
 else
 	# port is already in use by something. If it's ssh, we silently 
 	# continue and use it. If not, throw an error
@@ -95,4 +95,4 @@ if [[ "$c" -eq 10 ]]; then
 fi
 
 # Start browser 
-chromium-browser --proxy-server="socks5://localhost:${LOCAL_PORT}"
+chromium-browser --proxy-server="socks5://127.0.0.1:${LOCAL_PORT}" --host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"
