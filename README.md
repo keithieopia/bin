@@ -15,14 +15,19 @@ be solved in a humble shell script.
 ## Table of Contents:
 
 - `backup`: Automatically backup using rsync and tar.gz if space is available
+- `base64-img`: Convert an image to base64, suitable for [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) for HTML or CSS
 - `clean`: Erases files, directories, browser cache, junk files, history files, and slack space
+- `dd-status`: Make long-running `dd` operations print their current status
 - `digests`: List the various hashsums for a file and create or verify a SHA256SUMS for a directory.
 - `encrypt`: Wrapper for GPG symmetric encryption using AES256
 - `extract`: Wrapper to extract from many archives
+- `freedns-client`: DDNS client for [afraid.org](https://freedns.afraid.org/)
 - *fun/*
     - `busy`: Look busy to those annoying people who shoulder surf
 	- `disco`: Randomly colored lights in the terminal. For a more wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) simultaneously
 	- `quotes`: Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
+- `gpg-export-key`: Backup both the public and secret key for a given GPG key
+- `image-avg-color`: Find the average color of an image; useful for website development and theme building
 - `letsencrypt`: Renew SSL certs for my domains using certbot
 - `mirror`: Mirror a website sanely with wget
 - `mount-cd`: Mounts an .iso CD/DVD image to /mnt/cdrom
@@ -30,10 +35,14 @@ be solved in a humble shell script.
 - `nullcrypt`: Creates and opens encrypted LUKS containers with sane settings
 - `optimize-images`: Optimize images for the web by reduces image size and fixing file names
 - `pdf-extract`: Extract pages from a PDF; useful for removing superfluous and unofficial cover sheets added by many online repositories. Compare to [pdftk](https://linux.die.net/man/1/pdftk).
-- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
+- `poor-mans-proxy`: Scrap complicated VPN setups for a simple SSH tunnel
 - `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
+- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
+- `youtube-dl-update`: Download and install the latest youtube-dl version
+- `youtube-dlp`: Download a large list of videos simultaneously using [youtube-dl](https://rg3.github.io/youtube-dl/) and [GNU Parallel](https://www.gnu.org/software/parallel/)
+
 
 ### Attic
 Previously used scripts and experiments. Your mileage may vary, but some may find them useful.
