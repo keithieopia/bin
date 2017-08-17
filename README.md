@@ -14,100 +14,61 @@ be solved in a humble shell script.
 
 ## Table of Contents:
 
-* `backup` - Automatically backup using [borg](https://borgbackup.readthedocs.io/en/stable/),
-   which encrypts, uses differentials, and deduplicates stored data
-* `battmon` - Will warn about battery levels with increasing severity 
-   and then safely shut the system down if the battery gets too low
-* `cheese` - Take a picture of yourself using the webcam
-* `clean` - Erases files, directories, browser cache, junk files, 
-   history files, and slack space
-* `digests` - List the various hashsums for a file and create or verify 
-   a SHA256SUMS for a directory.
-* `encrypt` - Wrapper for GPG symmetric encryption using AES256
-* `extract` - Wrapper to extract from many archives
-* *fun/*
-    * `busy`  - Look busy to those annoying people who shoulder surf
-	* `disco` - Randomly colored lights in the terminal. For a more 
-	  wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
-	  simultaneously
-	* `quotes` - Random curated quotes in a easy to understand 
-	  all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
-* `greeting` - Sets the volume to an appropriate level given the time 
-   and says a greeting altogether mutes it depending on if it is too 
-   late at night    
-* `headset` - Connect/disconnect a bluetooth headset. Bluetooth in Linux 
-   is still crap, so the script repetitively tries to connect before 
-   giving up
-* *install/*
-    * `arch-get-packer` - Install [packer](https://aur.archlinux.org/packages/packer/),
-       an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
-* `letsencrypt` - Renew SSL certs for my domains using certbot
-* `local-wiki` - Starts PHP's built-in webserver and Firefox to access 
-   a local [dokuwiki](https://www.dokuwiki.org) install. After Firefox is 
-   closed, the PHP webserver is automatically stopped.
-* `mirror` - Mirror a website sanely with wget
-* `mount-cache` - Create folders and files expected to be in ~/.cache normally,
-   useful if mounted as tmpfs
-* `mount-cd` - Mounts an .iso CD/DVD image to /mnt/cdrom
-* `net-status` - Show the network status as well as the Gateway and local/public
-   IP addresses
-* `net-wait` - Wait for the network to come up, then start the given app
-* `nullcrypt` - Creates and opens encrypted LUKS containers with sane settings
-* `optimize-images` - Optimize images for the web by reduces image size and fixing
-   file names
-* `pdf-extract` - Extract pages from a PDF; useful for removing superfluous and
-   unofficial cover sheets added by many online repositories. Compare to
-   [pdftk](https://linux.die.net/man/1/pdftk).
-* `rangen` - Create random passwords, MAC addresses, letters, or numbers 
-   using /dev/urandom
-* `respawn` - Indefinitely restart a program after it exits
-* `say` - Use Pico TTS to speak the given text
-* `test-colors` - Show the current terminal color scheme
-* `weather.py` - Plaintext weather forecast from NOAA. Generally more timely and
-   accurate compared to commercial websites and APIs
-* *unmaintained/*
-    * `lemonade` - Start a [lemonbar](https://github.com/LemonBoy/bar) panel
-       with useful system info, similar to conky 
-    * `steam-preload` - Quirks fixes for Steam under bspwm with an Intel 
-       graphics card
-    * `xkcd-pass` - xkcd's [correct horse battery staple](https://xkcd.com/936/) 
-       password scheme generator. Uses the kernel's CSPRNG, unlike most 
-       implementations
-* *x11/*
-    * `autostart` - wm agnostic way to autostart some programs
-    * `cryptfox` - Create and launch an encrypted browser profiles
-    * `dropbox` - Nuke dropbox's buggy auto-update mechanism and run it 
-       in a firejail sandbox
-	* `fehquote` - Sets a random quote on the current background. Works 
-	   by reading `.fehbg` and overlaying a quote from `fortune -s`
-    * `firefox` - Run Firefox in a firejail sandbox
-    * *i3blocks/*
-        * `bandwidth` - shows the current network speeds
-		* `battery` - remaining battery, changes the icon according to 
-		   charge and if plugged in
-		* `colors` - called by the other i3block scripts for "warning", 
-		   "error", and "success" colors, so the color scheme can be 
-		   easily changed
-		* `cpu` - cumulative cpu utilization across cores. Requires 
-		   [sysstat](http://sebastien.godard.pagesperso-orange.fr/).
-		* `disk` - disk usage
-		* `email` - Unread email count for Gmail. Around 15 SLOC, 
-		   written pure bash, and only depends on `curl`. Other 
-		   implementations are about 100 SLOC with python/ruby/etc 
-		   and require add-on libraries 
-		* `memory` - RAM utilization
-		* `volume` - Current volume level, changes icon on mute
-    * *lockscreen/*
-        * `lockscreen` - Blurs and locks the screen with *Barney Fife
-           Protection&trade;* that will make evildoers think twice!
-    * `rxvt` - starts `urxvtd` if it isn't running already. If it is, 
-       urxvtc is launched instead
-    * `xkill` - `kill -9` the current active window. Meant to be used
-       as a hotkey script
-* `zeronet` - Script to run [ZeroNet](https://zeronet.io/), a 
-   decentralized censorship resistant network, using [Tor](https://www.torproject.org/)
-   for anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) 
-   [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
+- `backup`: Automatically backup using rsync and tar.gz if space is available
+- `clean`: Erases files, directories, browser cache, junk files, history files, and slack space
+- `digests`: List the various hashsums for a file and create or verify a SHA256SUMS for a directory.
+- `encrypt`: Wrapper for GPG symmetric encryption using AES256
+- `extract`: Wrapper to extract from many archives
+- *fun/*
+    - `busy`: Look busy to those annoying people who shoulder surf
+	- `disco`: Randomly colored lights in the terminal. For a more wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) simultaneously
+	- `quotes`: Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
+- `letsencrypt`: Renew SSL certs for my domains using certbot
+- `mirror`: Mirror a website sanely with wget
+- `mount-cd`: Mounts an .iso CD/DVD image to /mnt/cdrom
+- `net-status`: Show the network status as well as the Gateway and local/public IP addresses
+- `nullcrypt`: Creates and opens encrypted LUKS containers with sane settings
+- `optimize-images`: Optimize images for the web by reduces image size and fixing file names
+- `pdf-extract`: Extract pages from a PDF; useful for removing superfluous and unofficial cover sheets added by many online repositories. Compare to [pdftk](https://linux.die.net/man/1/pdftk).
+- `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
+- `test-colors`: Show the current terminal color scheme
+- `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
+
+### Attic
+Previously used scripts and experiments. Your mileage may vary, but some may find them useful.
+
+- `arch-get-packer`: Install [packer](https://aur.archlinux.org/packages/packer/), an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
+- `battmon`: Will warn about battery levels with increasing severity and then safely shut the system down if the battery gets too low
+- `cheese`: Take a picture of yourself using the webcam
+- `cryptfox`: Create and launch an encrypted browser profiles
+- `headset`: Connect/disconnect a bluetooth headset. Bluetooth in Linux is still crap, so the script repetitively tries to connect before giving up
+- `greeting`: Sets the volume to an appropriate level given the time and says a greeting altogether mutes it depending on if it is too late at night
+- `local-wiki`: Starts PHP's built-in webserver and Firefox to access a local [dokuwiki](https://www.dokuwiki.org) install. After Firefox is closed, the PHP webserver is automatically stopped.
+- `mount-cache`: Create folders and files expected to be in ~/.cache normally, useful if mounted as tmpfs
+- `net-wait`: Wait for the network to come up, then start the given app
+- `respawn`: Indefinitely restart a program after it exits
+- `rxvt`: starts `urxvtd` if it isn't running already. If it is, urxvtc is launched instead
+- `say` - Use Pico TTS to speak the given text
+- `steam-preload`: Quirks fixes for Steam under bspwm with an Intel graphics card
+- `xkcd-pass`: xkcd's [correct horse battery staple](https://xkcd.com/936/) password scheme generator. Uses the kernel's CSPRNG, unlike most implementations
+- `xkill`: `kill -9` the current active window. Meant to be invoked by a hotkey
+- `zeronet`: Script to run [ZeroNet](https://zeronet.io/), a decentralized censorship resistant network, using [Tor](https://www.torproject.org/) for anonymity, with [Firefox](https://www.mozilla.org/en-US/firefox/new/) [private browsing](https://support.mozilla.org/t5/Protect-your-privacy/Private-Browsing-Use-Firefox-without-saving-history/ta-p/4473).
+- *i3/*
+  - *i3blocks/*
+    - `bandwidth`: shows the current network speeds
+    - `battery`: remaining battery, changes the icon according to charge and if plugged in
+	- `colors`: called by the other i3block scripts for "warning", "error", and "success" colors, so the color scheme can be easily changed
+	- `cpu`: cumulative cpu utilization across cores. Requires [sysstat](http://sebastien.godard.pagesperso-orange.fr/).
+	- `disk`: disk usage
+	- `email`: Unread email count for Gmail. Around 15 SLOC, written pure bash, and only depends on `curl`. Other implementations are about 100 SLOC with python/ruby/etc and require add-on libraries
+	- `memory`: RAM utilization
+	- `volume`: Current volume level, changes icon on mute
+    - *lockscreen/*
+      - `lockscreen`: Blurs and locks the screen with *Barney Fife Protection&trade;* that will make evildoers think twice!
+  - `lemonade`: Start a [lemonbar](https://github.com/LemonBoy/bar) panel with useful system info, similar to conky 
+- *jail/*
+  - `dropbox`: Nuke dropbox's buggy auto-update mechanism and run it in a firejail sandbox
+  - `firefox` - Run Firefox in a firejail sandbox
 
 
 ## Usage
