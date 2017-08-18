@@ -87,17 +87,17 @@ zsh_git_prompt() {
 zsh_remote_host() {
     ZSH_THEME_HOST_PROMPT_PREFIX="%{$Y%}‹"
     ZSH_THEME_HOST_PROMPT_SUFFIX="%{$Y%}›%{$RESET%} "
-    
+
     if [ "$SSH_CONNECTION" ]; then
-        echo "$ZSH_THEME_HOST_PROMPT_PREFIX$(whoami)@$(hostname)$ZSH_THEME_HOST_PROMPT_SUFFIX" 
+        echo "$ZSH_THEME_HOST_PROMPT_PREFIX$(whoami)@$(hostname)$ZSH_THEME_HOST_PROMPT_SUFFIX"
     else
-        echo "" 
+        echo " "
     fi
 }
 
 
 # %B sets bold text
-PROMPT='$(zsh_remote_host) %B%2~%b $(zsh_git_prompt)$(zsh_usr_symbol)%{$RESET%} '
+PROMPT='$(zsh_remote_host)%B%2~%b $(zsh_git_prompt)$(zsh_usr_symbol)%{$RESET%} '
 
 local return_code="%(?..%{$R%}%? ↵%{$RESET%})"
 RPS1="${return_code}"
