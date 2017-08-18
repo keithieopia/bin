@@ -43,9 +43,9 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-
 source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
+source ~/.config/zsh/fortune.zsh
 
 # Include user's private bin if it exists
 if [ -d ~/bin ]; then
