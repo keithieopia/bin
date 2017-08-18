@@ -11,7 +11,8 @@ default: $(HOST)
 ## Actual stow targets
 ##
 everywhere:
-> stow bash git nano ssh ufw wget zsh
+> stow bash git nano ssh wget zsh
+> sudo stow -t / ufw
 
 desktop: everywhere
 > stow mpv smplayer youtube-dl xdg-user-dirs
