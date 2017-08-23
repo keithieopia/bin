@@ -22,6 +22,7 @@ servers: everywhere
 
 web_server: everywhere servers
 > sudo stow -t / lighttpd php
+> sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
 
 home_server: everywhere servers web_server
 > sudo stow -t / quirk-no-lid-suspend
@@ -38,8 +39,8 @@ deli: desktop
 
 # this is a VPS on linode
 linda: web_server git_server
-> ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighthttpd/sites-enabled/
+> sudo ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighttpd/sites-enabled/
 
 # this is my home media server
 minime: home_server
-> ln -s /etc/lighttpd/sites-available/minime.conf /etc/lighttpd/sites-enabled/
+> sudo ln -s /etc/lighttpd/sites-available/minime.conf /etc/lighttpd/sites-enabled/
