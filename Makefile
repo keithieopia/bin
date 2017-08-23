@@ -38,6 +38,8 @@ deli: desktop
 
 # this is a VPS on linode
 linda: web_server git_server
+> ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighthttpd/sites-enabled/
 
 # this is my home media server
 minime: home_server
+> ln -s /etc/lighttpd/sites-available/minime.conf /etc/lighttpd/sites-enabled/
