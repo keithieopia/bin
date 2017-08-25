@@ -1,4 +1,0 @@
-[Gogs]
-title=Gogs
-description=Gogs Git repo
-ports=3000/tcp
