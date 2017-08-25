@@ -1,0 +1,11 @@
+Package: default-mta
+Pin: release *
+Pin-Priority: -1
+
+Package: mail-transport-agent
+Pin: release *
+Pin-Priority: -1
+
+Package: exim4-base
+Pin: release *
+Pin-Priority: -1
