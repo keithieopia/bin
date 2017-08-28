@@ -27,8 +27,8 @@ fi
 if [ -d "$*" ]; then
     echo -e "\033[1;32mEncrypting directory...\033[0m"
 
-    NAME=$(basename $*)
-    tar -c --xz "$*" | gpg --output "$NAME.txz.enc" --symmetric --cipher-algo AES256
+    NAME=$(basename "$*")
+    tar -c --xz -- "$*" | gpg --output "$NAME.txz.enc" --symmetric --cipher-algo AES256
 
 else
 
