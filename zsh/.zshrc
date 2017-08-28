@@ -47,6 +47,9 @@ source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
 source ~/.config/zsh/fortune.zsh
 
+# add sbin to path
+PATH=/sbin:"${PATH}"
+
 # Include user's private bin if it exists
 if [ -d ~/bin ]; then
     PATH=~/bin:"${PATH}"
