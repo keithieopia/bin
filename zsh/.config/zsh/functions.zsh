@@ -45,9 +45,9 @@ function mktgz() {
 }
 
 function mktxz() {
-    if type pixz &> /dev/null; then
-        echo -e "\033[1;37mUsing parallel pixz...\033[00m"
-        tar -Ipixz -cvf "${1%%/}.txz" "${1%%/}/"
+    if type pxz &> /dev/null; then
+        echo -e "\033[1;37mUsing parallel pxz...\033[00m"
+        tar -Ipxz -cvf "${1%%/}.txz" "${1%%/}/"
     else
         tar cvJf "${1%%/}.txz" "${1%%/}/"
     fi
