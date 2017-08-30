@@ -1,33 +1,191 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
-    exit
-else
-    if [ -f $1 ] ; then
-        case "${1,,}" in
-            # unless you have an ancient version of tar, you do not need to 
-            # specify the tarball's compression when extracting (-j,-z,-J flags)
-            *.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)           
-                tar xvf "$1" ;;
 
-            *.7z)        7z x "$1"       ;;
-            *.bz2)       bunzip2 "$1"    ;;
-            *.exe)       cabextract "$1" ;;
-            *.gz)        gunzip "$1"     ;;
-            *.lzma)      unlzma "$1"     ;;
-            *.rar)       unrar x "$1"    ;;
-            *.xz)        unxz "$1"       ;;
-            *.z)         uncompress "$1" ;;
-            *.zip)       unzip "$1"      ;;
-            
-            *) 
-                echo "extract: '$1' - unknown archive format" 
-                exit 1
-                ;;
-        esac 
+extract_gz() {
+    if hash pigz 2>/dev/null; then
+        echo "Using pigz for parallel uncompression..."
+        pigz -dc "$@"
     else
-        echo "extract: '$1' - not a file"
+        # modern tar recognizes formats automatically
+        gunzip "$@"
+    fi
+}
+
+extract_bzip2() {
+    if hash pbzip2 2>/dev/null; then
+        echo "Using pbzip2 for parallel uncompression..."
+        pbzip2 -dc "$@"
+    elif hash bunzip2 2>/dev/null; then
+        bunzip2 "$1"
+    else
+        echo "bzip2 not installed!"
+        exit 1
+    fi
+}
+
+extract_xz() {
+    if hash pxz 2>/dev/null; then
+        echo "Using pxz for parallel uncompression..."
+        pxz -dc "$@"
+    elif hash unxz 2>/dev/null; then
+         # modern tar recognizes formats automatically
+        unxz "$@"
+    else
+        echo "xz-utils not installed!"
+        exit 1
+    fi
+}
+
+extract_tar_gz() {
+    if hash pigz 2>/dev/null; then
+        echo "Using pigz for parallel uncompression..."
+        pigz -dc "$@" | tar xv
+    else
+        # modern tar recognizes formats automatically
+        tar xvf "$@"
+    fi
+}
+
+extract_tar_bz() {
+    if hash pbzip2 2>/dev/null; then
+        echo "Using pbzip2 for parallel uncompression..."
+        pbzip2 -dc "$@" | tar xv
+    elif hash bunzip2 2>/dev/null; then
+        # modern tar recognizes formats automatically
+        tar xvf "$@"
+    else
+        echo "bzip2 not installed!"
+        exit 1
+    fi
+}
+
+extract_tar_xz() {
+    if hash pxz 2>/dev/null; then
+        echo "Using pxz for parallel uncompression..."
+        pxz -dc "$@" | tar xv
+    elif hash unxz 2>/dev/null; then
+         # modern tar recognizes formats automatically
+        tar xvf "$@"
+    else
+        echo "xz-utils not installed!"
+        exit 1
+    fi
+}
+
+extract_zip() {
+    if hash unzip 2>/dev/null; then
+        unzip x "$@"
+    elif hash 7z 2>/dev/null && 7z i | grep -q "Deflate"; then
+        # most p7zip versions can handle zips, but check anyway before
+        # using it to make sure
+        7z x "$@"
+    else
+        echo "unzip not installed!"
+        exit 1
+    fi
+}
+
+extract_7z() {
+    # most distros have several packages for p7zip: a lightweight version, 
+    # a full version, and a wrapper around the previous two. This will try
+    # each of those in that order.
+
+    if hash 7zr 2>/dev/null; then
+        7zr x "$@"
+    elif hash 7za 2>/dev/null; then
+        7za x "$@"
+    elif hash 7z 2>/dev/null; then
+        7z x "$@"
+    else
+        echo "p7zip not installed!"
+        exit 1
+    fi
+}
+
+extract_rar() {
+    if hash unrar 2>/dev/null; then
+        unrar x "$@"
+    elif hash 7z 2>/dev/null && 7z i | grep -q "Rar"; then
+        # p7zip has a rar module, try using it if unrar isn't installed
+        7z x "$@"
+    else
+        echo "unrar not installed!"
+        exit 1
+    fi
+}
+
+
+if [ -z "$1" ]; then
+    echo "Usage: extract COMPRESSED_ARCHIVE"
+    echo ""
+    echo "  Example:"
+    echo "  $ extract some-archive.tar.gz"
+    exit 1
+fi
+
+if [ -f "$@" ] ; then
+
+    FILETYPE=$(xdg-mime query filetype "$@")
+
+    case "$FILETYPE" in
+        'application/x-tar')
+            tar xvf "$@"
+            ;;
+
+    # Single compressed files
+        'application/gzip')
+            extract_gzip "$@"
+            ;;
+        'application/x-bzip')
+            extract_bzip2 "$@"
+            ;;
+        'application/x-xz')
+            extract_xz "$@"
+            ;;
+
+    # Compressed tarballs
+        'application/x-compressed-tar')
+            extract_tar_gz "$@"
+            ;;
+        'application/x-bzip-compressed-tar')
+            extract_tar_bz "$@"
+            ;;
+        'application/x-xz-compressed-tar')
+            extract_tar_xz "$@"
+            ;;
+
+    # Windows archives
+        'application/zip')
+            extract_zip "$@"
+            ;;
+        'application/x-7z-compressed')
+            extract_7z "$@"
+            ;;
+        'application/vnd.rar')
+            extract_rar "$@"
+            ;;
+    esac
+else 
+    if [[ "$1" -eq "-h" ]] || [[ "$1" -eq "--help" ]]; then
+        cat <<EOF
+  extract uses the the best tool to decompress an archive
+
+  SUPPORTED ARCHIVES
+  tar, gz, bzip2, xz, zip, 7z, rar
+  compressed tarballs like tgz and tbz are also supported
+
+  PARALLEL DECOMPRESSOR SUPPORT
+  extract will use parallel versions of decompressors for 
+  maximum speed. Examples: pigz, pbzip2, and pxz
+
+  FALLBACKS
+  extract will try to use fallback decompressors if the 
+  standard one isn't installed. For instance, 7zip
+  supports decompressing rar and zip
+
+EOF
+    else
+        echo "File is not a valid archive: $@"
         exit 1
     fi
 fi
