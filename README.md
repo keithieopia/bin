@@ -50,8 +50,6 @@ be invoked by passing the typical `-h` flag.
 
 ## Credits
 
-- `disco`: [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
-  License: *public domain*
 - `extract`: Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
