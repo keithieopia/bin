@@ -1,5 +1,20 @@
 # make directory and cd into it
-function md() { mkdir -p "$@" && cd "$@"; }
+function md() { 
+    mkdir -p "$@"
+    cd "$@"
+}
+
+# quicker cd'ing
+function cdup() {
+    [[ -z $@ ]] && echo -e "cd out of directory quicker\nusage: cdup <#ofdirs>" && return 1
+
+    local x="";
+    for i in $(seq $1); do
+        x="$x../"
+    done
+
+    cd $x
+}
 
 # Calculate size of directories
 function dudir() {
