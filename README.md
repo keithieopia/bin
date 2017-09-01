@@ -34,7 +34,8 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 - `pdf-extract`: Extract pages from a PDF; useful for removing superfluous and unofficial cover sheets added by many online repositories. Compare to [pdftk](https://linux.die.net/man/1/pdftk).
 - `poor-mans-proxy`: Scrap complicated VPN setups for a simple SSH tunnel
 - `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
-- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
+- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl)
+- `speedtest`: A nice cli network speed test without additional dependances
 - `tclock`: A nice fullscreen console clock
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+tput setaf 4; echo "Performing speedtest, please wait..."; tput sgr0
+
+WGET=$(wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test10.zip 2>&1 | grep saved)
+SPEED=$(awk '{print $3}' <<< $WGET | tr -d '(')
+UNIT=$(awk '{print $4}' <<< $WGET | tr -d ')')
+
+echo "" # newline
+echo "Speed: $SPEED $UNIT"
+
+if grep -q 'MB/s' <<< $UNIT; then
+    MBPS=$(echo "$SPEED * 8" | bc -l)
+    echo "       $MBPS Mbps"
+elif grep -q 'KB/s' <<< $UNIT; then
+    MBPS=$(echo "scale=3; $SPEED / 1000" | bc -l)
+    echo "       $MBPS Mbps"
+fi
