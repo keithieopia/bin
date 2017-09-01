@@ -5,18 +5,18 @@ cat <<HELP
 Wrapper for GPG symmetric encryption
 
 Encrypt files or directories using AES256 or automatically
-decrypt a file created with this utility (files have an ".enc" extension)
+decrypt a file created with this utility (files have an ".gpg" extension)
 
 
 https://github.com/keithieopia/bin/
 
-Copyright (c) 2016 Timothy Keith
+Copyright (c) 2016-2017 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
 
 if [ -z "$1" ]; then
-    echo -e "\e[31mYou must specify something to encrypt!\e[39m"
+    tput setaf 1; echo "You must specify something to encrypt!"; tput sgr0
     exit 1
 elif [ "$1" == "-h" ]; then
     usage
@@ -24,36 +24,39 @@ elif [ "$1" == "-h" ]; then
 fi
 
 
-if [ -d "$*" ]; then
-    echo -e "\033[1;32mEncrypting directory...\033[0m"
+if [ -d "$@" ]; then
+    tput setaf 4; echo "Encrypting directory..."; tput sgr0
 
-    NAME=$(basename "$*")
-    tar -c --xz -- "$*" | gpg --output "$NAME.txz.enc" --symmetric --cipher-algo AES256
+    NAME=$(basename "$@")
 
+    if hash pigz 2>/dev/null; then
+        tar cf - "$@" | pigz -c | gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+    else
+        tar zcf - "$@" | gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+    fi
 else
 
-    if [ -f "$*" ]; then
+    if [ -f "$@" ]; then
 
-        FILE="$*"
+        FILE="$@"
 
-        if [[ ${FILE: -8} == ".txz.enc" ]]; then
-            echo -e "\033[1;32mDecrypting directory...\033[0m"
+        if [[ ${FILE: -8} == ".tgz.gpg" ]]; then
+            tput setaf 4; echo "Decrypting directory..."; tput sgr0
 
-            gpg2 --decrypt $FILE | tar -xJf -
-
-        elif [[ ${FILE: -4} == ".enc" ]]; then
-            echo -e "\033[1;32mDecrypting file...\033[0m"
-
-            NAME=$(basename $FILE .enc)
-            gpg2 --output $NAME --decrypt $FILE
-
+            if hash pigz 2>/dev/null; then
+                gpg --decrypt $FILE | pigz -dc | tar xf -
+            else
+                 gpg --decrypt $FILE | tar xf -
+            fi
+        elif [[ ${FILE: -4} == ".gpg" ]]; then
+            tput setaf 4; echo "Decrypting file..."; tput sgr0
+            gpg --output "$(basename $FILE .gpg)" --decrypt "$FILE"
         else
-            echo -e "\033[1;32mEncrypting file...\033[0m"
-
-            gpg2 --output $FILE.enc --symmetric --cipher-algo AES256 $FILE
+            tput setaf 4; echo "Encrypting file..."; tput sgr0
+            gpg --output "$FILE.gpg" --symmetric --cipher-algo AES256 "$FILE"
         fi
     else
-        echo -e "\e[31mThat file does not exist!\e[39m"
+        tput setaf 1; echo "That file does not exist!"; tput sgr0
         exit 1
     fi
 fi
