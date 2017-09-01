@@ -41,7 +41,7 @@ be solved in a humble shell script.
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
 - `youtube-dl-update`: Download and install the latest youtube-dl version
-- `youtube-dlp`: Download a large list of videos simultaneously using [youtube-dl](https://rg3.github.io/youtube-dl/) and [GNU Parallel](https://www.gnu.org/software/parallel/)
+- `youtube-dl-parallel`: Download a large list of videos simultaneously using [youtube-dl](https://rg3.github.io/youtube-dl/) and [GNU Parallel](https://www.gnu.org/software/parallel/)
 - `youtube-play`: Stream a youtube video using mpv, or fallback to downloading and playing it locally
 
 
