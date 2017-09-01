@@ -13,7 +13,7 @@ Entertaining toys and distractions for your command prompt
 
 - `disco`: [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
   License: *public domain*
-- `rand-uncyclopedia`: Found in a /r/linux reddit thread: *[A simple and hilarious replacement for fortune](https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/)*. Author of code used is [/u/keenerd](https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/djyqg0h/).  
+- `rand-uncyclopedia`: Found in a /r/linux reddit thread: *[A simple and hilarious replacement for fortune](https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/)*. Author of the [particular implementation](https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/djyqg0h/) is [/u/keenerd](https://www.reddit.com/user/keenerd).  
 License: *assumed to be attribution-only or public domain*
 
 ---
