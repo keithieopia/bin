@@ -35,6 +35,7 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 - `poor-mans-proxy`: Scrap complicated VPN setups for a simple SSH tunnel
 - `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
 - `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
+- `tclock`: A nice fullscreen console clock
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
 - `youtube-dl-update`: Download and install the latest youtube-dl version
@@ -49,16 +50,18 @@ be invoked by passing the typical `-h` flag.
 
 ## Credits
 
-* `disco` - [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
+- `disco`: [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/)  
   License: *public domain*
-* `extract` - Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
+- `extract`: Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
-* `lemonade` - Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-* `lockscreen` - Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
+- `lemonade`: Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
+- `lockscreen`: Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
 which in turn is based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy).  
 License: [MIT](https://opensource.org/licenses/MIT)
-* `test-colors` - Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
+- `tclock`: [William Shotts](http://linuxcommand.org/lc3_adv_tput.php)  
+License: Similar to GNU's Verbatim Copying License; *"Verbatim copying and distribution of this entire article is permitted in any medium, provided this copyright notice is preserved."*
+- `test-colors`: Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
 
 
