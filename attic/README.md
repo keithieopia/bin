@@ -1,6 +1,8 @@
 # ~/bin/attic
 Previously used scripts and experiments. Your mileage may vary, but some may find them useful.
 
+## Table of Contents:
+
 - `arch-get-packer`: Install [packer](https://aur.archlinux.org/packages/packer/), an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
 - `battmon`: Will warn about battery levels with increasing severity and then safely shut the system down if the battery gets too low
 - `cheese`: Take a picture of yourself using the webcam
@@ -33,6 +35,13 @@ Previously used scripts and experiments. Your mileage may vary, but some may fin
 - *jail/*
   - `dropbox`: Nuke dropbox's buggy auto-update mechanism and run it in a firejail sandbox
   - `firefox` - Run Firefox in a firejail sandbox
+
+## Credits
+
+- `lemonade`: Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
+- `lockscreen`: Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
+which in turn is based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy).  
+License: [MIT](https://opensource.org/licenses/MIT)
 
 ---
 *This is part of my [~/bin](https://github.com/keithieopia/linux-guides) repo. For more information, see the main [README](https://github.com/keithieopia/bin/blob/master/README.md).*

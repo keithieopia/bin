@@ -44,8 +44,7 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 
 
 ## Usage
-Complex shell scripts *usually* include a help/usage statement that can
-be invoked by passing the typical `-h` flag.
+Complex shell scripts *usually* include a help/usage statement that can be invoked by passing the typical `-h` flag.
 
 
 ## Credits
@@ -53,10 +52,6 @@ be invoked by passing the typical `-h` flag.
 - `extract`: Based on the [ArchWiki](https://wiki.archlinux.org/index.php/Bash/Functions#Extract)
   and Vitalii Tereshchuk's [Extract](https://github.com/xvoland/Extract).  
   License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html) & [MIT](https://opensource.org/licenses/MIT)
-- `lemonade`: Naming convention stolen from Nathan Isom's [dotfiles](https://github.com/neeasade/dotfiles)
-- `lockscreen`: Idea based on Jessie Frazelle's [i3lock-fancy](https://github.com/jessfraz/dotfiles/blob/master/bin/fancy-i3lock),
-which in turn is based on Dolores Portalatin's [i3lock-fancy](https://github.com/meskarune/i3lock-fancy).  
-License: [MIT](https://opensource.org/licenses/MIT)
 - `tclock`: [William Shotts](http://linuxcommand.org/lc3_adv_tput.php)  
 License: Similar to GNU's Verbatim Copying License; *"Verbatim copying and distribution of this entire article is permitted in any medium, provided this copyright notice is preserved."*
 - `test-colors`: Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)  
