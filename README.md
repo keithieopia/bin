@@ -12,6 +12,8 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 
 ## Table of Contents:
 
+- [attic/*](https://github.com/keithieopia/bin/blob/master/attic/README.md)
+- [wallpaper/*](https://github.com/keithieopia/bin/blob/master/wallpaper/README.md)
 - `backup`: Automatically backup using rsync and tar.gz if space is available
 - `base64-img`: Convert an image to base64, suitable for [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) for HTML or CSS
 - `clean`: Erases files, directories, browser cache, junk files, history files, and slack space

@@ -1,4 +1,4 @@
-# Attic
+# ~/bin/attic
 Previously used scripts and experiments. Your mileage may vary, but some may find them useful.
 
 - `arch-get-packer`: Install [packer](https://aur.archlinux.org/packages/packer/), an [Arch Linux](https://www.archlinux.org/) [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers)
