@@ -12,8 +12,8 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 
 ## Table of Contents:
 
-- [attic/*](https://github.com/keithieopia/bin/blob/master/attic/README.md)
-- [wallpaper/*](https://github.com/keithieopia/bin/blob/master/wallpaper/README.md)
+- ./[attic](https://github.com/keithieopia/bin/blob/master/attic/README.md)/*
+- ./[wallpaper](https://github.com/keithieopia/bin/blob/master/wallpaper/README.md)/*
 - `backup`: Automatically backup using rsync and tar.gz if space is available
 - `base64-img`: Convert an image to base64, suitable for [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) for HTML or CSS
 - `clean`: Erases files, directories, browser cache, junk files, history files, and slack space
@@ -22,10 +22,6 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 - `encrypt`: Wrapper for GPG symmetric encryption using AES256
 - `extract`: Wrapper to extract from many archives
 - `freedns-client`: DDNS client for [afraid.org](https://freedns.afraid.org/)
-- *fun/*
-    - `busy`: Look busy to those annoying people who shoulder surf
-	- `disco`: Randomly colored lights in the terminal. For a more wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) simultaneously
-	- `quotes`: Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
 - `gpg-export-key`: Backup both the public and secret key for a given GPG key
 - `image-avg-color`: Find the average color of an image; useful for website development and theme building
 - `letsencrypt`: Renew SSL certs for my domains using certbot
