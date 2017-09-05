@@ -34,7 +34,8 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 - `pdf-extract`: Extract pages from a PDF; useful for removing superfluous and unofficial cover sheets added by many online repositories. Compare to [pdftk](https://linux.die.net/man/1/pdftk).
 - `poor-mans-proxy`: Scrap complicated VPN setups for a simple SSH tunnel
 - `rangen`: Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
-- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl).
+- `sl`: cure mistyping bad habits. Slightly more useful than the ubiquitous [steam locomotive](https://github.com/mtoyoda/sl)
+- `speedtest`: A nice cli network speed test without additional dependances
 - `tclock`: A nice fullscreen console clock
 - `test-colors`: Show the current terminal color scheme
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
@@ -61,15 +62,18 @@ License: Similar to GNU's Verbatim Copying License; *"Verbatim copying and distr
 ## Feedback
 I would love your feedback! If you found any of these scripts useful, please
 drop me [an email](mailto:timothykeith@gmail.com). For the privacy conscious,
-feel free to encrypt any messages using my [PGP key](http://pgp.mit.edu/pks/lookup?op=vindex&fingerprint=on&search=0xF4F4A135C022EE12):
+feel free to encrypt any messages using my [PGP key](https://gist.githubusercontent.com/keithieopia/434f3575ec1f020d6589a4c01dc0847e/raw/2e0749f2966ff501ee28797a926229c081f7e652/timothykeith.pub.asc):
 
-> 4135 C593 1D89 368E 7F32 C8ED F4F4 A135 C022 EE12
+> 46E6 9F69 90C1 DE8C 9791 88EE 94A4 E2D4 *6B32 AA11*
 
 To import it into your keyring:
 ```console
-$  gpg --keyserver pgp.mit.edu --recv-key 4135C5931D89368E7F32C8EDF4F4A135C022EE12
+$ curl https://gist.githubusercontent.com/keithieopia/434f3575ec1f020d6589a4c01dc0847e/raw/2e0749f2966ff501ee28797a926229c081f7e652/timothykeith.pub.asc | gpg --import -
 ```
 
+**NOTE:** SKS Public Key Servers (such as pgp.mit.edu) don't support Curve25519 keys yet. In the meantime, consider using [Keybase.io](https://keybase.io/); my username is [timothykeith](https://keybase.io/timothykeith).
+
+### Bug Reports
 Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/bin/issues)
 
 
