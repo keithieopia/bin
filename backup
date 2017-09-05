@@ -1,29 +1,49 @@
-#!/bin/sh
+#!/bin/bash
 
-DRIVE="/media/$(whoami)/Backups"
+
+DRIVE="/media/$(whoami)/laptop-backup"
 DATE="$(date +%Y%m%d)"
 
-# run with low priority
-#ionice -c 3 -p $$
-#renice +12 -p $$
+read -r -d '' EXCLUDE <<EOF
+--exclude ".antigen"
+--exclude ".cache" 
+--exclude ".config/chromium"
+--exclude ".config/dconf"
+--exclude ".config/dolphinrc"
+--exclude ".config/konsolerc"
+--exclude ".config/pulse"
+--exclude ".config/session"
+--exclude ".dbus"
+--exclude ".ecryptfs"
+--exclude ".kde/cache-$(hostname)" 
+--exclude ".kde/socket-$(hostname)"
+--exclude ".kde/tmp-$(hostname)"
+--exclude ".kde/share/apps/RecentDocuments"
+--exclude ".pki"
+--exclude ".Private"
+--exclude ".steam*"
+--exclude ".local/share/kcookiejar"
+--exclude ".local/share/klipper"
+--exclude ".local/share/Steam" 
+--exclude ".local/share/RecentDocuments"
+--exclude ".local/share/Trash" 
+--exclude ".local/share/vulkan"
+--exclude ".wine/dosdevices"
+--exclude ".wine/drive_c/windows"
+--exclude ".zsh_history"
+--exclude "Dropbox/.dropbox"
+--exclude "Dropbox/.dropbox.cache"
+--exclude "Private"
+EOF
 
-# Ensure the target exists
-if [ ! -d "$DRIVE" ]; then
-    if [ -d "/mnt/backup" ]; then
-        # sane fallback location
-        DRIVE="/mnt/backup"
-    else
-        echo "Backup drive not mounted!"
-        exit 1
-    fi
-fi
-
+###############################################################################
+# TARGETS
 
 backup_home() {
     BACKUP_FREE=$(/bin/df $DRIVE | tail -1 | awk '{print $4}')
-    HOME_USED=$(/usr/bin/du -s $HOME | awk '{print $1}')
+    HOME_SIZE=$(/usr/bin/du -s $HOME $EXCLUDE | awk '{print $1}')
 
-    if [ "$BACKUP_FREE" -lt "$HOME_USED" ]; then
+    if [ "$BACKUP_FREE" -lt "$HOME_SIZE" ]; then
         echo "There is not enough free space on backup drive!"
         exit 1
     fi
@@ -32,110 +52,66 @@ backup_home() {
         mkdir -p "${DRIVE}/$(hostname)-home"
     fi
 
-    rsync -Sratgv --delay-updates --log-file="${DRIVE}/$(hostname)-home/${DATE}.log" \
-        --exclude ".antigen"                        \
-        --exclude ".cache"                          \
-        --exclude ".config/chromium"                \
-        --exclude ".config/dconf"                   \
-        --exclude ".config/dolphinrc"               \
-        --exclude ".config/konsolerc"               \
-        --exclude ".config/pulse"                   \
-        --exclude ".config/session"                 \
-        --exclude ".dbus"                           \
-        --exclude ".kde/cache-$(hostname)"          \
-        --exclude ".kde/socket-$(hostname)"         \
-        --exclude ".kde/tmp-$(hostname)"            \
-        --exclude ".kde/share/apps/RecentDocuments" \
-        --exclude ".pki"                            \
-        --exclude ".private"                        \
-        --exclude ".steam*"                         \
-        --exclude ".local/share/kcookiejar"         \
-        --exclude ".local/share/klipper"            \
-        --exclude ".local/share/Steam"              \
-        --exclude ".local/share/RecentDocuments"    \
-        --exclude ".local/share/Trash"              \
-        --exclude ".local/share/vulkan"             \
-        --exclude ".wine/dosdevices"                \
-        --exclude ".wine/drive_c/windows"           \
-        --exclude ".zsh_history"                    \
-        --exclude "Dropbox/.dropbox"                \
-        --exclude "Dropbox/.dropbox.cache"          \
-        "$HOME" "${DRIVE}/$(hostname)-home/${DATE}"
-
-    ##
-    ## Create tar.gz
-    ##
-    BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
-    BACKUP_USED=$(/usr/bin/du -s "${DRIVE}/$(hostname)-home/${DATE}" | awk '{print $1}')
-
-    if [ "$BACKUP_FREE" -lt "$BACKUP_USED" ]; then
-        echo "Skipping gzip, not enough free space on drive"
-    else
-        if hash pigz 2>/dev/null; then
-            tar -I pigz -cpvSf "${DRIVE}/$(hostname)-home/${DATE}.tgz" "${DRIVE}/$(hostname)-home/${DATE}"
-        else
-            tar -czpvSf "${DRIVE}/$(hostname)-home/${DATE}.tgz" "${DRIVE}/$(hostname)-home/${DATE}"
-        fi
-
-        echo ""
-        echo "Generating archive checksum..."
-        md5sum "${DRIVE}/$(hostname)-home/${DATE}.tgz" > "${DRIVE}/$(hostname)-home/${DATE}.sum"
-
-        # Remove rsync dir, but do it safely...
-        if [ ! -z "$DRIVE"] && [ ! -z "$DATE" ]; then 
-            rm -rf "${DRIVE}/$(hostname)-home/${DATE}"
-        fi
-    fi
+    tar cfp - "$HOME" -P $EXCLUDE  | \
+    pv -W -s $(du -sb "$HOME" $EXCLUDE | awk '{print $1}') | \
+    pbzip2 -c | \
+    gpg --symmetric --cipher-algo AES128 --output "${DRIVE}/$(hostname)-home/${DATE}.tbz.gpg"
 }
 
 backup_private() {
-    if [ ! -d "${DRIVE}/$(hostname)-private" ]; then
-        mkdir -p "${DRIVE}/$(hostname)-private"
-    fi
-
-    for CONTAINER in $HOME/.private/*; do
-        CONTAINER_NAME=$(basename $CONTAINER)
-
+    if mount | grep -q "$HOME/Private"; then
+        echo "Skipping mounted private dir..."
+    else
         BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
-        CONTAINER_SIZE=$(ls -l "$CONTAINER" --block-size=K | awk '{print $5}' | sed 's/.$//')
+        PRIVATE_SIZE=$(/usr/bin/du -s "$HOME/.Private" | awk '{print $1}')
 
-        if [ "$BACKUP_FREE" -lt "$CONTAINER_SIZE" ]; then
-            echo "Not enough free space to backup container $CONTAINER_NAME"
+        if [ "$BACKUP_FREE" -lt "$PRIVATE_SIZE" ]; then
+            echo "Not enough free space to backup private dir"
         else
-
-            if mount | grep -q "/dev/mapper/$CONTAINER_NAME"; then
-                echo "Skipping mounted container $CONTAINER_NAME"
-            else
-                rsync -Satgv "$CONTAINER" "${DRIVE}/$(hostname)-private"
+            if [ ! -d "${DRIVE}/$(hostname)-private" ]; then
+                mkdir -p "${DRIVE}/$(hostname)-private"
             fi
+
+            tar cfp - "$HOME/.Private" "$HOME/.ecryptfs" -P | \
+            pv -W -s $(du -sb "$HOME/.Private" | awk '{print $1}') | \
+            pbzip2 -c > "${DRIVE}/$(hostname)-private/${DATE}.tbz"
         fi
-    done
+    fi
 }
 
 backup_media() {
-
     MEDIA="/mnt/tv-movies"
 
-    if [ -d "$MEDIA" ]; then
-        BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
-        MEDIA_SIZE=$(/usr/bin/du -s "$MEDIA" --exclude "lost+found" | awk '{print $1}')
-
-        if [ "$BACKUP_FREE" -lt "$MEDIA_SIZE" ]; then
-            echo "Not enough free space to backup media!"
-            exit 1
-        else
-            rsync -Sratgv --delay-updates               \
-                --exclude "lost+found"                  \
-                --exclude ".Trash-1000"                 \
-                "$MEDIA" "${DRIVE}/$(hostname)-media"
-        fi
-    else
+    if [ ! -d "$MEDIA" ]; then
         echo "Could not find media drive!"
         exit 1
     fi
 
+    BACKUP_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
+    MEDIA_SIZE=$(/usr/bin/du -s "$MEDIA" --exclude "lost+found" | awk '{print $1}')
+
+    if [ "$BACKUP_FREE" -lt "$MEDIA_SIZE" ]; then
+        echo "Not enough free space to backup media!"
+        exit 1
+    else
+        tar cfp - "$MEDIA" -P --exclude "lost+found" --exclude ".Trash-1000" | \
+        pv -W -s $(du -sb "$MEDIA" --exclude "lost+found" --exclude ".Trash-1000" | awk '{print $1}') | \
+        pbzip2 -c > "${DRIVE}/$(hostname)-media/${DATE}.tbz"
+    fi
 }
 
+###############################################################################
+# LOGIC
+
+# run with low priority
+#ionice -c 3 -p $$
+#renice +12 -p $$
+
+# Ensure the target exists
+if [ ! -d "$DRIVE" ]; then
+    echo "Backup drive not mounted!"
+    exit 1
+fi
 
 if [ -z "$@" ]; then
     case "$(hostname)" in
@@ -155,8 +131,8 @@ if [ -z "$@" ]; then
     esac
 else
     for target in "$@"; do
-        if [ -n "$(type -t backup_${target})" ] && [ "$(type -t backup_${target})" = function ]; then
-            backup_${target}
+        if type "backup_${target}" | grep -q 'function' 2>/dev/null; then
+            eval backup_${target}
         else
             echo "Unknown target: $target"
         fi
