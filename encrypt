@@ -30,9 +30,14 @@ if [ -d "$@" ]; then
     NAME=$(basename "$@")
 
     if hash pigz 2>/dev/null; then
-        tar cf - "$@" | pigz -c | gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+        tar cf - "$@" | \
+        pv -W -s $(du -sb "$@" | awk '{print $1}') | \
+        pigz -c | \
+        gpg --symmetric --cipher-algo AES128 --output "$NAME.tgz.gpg"
     else
-        tar zcf - "$@" | gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+        tar zcf - "$@" | \
+        pv -W -s $(du -sb "$@" | awk '{print $1}') | \
+        gpg --symmetric --cipher-algo AES128 --output "$NAME.tgz.gpg"
     fi
 else
 
@@ -46,14 +51,14 @@ else
             if hash pigz 2>/dev/null; then
                 gpg --decrypt $FILE | pigz -dc | tar xf -
             else
-                 gpg --decrypt $FILE | tar xf -
+                gpg --decrypt $FILE | tar xf -
             fi
         elif [[ ${FILE: -4} == ".gpg" ]]; then
             tput setaf 4; echo "Decrypting file..."; tput sgr0
             gpg --output "$(basename $FILE .gpg)" --decrypt "$FILE"
         else
             tput setaf 4; echo "Encrypting file..."; tput sgr0
-            gpg --output "$FILE.gpg" --symmetric --cipher-algo AES256 "$FILE"
+            pv $FILE | gpg --symmetric --cipher-algo AES128 --output "$FILE.gpg"
         fi
     else
         tput setaf 1; echo "That file does not exist!"; tput sgr0
