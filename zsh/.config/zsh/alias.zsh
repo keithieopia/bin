@@ -17,7 +17,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
-alias kate='kate >/dev/null 2>&1' # kate editor is noisy, make it be silent
+
+# Fix noisy apps to be silent
+alias kate='kate >/dev/null 2>&1'
+alias retext='retext >/dev/null 2>&1'
 
 # defaults to optional programs
 if type shred &> /dev/null; then 
