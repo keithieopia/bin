@@ -231,7 +231,7 @@ function makeContainer() {
 
 
 
-CONTAINER_DIR="$HOME/.private"
+CONTAINER_DIR="$HOME/.nullcrypt-store"
 MOUNT_DIR="/mnt"
 WHOAMI=${SUDO_USER:-$(whoami)}
 
