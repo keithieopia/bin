@@ -3,7 +3,7 @@
 #
 
 # safer commands
-alias rm="rm -iv"
+alias rm="rm -Iv"
 alias cp="cp -iv"
 alias mv="mv -iv"
 
