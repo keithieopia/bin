@@ -15,6 +15,7 @@ everywhere:
 
 desktop: everywhere
 > stow mpv smplayer youtube-dl xdg-user-dirs
+> sudo stow -t / quirk-no-ipv6 quirk-apt-no-recommend
 
 servers: everywhere
 > sudo stow -t / quirk-oom-killer-reboot sshd
@@ -43,3 +44,4 @@ linda: web_server git_server
 # this is my home media server
 minime: home_server
 > test -L /etc/lighttpd/sites-enabled/minime.conf || sudo ln -s /etc/lighttpd/sites-available/minime.conf /etc/lighttpd/sites-enabled/
+> sudo stow -t / quirk-no-ipv6
