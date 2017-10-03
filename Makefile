@@ -40,6 +40,7 @@ deli: desktop
 # this is a VPS on linode
 linda: web_server git_server
 > test -L /etc/lighttpd/sites-enabled/keithieopia.conf || sudo ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighttpd/sites-enabled/
+> test -L /etc/lighttpd/sites-enabled/kerriandtimothy.conf || sudo ln -s /etc/lighttpd/sites-available/kerriandtimothy.conf /etc/lighttpd/sites-enabled/
 
 # this is my home media server
 minime: home_server
