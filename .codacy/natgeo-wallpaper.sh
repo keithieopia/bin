@@ -1,0 +1,1 @@
+../wallpaper/natgeo-wallpaper
