@@ -38,8 +38,11 @@ These are various shell scripts I have in my `$PATH`. Most are quite useful, but
 - `speedtest`: A nice cli network speed test without additional dependances
 - `tclock`: A nice fullscreen console clock
 - `test-colors`: Show the current terminal color scheme
+- `update-firefox`: Download and install locally the latest Firefox. Suitable for Debian users who want the latest Firefox over Firefox ESR
+- `update-youtube-dl`: Download and install locally the latest youtube-dl version
 - `weather.py`: Plaintext weather forecast from NOAA. Generally more timely and accurate compared to commercial websites and APIs
-- `youtube-dl-update`: Download and install the latest youtube-dl version
+- `webserver.py`: start a simple webserver running on port 8080 in the current directory
+- `whois`: trivial whois replacement that filters annoyingly large legal notices
 - `youtube-dl-parallel`: Download a large list of videos simultaneously using [youtube-dl](https://rg3.github.io/youtube-dl/) and [GNU Parallel](https://www.gnu.org/software/parallel/)
 - `youtube-play`: Stream a youtube video using mpv, or fallback to downloading and playing it locally
 
