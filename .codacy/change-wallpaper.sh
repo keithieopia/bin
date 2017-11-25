@@ -1,1 +1,0 @@
-../wallpaper/change-wallpaper

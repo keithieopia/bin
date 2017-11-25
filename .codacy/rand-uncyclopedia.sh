@@ -1,1 +1,0 @@
-../fun/rand-uncyclopedia

@@ -1,1 +1,0 @@
-../wallpaper/color-wallpaper

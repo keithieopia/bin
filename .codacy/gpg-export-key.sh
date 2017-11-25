@@ -1,1 +1,0 @@
-../gpg-export-key
