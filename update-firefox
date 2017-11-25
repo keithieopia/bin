@@ -1,0 +1,17 @@
+#!/bin/bash
+
+URL="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US"
+DIR=$(mktemp -d)
+
+cd "$DIR"
+curl -Lo "$DIR/firefox.tar.bz2" "$URL"
+
+if [ -d "$HOME/.local/firefox" ]; then
+    rm -r "$HOME/.local/firefox"
+fi
+
+tar -xjf "$DIR/firefox.tar.bz2" -C "$HOME/.local"
+
+if [ ! -L "$HOME/.local/bin/firefox" ]; then
+    ln -s "$HOME/.local/firefox/firefox" "$HOME/.local/bin/firefox"
+fi
