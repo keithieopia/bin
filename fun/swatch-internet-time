@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Swatch .beats are in UTC+1 / European Central Time
+read HOURS MINS SECS <<< $(TZ=":Europe/CET" date +"%H %M %S")
+
+BEATS=$(bc <<< "scale=2; (($SECS + 1) + (($MINS + 1) * 60) + (($HOURS + 1) * 3600)) / 86.4")
+
+# round down the result (discard the decimal value)
+echo "@${BEATS%.*}"

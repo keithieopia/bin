@@ -7,7 +7,8 @@ Entertaining toys and distractions for your command prompt
 - `busy`: Look busy to those annoying people who shoulder surf
 - `disco`: Randomly colored lights in the terminal. For a more wholesome experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) simultaneously
 - `quotes`: Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
-- `rand-uncyclopedia`: random nonsensical snippets from [Uncyclopedia](http://uncyclopedia.wikia.com/wiki/Main_Page). A hilarious replacement for fortune or MOTDs.
+- `swatch-internet-time`: get the current [internet time](https://en.wikipedia.org/wiki/Swatch_Internet_Time) / .beat time; a form of decimal time created by Swatch for their "Beat" watches
+- `rand-uncyclopedia`: random nonsensical snippets from [Uncyclopedia](http://uncyclopedia.wikia.com/wiki/Main_Page). A hilarious replacement for fortune or MOTDs
 
 ## Credits
 
