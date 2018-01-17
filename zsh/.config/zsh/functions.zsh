@@ -1,9 +1,3 @@
-# make directory and cd into it
-function md() { 
-    mkdir -p "$@"
-    cd "$@"
-}
-
 # quicker cd'ing
 function cdup() {
     [[ -z $@ ]] && echo -e "cd out of directory quicker\nusage: cdup <#ofdirs>" && return 1
@@ -133,3 +127,20 @@ function bing-vid() {
 }
 
 alias search="ddg"
+
+function weather() {
+    if [ -f "$HOME/.bash_secrets" ]; then
+        source "$HOME/.bash_secrets"
+        curl "wttr.in/$LOCATION_CITY"
+    fi
+}
+
+function open-port() {
+    if [ $# -eq 0 ]; then
+        echo "You must specify a port..."
+        exit 1
+    fi
+
+    sudo firewall-cmd --zone=public --add-port=$1 --permanent
+    sudo firewall-cmd --reload
+}
