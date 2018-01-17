@@ -53,6 +53,7 @@ alias ..="cd .."
 alias ...="cd ..."
 alias ....="cd ...."
 alias ~='cd ~ && clear'
+alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
@@ -62,11 +63,13 @@ alias lsd='ls -l | grep "^d"' # list only dirs
 alias ll='ls -lhA --color | less -R'
 alias ports='sudo lsof -i -n -P' # list open ports / running network services
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
+alias whatismyip='curl ipinfo.io/ip'
 
 # sudo
 alias snano='sudo nano'
 alias ufw='sudo ufw'
 
+# services
 alias start='sudo systemctl start '
 alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
