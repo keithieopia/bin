@@ -1,0 +1,32 @@
+#!/bin/bash
+
+usage () {
+cat <<HELP
+Create folders and files expected to be in ~/.cache normally
+
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2016 - 2018 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+if [ "$1" == "-h" ]; then
+	usage
+	exit
+fi
+
+if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
+    if [ ! -d "$HOME/.cache/thumbnails" ]; then
+		mkdir "$HOME/.cache/thumbnails"
+	fi
+
+    if [ ! -L "$HOME/.thumbnails" ]; then
+		if [ -d "$HOME/.thumbnails" ]; then
+			rm -r "$HOME/.thumbnails"
+		fi
+
+    	ln -s "$HOME/.cache/thumbnails" "$HOME/.thumbnails"
+    fi
+fi
