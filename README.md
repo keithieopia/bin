@@ -36,7 +36,6 @@ Here's a high level overview if you just want to see what I use:
 | **Shell Theme**:   | [Sunrise](https://github.com/robbyrussell/oh-my-zsh/wiki/themes#sunrise) (modified)  |
 | **Editor**:        | [nano](http://www.nano-editor.org)                                                   |
 | **IDE**:           | [Kate](https://kate-editor.org/)                                                     |
-| **Media player**:  | [SMPlayer](http://www.smplayer.info/) ([mpv](https://mpv.io) backend)                |
 
 
 ## Applications
