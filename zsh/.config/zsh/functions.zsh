@@ -144,3 +144,33 @@ function open-port() {
     sudo firewall-cmd --zone=public --add-port=$1 --permanent
     sudo firewall-cmd --reload
 }
+
+function img-res() {
+    if [ $# -eq 0 ]; then 
+        echo "print an image's resolution (width and height)"
+        echo "usage: img-res <image>"
+        return 1
+    fi
+    identify "$@" | awk '{print $3}'
+}
+
+function img-avg-color() {
+    if [ $# -eq 0 ]; then 
+        echo "find an image's average hex color"
+        echo "usage: img-avg-color <image>"
+        return 1
+    fi
+    convert "$1" -resize 1x1 txt: | tail -1 | awk '{print $3}'
+}
+
+function whatismyip() {
+    if [[ $1 == "public" ]]; then
+        # curl ipinfo.io/ip
+        dig +short myip.opendns.com @resolver1.opendns.com
+    else
+        ip addr | grep "inet .* global" | awk '{print $2}' | sed 's/...$//'
+    fi
+
+}
+
+
