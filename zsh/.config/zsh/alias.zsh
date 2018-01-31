@@ -63,7 +63,6 @@ alias lsd='ls -l | grep "^d"' # list only dirs
 alias ll='ls -lhA --color | less -R'
 alias ports='sudo lsof -i -n -P' # list open ports / running network services
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
-alias whatismyip='curl ipinfo.io/ip'
 
 # sudo
 alias snano='sudo nano'
@@ -74,3 +73,5 @@ alias start='sudo systemctl start '
 alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
 alias status='systemctl status '
+
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
