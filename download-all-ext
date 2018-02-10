@@ -1,0 +1,8 @@
+#!/bin/bash
+
+JOBS=3
+DOWNLOAD_LIST=$(mktemp)
+
+lynx -dump -listonly "$2" | awk '{print $2}' | grep $1 > $DOWNLOAD_LIST
+
+parallel -j "$JOBS" -a "$DOWNLOAD_LIST" wget
