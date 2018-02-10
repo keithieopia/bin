@@ -145,13 +145,20 @@ in
         fi
 
         title 'Shredding slack space...'
-        $DISKDESTROYER if=/dev/urandom of=.fill bs=4092
 
-        title 'Shredding complete, removing slack file...'
+		HOME_FREE=$(/bin/df -B1 | grep "/home$" | head -1 | awk '{print $4}')
+		pv -per -s $HOME_FREE -N "/home" < /dev/zero > /home/.fill.bin
+		
+		sync
+		rm /home/.fill.bin
+		sync
 
-        sync
-        rm .fill
-        sync
+		ROOT_FREE=$(/bin/df -B1 | grep "/$" | head -1 | awk '{print $4}')
+		pv -per -s $ROOT_FREE -N "/" < /dev/zero > /.fill.bin
+		
+		sync
+		rm /.fill.bin
+		sync
 
         success 'Slack space successfully shredded!'
         ;;
