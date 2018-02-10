@@ -127,7 +127,7 @@ Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/d
 
 ## Author
 <a name="author"></a>
-Copyright &copy; 2016 - 2017 Timothy Keith
+Copyright &copy; 2016 - 2018 Timothy Keith
 
 Licensed under the [MIT license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
 
