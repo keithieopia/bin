@@ -1,6 +1,7 @@
-## dotfiles [![Codacy Badge]([![Codacy Badge](https://api.codacy.com/project/badge/Grade/45075b8bb6664b8c82e1b5d1f707fe7c)](https://www.codacy.com/app/timothykeith/dotfiles)) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/keithieopia)
+## dotfiles [ ![Codacy Badge](https://api.codacy.com/project/badge/Grade/45075b8bb6664b8c82e1b5d1f707fe7c)](https://www.codacy.com/app/timothykeith/dotfiles) [![MIT License](https://img.shields.io/github/license/keithieopia/dotfiles.svg)](https://github.com/keithieopia/dotfiles/blob/master/LICENSE) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/keithieopia)
 
 <img align="right" alt="Markdown Screenshot" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.readme-assets/markdown_circle.png">
+
 
 > Being a Linux user is sort of like living in a house inhabited by a large family of carpenters and architects. Every morning when you wake up, the house is a little different. Maybe there is a new turret, or some walls have moved. Or perhaps someone has temporarily removed the floor under your bed."
 >  
