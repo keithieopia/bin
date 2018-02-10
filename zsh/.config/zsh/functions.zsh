@@ -145,6 +145,16 @@ function open-port() {
     sudo firewall-cmd --reload
 }
 
+function close-port() {
+    if [ $# -eq 0 ]; then
+        echo "You must specify a port..."
+        exit 1
+    fi
+
+    sudo firewall-cmd --zone=public --remove-port=$1 --permanent
+    sudo firewall-cmd --reload
+}
+
 function img-res() {
     if [ $# -eq 0 ]; then 
         echo "print an image's resolution (width and height)"
