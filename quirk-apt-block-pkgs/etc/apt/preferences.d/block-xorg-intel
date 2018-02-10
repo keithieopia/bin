@@ -1,7 +1,0 @@
-Package: xserver-xorg-video-intel
-Pin: release *
-Pin-Priority: -1
-
-Package: xserver-xorg-video-intel-dbg
-Pin: release *
-Pin-Priority: -1

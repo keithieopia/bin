@@ -14,8 +14,8 @@ everywhere:
 > stow bash git nano ssh wget zsh
 
 desktop: everywhere
-> stow mpv smplayer youtube-dl xdg-user-dirs
-> sudo stow -t / quirk-no-ipv6 quirk-apt-no-recommend
+> stow mpv youtube-dl xdg-user-dirs
+> sudo stow -t / quirk-apt-no-recommend
 
 servers: everywhere
 > sudo stow -t / quirk-oom-killer-reboot sshd
@@ -36,6 +36,7 @@ git_server: everywhere servers
 
 # this is my personal laptop
 deli: desktop
+> sudo stow -t / xorg
 
 # this is a VPS on linode
 linda: web_server git_server
