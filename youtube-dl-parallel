@@ -1,12 +1,23 @@
 #!/bin/bash
 
-LIST="download.txt"
+
 JOBS=3
 
-if [ ! -f "./$LIST" ]; then
-    echo "\"download.txt\" not found: create that file in the current directory with the URLs you wish to download!"
-    exit 1
+if [ -z $1 ]; then
+    if [ ! -f "./download.txt" ]; then
+        echo "No download list was given and there is no \"download.txt\" in the current directory"
+        echo "create a download.txt in the current directory with the URLs you wish to download!"
+        exit 1
+    else
+        LIST="download.txt"
+    fi
+else
+    if [ -f "$1" ]; then
+        LIST="$1"
+    else
+        echo "Could not find the given download list: $1"
+        exit 1
+    fi
 fi
-
 
 parallel -j "$JOBS" -a "$LIST" youtube-dl
