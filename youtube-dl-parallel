@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 JOBS=3
 
 if [ -z $1 ]; then
@@ -19,5 +18,8 @@ else
         exit 1
     fi
 fi
+
+# remove empty / whitespace only lines
+sed -i '/^$/d' "$LIST"
 
 parallel -j "$JOBS" -a "$LIST" youtube-dl
