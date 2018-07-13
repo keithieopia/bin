@@ -15,9 +15,9 @@ ttyctl -f
 
 # history settings
 setopt histignorealldups sharehistory
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.zsh_history
+HISTSIZE=50
+SAVEHIST=50
+HISTFILE=~/.zhistory
 
 # rehash automatically on path changes
 zstyle ':completion:*' rehash true
@@ -48,15 +48,28 @@ source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
 source ~/.config/zsh/fortune.zsh
 
+# set default editor
+export EDITOR=nano
+
 # add sbin to path
-PATH=/sbin:"${PATH}"
+export PATH=/sbin:"${PATH}"
 
 # Include user's private bin if it exists
 if [ -d ~/bin ]; then
-    PATH=~/bin:"${PATH}"
+    export PATH=~/bin:"${PATH}"
 fi
 
 # Include pip install path
 if [ -d ~/.local/bin ]; then
-    PATH=~/.local/bin:"${PATH}"
+    export PATH=~/.local/bin:"${PATH}"
+fi
+
+# set go path
+if [ -d ~/.go ]; then
+    export GOPATH=$HOME/.go
+    export PATH=$GOROOT/bin:"${PATH}"
+fi
+
+if type ccache > /dev/null; then
+    export PATH="/usr/lib/ccache/bin/:$PATH"
 fi
