@@ -1,0 +1,7 @@
+#!/bin/sh
+IF=$1
+STATUS=$2
+if [ "${IF}" = "wls8" ] && [ "${STATUS}" = "up" ]; then
+   iwconfig ${IF} power off
+   logger "${IF}: turning off powersave mode to prevent constant reconnections"
+fi
