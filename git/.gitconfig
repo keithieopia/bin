@@ -11,6 +11,9 @@
     interactive = auto
 	ui = true
 
+[diff]
+    external = git-meld
+
 [core]
 	excludesfile = ~/.gitignore
 
