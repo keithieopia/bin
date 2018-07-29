@@ -15,3 +15,18 @@ tar -xjf "$DIR/firefox.tar.bz2" -C "$HOME/.local"
 if [ ! -L "$HOME/.local/bin/firefox" ]; then
     ln -s "$HOME/.local/firefox/firefox" "$HOME/.local/bin/firefox"
 fi
+
+MENU_ENTRY="$HOME/.local/share/applications/firefox-quantum.desktop"
+
+if [ ! -f "$MENU_ENTRY" ]; then
+    cat << 'EOF' > "$MENU_ENTRY"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=/home/timothy/.local/firefox/firefox %u
+Icon=/home/timothy/.local/firefox/browser/chrome/icons/default/default64.png
+Name=Firefox Quantum
+Comment=Custom definition for Firefox
+Categories=Network;
+EOF
+fi
