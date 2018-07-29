@@ -33,11 +33,11 @@ if [ -d "$@" ]; then
         tar cf - "$@" | \
         pv -W -s $(du -sb "$@" | awk '{print $1}') | \
         pigz -c | \
-        gpg --symmetric --cipher-algo AES128 --output "$NAME.tgz.gpg"
+        gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
     else
         tar zcf - "$@" | \
         pv -W -s $(du -sb "$@" | awk '{print $1}') | \
-        gpg --symmetric --cipher-algo AES128 --output "$NAME.tgz.gpg"
+        gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
     fi
 else
 
@@ -58,7 +58,7 @@ else
             gpg --output "$(basename $FILE .gpg)" --decrypt "$FILE"
         else
             tput setaf 4; echo "Encrypting file..."; tput sgr0
-            pv $FILE | gpg --symmetric --cipher-algo AES128 --output "$FILE.gpg"
+            pv $FILE | gpg --symmetric --cipher-algo AES256 --output "$FILE.gpg"
         fi
     else
         tput setaf 1; echo "That file does not exist!"; tput sgr0
