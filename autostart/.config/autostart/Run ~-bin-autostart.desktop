@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Name=Run ~/bin/autostart
+Comment=Run scripts found in ~/bin/autostart
+Exec=run-parts /home/timothy/bin/autostart
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=false
+Hidden=false
+
