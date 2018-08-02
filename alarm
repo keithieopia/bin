@@ -1,0 +1,65 @@
+#!/bin/bash
+
+if [[ $1 == "-q" ]]; then
+    QUIET=1
+    shift
+else
+    QUIET=0
+fi
+
+if ! [ "$1" -eq "$1" ] 2>/dev/null; then
+    echo "\"$1\" is not a number. Please provide a number of seconds to countdown"
+    exit 1
+fi
+
+
+START=$(date +%s)
+END=$(($START + $1))
+
+time_remaining() {
+    TIME=$(date +%s)
+    PERCENT=$(echo "(($TIME - $START) / ($END - $START)) * 100" | bc -l)
+}
+
+
+time_remaining # initial run
+
+while [ $TIME -lt $END ]; do
+    time_remaining
+    #echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
+
+    echo "XXX"
+    printf '%.0f\n' $PERCENT
+    echo -n "Remaining time: "
+    echo $(date -u --date @$(($END - $TIME)) +%H:%M:%S)
+    echo "XXX"
+    sleep 1s
+done | whiptail --title "Timer" --gauge "${1} second timer..." 6 60 0
+
+
+# Play a sound unless -q was passed. Will progressively
+# fallback to a variety of methods of beeping
+if [ $QUIET -eq 0 ]; then
+
+    # sound-theme-freedesktop package (not installed by default)
+    if [ -f /usr/share/sounds/freedesktop/stereo/complete.oga ]; then
+        # comes with PulseAudio
+        if hash paplay 2>/dev/null; then
+            paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+            exit
+        fi
+    fi
+
+    # speech-dispatcher (usually installed on desktops)
+    if [ -f /usr/share/sounds/speech-dispatcher/test.wav ]; then
+        # comes with alsa, usually installed with Xorg
+        if hash aplay 2>/dev/null; then
+            aplay /usr/share/sounds/speech-dispatcher/test.wav 2>/dev/null
+            exit
+        fi
+    fi
+
+    # if all else fails, play an ASCII BEL
+    # (requires modprobe pcspkr or snd-pcsp)
+    echo -e "\a"
+fi
