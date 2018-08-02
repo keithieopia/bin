@@ -10,6 +10,7 @@ antigen bundle ssh-agent
 antigen apply
 
 source ~/.config/zsh/keithieopia.zsh-theme
+~/.config/zsh/base16/base16-eighties.sh
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
@@ -74,3 +75,7 @@ fi
 if type ccache > /dev/null; then
     export PATH="/usr/lib/ccache/bin/:$PATH"
 fi
+
+case "$TERM" in
+    xterm*) TERM=xterm-256color
+esac
