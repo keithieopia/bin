@@ -52,10 +52,10 @@ function unlockContainer() {
 function mountContainer() {
 
     if [ ! -d $MOUNT_DIR/$1 ]; then
-        sudo mkdir -p $MOUNT_DIR/$1
+        mkdir -p $MOUNT_DIR/$1
     fi
 
-    sudo mount -o noatime,nodev,nosuid /dev/mapper/$1 $MOUNT_DIR/$1
+    mount -o noatime,nodev,nosuid /dev/mapper/$1 $MOUNT_DIR/$1
 }
 
 function makeContainer() {
@@ -197,13 +197,13 @@ function makeContainer() {
             # Create private directory if it doesn't exist
             if [ ! -d $CONTAINER_DIR ]; then
                 mkdir $CONTAINER_DIR
-                sudo chown $WHOAMI $CONTAINER_DIR
+                chown $WHOAMI $CONTAINER_DIR
                 chmod 700 $CONTAINER_DIR
             fi
 
             # Make the container
             truncate -s $SIZE $CONTAINER_DIR/$1
-            sudo chown $WHOAMI $CONTAINER_DIR/$1
+            chown $WHOAMI $CONTAINER_DIR/$1
             chmod 600 $CONTAINER_DIR/$1
 
             # Encrypt and open container
@@ -211,8 +211,8 @@ function makeContainer() {
             echo -n $PASSWORD | sudo cryptsetup --key-file "-" luksOpen $CONTAINER_DIR/$1 $1
 
             # Make the filesystem
-            sudo mkfs.ext4 -L $1 /dev/mapper/$1
-            sudo tune2fs -m 0 /dev/mapper/$1
+            mkfs.ext4 -L $1 /dev/mapper/$1
+            tune2fs -m 0 /dev/mapper/$1
 
             mountContainer $1
 
@@ -229,11 +229,20 @@ function makeContainer() {
 }
 
 
+if [ "$(id -u)" != "0" ]; then
+    if [ -z "$SUDO_COMMAND" ]; then
+		echo "This script must be run as root, recalling self with sudo..." | colorize WARN
+        sudo $0 $*
+        exit 0
+    else
+		echo "This script must be run as root" | colorize ERROR
+		exit 1
+	fi
+fi
 
-
-CONTAINER_DIR="$HOME/.nullcrypt-store"
 MOUNT_DIR="/mnt"
 WHOAMI=${SUDO_USER:-$(whoami)}
+CONTAINER_DIR="/home/${WHOAMI}/.nullcrypt-store"
 
 while [ "$1" != "" ]; do
 case $1 in
@@ -252,9 +261,9 @@ case $1 in
     * )
         if mount | grep $MOUNT_DIR/$1 > /dev/null; then
 
-            sudo umount $MOUNT_DIR/$1
-            sudo rmdir $MOUNT_DIR/$1
-            sudo cryptsetup luksClose $1
+            umount $MOUNT_DIR/$1
+            rmdir $MOUNT_DIR/$1
+            cryptsetup luksClose $1
             echo "$1 successfully closed!" | colorize SUCCESS
             exit
         elif [ ! -f $CONTAINER_DIR/$1 ]; then
