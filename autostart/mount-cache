@@ -17,16 +17,34 @@ if [ "$1" == "-h" ]; then
 	exit
 fi
 
-if mount | grep "tmpfs on $HOME/.cache" > /dev/null; then
-    if [ ! -d "$HOME/.cache/thumbnails" ]; then
-		mkdir "$HOME/.cache/thumbnails"
+rm -rf "/dev/shm/${USER}-cache"
+mkdir "/dev/shm/${USER}-cache"
+chmod 700 "/dev/shm/${USER}-cache"
+
+if [ ! -L "$HOME/.cache" ]; then
+    echo "$HOME/.cache not symlinked to /dev/shm yet..."
+
+    if [ -d "$HOME/.cache" ]; then
+        if [ -z "$(ls -A /home/${USER}/.cache)" ]; then
+            echo "$HOME/.cache not empty, cowardly refusing to rm -rf it..."
+            exit 1
+        fi
+
+        rm -rf "/home/${USER}/.cache"
+    fi
+
+    ln -s "/dev/shm/${USER}-cache" "/home/${USER}/.cache"
+fi
+
+if [ ! -d "$HOME/.cache/thumbnails" ]; then
+    mkdir "$HOME/.cache/thumbnails"
+fi
+
+if [ ! -L "$HOME/.thumbnails" ]; then
+	if [ -d "$HOME/.thumbnails" ]; then
+		rm -r "$HOME/.thumbnails"
 	fi
 
-    if [ ! -L "$HOME/.thumbnails" ]; then
-		if [ -d "$HOME/.thumbnails" ]; then
-			rm -r "$HOME/.thumbnails"
-		fi
-
-    	ln -s "$HOME/.cache/thumbnails" "$HOME/.thumbnails"
-    fi
+   	ln -s "$HOME/.cache/thumbnails" "$HOME/.thumbnails"
 fi
+
