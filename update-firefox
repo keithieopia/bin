@@ -6,14 +6,14 @@ DIR=$(mktemp -d)
 cd "$DIR"
 curl -Lo "$DIR/firefox.tar.bz2" "$URL"
 
-if [ -d "$HOME/.local/firefox" ]; then
-    rm -r "$HOME/.local/firefox"
+if [ -d "$HOME/.local/share/firefox" ]; then
+    rm -r "$HOME/.local/share/firefox"
 fi
 
-tar -xjf "$DIR/firefox.tar.bz2" -C "$HOME/.local"
+tar -xjf "$DIR/firefox.tar.bz2" -C "$HOME/.local/share"
 
 if [ ! -L "$HOME/.local/bin/firefox" ]; then
-    ln -s "$HOME/.local/firefox/firefox" "$HOME/.local/bin/firefox"
+    ln -s "$HOME/.local/share/firefox/firefox" "$HOME/.local/bin/firefox"
 fi
 
 MENU_ENTRY="$HOME/.local/share/applications/firefox-quantum.desktop"
@@ -23,8 +23,8 @@ if [ ! -f "$MENU_ENTRY" ]; then
 [Desktop Entry]
 Version=1.0
 Type=Application
-Exec=/home/timothy/.local/firefox/firefox %u
-Icon=/home/timothy/.local/firefox/browser/chrome/icons/default/default64.png
+Exec=/home/timothy/.local/share/firefox/firefox %u
+Icon=/home/timothy/.local/share/firefox/browser/chrome/icons/default/default64.png
 Name=Firefox Quantum
 Comment=Custom definition for Firefox
 Categories=Network;
