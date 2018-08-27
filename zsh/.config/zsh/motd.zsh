@@ -32,7 +32,7 @@ function motd() {
 	else
 		echo $(tput bold)
 		
-		if [[ "$SECPKG" -gt "0" ]] && [[ "$MISCPKG" -gt "0" ]]; then
+		if [[ "$SECPKG" -gt "0" && "$MISCPKG" -gt "0" ]]; then
 			echo "$SECPKG security and $MISCPKG misc. updates are ready for install"
 		elif [ "$MISCPKG" -gt "0" ]]; then
 			echo "$MISCPKG misc. updates are ready for install"
