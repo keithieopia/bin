@@ -12,7 +12,7 @@
 	ui = true
 
 [diff]
-    external = git-meld
+    external = ~/bin/git-diff
 
 [core]
 	excludesfile = ~/.gitignore
