@@ -19,7 +19,7 @@ ttyctl -f
 setopt histignorealldups sharehistory
 HISTSIZE=50
 SAVEHIST=50
-HISTFILE=~/.zhistory
+HISTFILE=~/.bash_history
 
 # rehash automatically on path changes
 zstyle ':completion:*' rehash true
@@ -49,6 +49,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
 source ~/.config/zsh/fortune.zsh
+source ~/.config/zsh/motd.zsh
 
 # set default editor
 export EDITOR=nano
