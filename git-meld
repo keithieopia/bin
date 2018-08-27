@@ -1,7 +1,17 @@
 #!/bin/bash
 
 if [ -z "XDG_SESSION_TYPE" ]; then
-	colordiff $2 $5
+	if hash colordiff 2>/dev/null; then 
+		colordiff $2 $5
+	else
+		echo "colordiff not installed, falling back to plain diff..."
+		diff $2 $5
+	fi
 else
-	meld $2 $5
+	if hash meld 2>/dev/null; then
+		meld $2 $5
+	else
+		echo "meld not installed, falling back to plain diff..."
+		diff $2 $5
+	fi
 fi
