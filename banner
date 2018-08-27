@@ -1,5 +1,18 @@
 #!/bin/bash
 
+#
+# Run only on the first remote connection for each user account
+#
+if [ -n "$SSH_CLIENT" ] || [ "$SSH_TTY" ]; then
+    LOGIN_COUNT=$(who | grep $(whoami) | wc -l)
+
+    if [ "$LOGIN_COUNT" -gt 1 ]; then
+        exit 0
+    fi
+else
+    exit 0
+fi
+
 DATE=$(date '+%Y-%m-%d @ %-I:%M %p')
 
 PKG=$(apt-get --just-print upgrade | grep Inst |  wc -l)
