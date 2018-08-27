@@ -1,8 +1,8 @@
 function motd() {
 	DATE=$(date '+%Y-%m-%d @ %-I:%M %p')
 
-	PKG=$(apt-get --just-print upgrade | grep Inst |  wc -l)
-	SECPKG=$(apt-get --just-print upgrade | grep Inst | grep Debian-Security |  wc -l)
+	PKG=$(apt-get --just-print upgrade | grep Inst | wc -l)
+	SECPKG=$(apt-get --just-print upgrade | grep Inst | grep Debian-Security | wc -l)
 	MISCPKG=$(echo "$PKG - $SECPKG" | bc -l)
 
 	LOAD=$(iostat | sed -n 4p | awk '{load=100-$6; print load "%"}')
@@ -30,17 +30,13 @@ function motd() {
 	if [[ "$PKG" -eq "0" ]]; then
 		echo "System is up-to-date"
 	else
-		echo $(tput bold)
-		
 		if [[ "$SECPKG" -gt "0" && "$MISCPKG" -gt "0" ]]; then
 			echo "$SECPKG security and $MISCPKG misc. updates are ready for install"
-		elif [ "$MISCPKG" -gt "0" ]]; then
+		elif [[ "$MISCPKG" -gt "0" ]]; then
 			echo "$MISCPKG misc. updates are ready for install"
 		else
 			echo "$SECPKG security updates are ready for install"
 		fi
-		
-		echo "$(tput sgr0)"
 	fi
 }
 
