@@ -30,11 +30,17 @@ function motd() {
 	if [[ "$PKG" -eq "0" ]]; then
 		echo "System is up-to-date"
 	else
-		if [[ "$MISCPKG" -gt "0" ]]; then
+		echo $(tput bold)
+		
+		if [[ "$SECPKG" -gt "0" ]] && [[ "$MISCPKG" -gt "0" ]]; then
 			echo "$SECPKG security and $MISCPKG misc. updates are ready for install"
+		elif [ "$MISCPKG" -gt "0" ]]; then
+			echo "$MISCPKG misc. updates are ready for install"
 		else
 			echo "$SECPKG security updates are ready for install"
 		fi
+		
+		echo "$(tput sgr0)"
 	fi
 }
 
