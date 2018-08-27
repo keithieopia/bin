@@ -1,6 +1,3 @@
-#!/bin/zsh
-
-
 function motd() {
 	DATE=$(date '+%Y-%m-%d @ %-I:%M %p')
 
@@ -30,10 +27,10 @@ function motd() {
 	
 	echo
 
-	if [ $PKG -eq 0 ]; then
+	if [[ "$PKG" -eq "0" ]]; then
 		echo "System is up-to-date"
 	else
-		if [ $MISCPKG -gt 0 ]; then
+		if [[ "$MISCPKG" -gt "0" ]]; then
 			echo "$SECPKG security and $MISCPKG misc. updates are ready for install"
 		else
 			echo "$SECPKG security updates are ready for install"
@@ -47,7 +44,7 @@ function motd() {
 if [ -n "$SSH_CLIENT" ] || [ "$SSH_TTY" ]; then
     LOGIN_COUNT=$(who | grep $(whoami) | wc -l)
 
-    if [ "$LOGIN_COUNT" -lt 2 ]; then
+    if [[ "$LOGIN_COUNT" -lt 2 ]]; then
         if hash lolcat 2>/dev/null; then
 			motd | lolcat
 		else
