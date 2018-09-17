@@ -1,0 +1,113 @@
+#!/bin/bash
+
+PROG="curl -C - -O"
+JOBS=3
+EXT=0
+LIST=0
+
+usage () {
+cat <<HELP
+Download a list of URLs simultaneously
+
+Usage: $(basename "$0") [-yc] [-j NUM] [-f FILE] [-w URL] [-x EXT]
+   -c : use curl to download (default)
+   -y : use youtube-dl to download
+
+   -j : number of simultaneous downloads
+   
+   -f : file containing list of URLs to download
+   -w : download all of the files linked in the provided webpage 
+        use this for open directories, file listings, or index pages)
+
+   -x : limit downloads to the following file extensions
+        you probably want this -w, unless you truly want to download 
+        everything on the page
+
+Note:
+   $(basename "$0") has built-in sane defaults, only
+   advanced users should set the above flags
+
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2018 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+while getopts "hyc:j:w:x:f:" opt; do
+  case $opt in
+	h)
+	  usage
+	  exit
+	  ;;
+    y)
+      hash youtube-dl 2>/dev/null || { echo >&2 "This option requires the program \"youtube-dl\" to be installed"; exit 1; }
+
+	  PROG="youtube-dl"
+      ;;
+    c)
+	  hash curl 2>/dev/null || { echo >&2 "This option requires the program \"curl\" to be installed"; exit 1; }
+
+      PROG="curl -C - -O"
+      ;;
+    j)
+      JOBS=$OPTARG
+      ;;
+    x)
+      EXT=$OPTARG
+      ;;
+    w)
+	  hash lynx 2>/dev/null || { echo >&2 "This option requires the program \"lynx\" to be installed"; exit 1; }
+    
+      LIST=$(mktemp)
+      lynx -dump -listonly "$2" | awk '{$1=""}1' | sed -e 's/^[ \t]*//' > $LIST
+      ;;
+    f)
+      LIST=$OPTARG
+      if [ -f "$LIST" ]; then
+		echo "ERROR: could not find file: $1"
+		exit 1
+	  fi
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [ $OPTIND -eq 1 ]; then 
+	usage
+	exit 1
+fi
+
+shift $((OPTIND -1))
+
+
+
+if [[ "$LIST" == "0" ]]; then
+	if [ -f "./download.txt" ]; then
+		LIST="download.txt"
+	else
+		echo "ERROR: No input provided."
+		echo "       Set the -f or -w flag or create a download.txt in the current directory"
+		echo "       with the URLs you wish to download!"
+		exit 1
+	fi	
+fi
+
+# Remove blank lines
+sed -i '/^$/d' "$LIST" 
+
+if [[ "$EXT" != "0" ]]; then
+	NEWLIST=$(mktemp)
+	grep -i "\.${EXT}$" "$LIST" > $NEWLIST
+	LIST=$NEWLIST
+fi
+
+parallel -j $JOBS -a $LIST $PROG "{}"
