@@ -64,9 +64,10 @@ while getopts "hyc:j:w:x:f:" opt; do
       lynx -dump -listonly "$2" | awk '{$1=""}1' | sed -e 's/^[ \t]*//' > $LIST
       ;;
     f)
-      LIST=$OPTARG
-      if [ -f "$LIST" ]; then
-		echo "ERROR: could not find file: $1"
+      if [ -f "$OPTARG" ]; then
+		LIST=$OPTARG
+      else
+		echo "ERROR: could not find file: $OPTARG"
 		exit 1
 	  fi
       ;;
