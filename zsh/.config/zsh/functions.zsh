@@ -180,7 +180,19 @@ function whatismyip() {
     else
         ip addr | grep "inet .* global" | awk '{print $2}' | sed 's/...$//'
     fi
-
 }
 
+function check-port() {
+    if [ $# -eq 0 ]; then
+        echo "Check if a given host's port is accessible"
+        echo "usage: check-port [HOST] [PORT]"
+    fi
+    
+    if [[ ! -v $2 ]]; then
+        2=$1
+        1=127.0.0.1
+    fi
+    
+    nc -v -z -w 3 $1 $2 &> /dev/null && echo "Online" || echo "Offline"
+}
 
