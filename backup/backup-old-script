@@ -1,0 +1,117 @@
+#!/bin/bash
+
+DATE="$(date +%Y%m%d)"
+
+read -r -d '' EXCLUDE <<EOF
+--exclude=".antigen"
+--exclude=".cache" 
+--exclude=".config/chromium"
+--exclude=".config/dconf"
+--exclude=".config/pulse"
+--exclude=".config/session"
+--exclude=".dbus"
+--exclude=".dropbox"
+--exclude=".pki"
+--exclude=".steam*"
+--exclude=".local/share/Steam" 
+--exclude=".local/share/RecentDocuments"
+--exclude=".local/share/Trash" 
+--exclude=".local/share/vulkan"
+--exclude=".wine/dosdevices"
+--exclude=".wine/drive_c/windows"
+--exclude=".zsh_history"
+--exclude="Dropbox/.dropbox"
+--exclude="Dropbox/.dropbox.cache"
+EOF
+
+uuid_mounted() {
+    if lsblk -o UUID | grep -q "$1"; then
+        lsblk -o UUID,MOUNTPOINT | grep "$1" | awk '{print $2}'
+    else
+        echo "Drive not mounted!"
+        exit 1
+    fi
+}
+
+###############################################################################
+# TARGETS
+
+backup_home() {
+    DRIVE=$(uuid_mounted "7b5e26de-0d54-405c-b93d-b75f7cddecd1")
+    BACKUP_FREE=$(/bin/df $DRIVE | tail -1 | awk '{print $4}')
+    HOME_SIZE=$(/usr/bin/du -s $HOME | awk '{print $1}')
+
+    if [ "$BACKUP_FREE" -lt "$HOME_SIZE" ]; then
+        echo "There is not enough free space on backup drive!"
+        exit 1
+    fi
+
+    if [ ! -d "${DRIVE}/$(hostname)-home" ]; then
+        mkdir -p "${DRIVE}/$(hostname)-home"
+    fi
+
+    tar "$EXCLUDE" -cPpf - "$HOME" | \
+    pv -W -s $(du -sb "$HOME" "$EXCLUDE" | awk '{print $1}') | \
+    pbzip2 -c | \
+    gpg --symmetric --cipher-algo AES128 --output "${DRIVE}/$(hostname)-home/${DATE}.tbz.gpg"
+}
+
+backup_private() {
+    DRIVE=$(uuid_mounted "7b5e26de-0d54-405c-b93d-b75f7cddecd1")
+    FOLDER=$(uuid_mounted "aed077e2-e252-4212-9b13-dfd3a5bfecf9")
+
+    DRIVE_FREE=$(/bin/df "$DRIVE" | tail -1 | awk '{print $4}')
+    FOLDER_SIZE=$(/usr/bin/du -s --exclude="lost+found" "$FOLDER" | awk '{print $1}')
+
+    if [ "$DRIVE_FREE" -lt "$FOLDER_SIZE" ]; then
+        echo "Not enough free space to backup!"
+    else
+        if [ ! -d "${DRIVE}/$(hostname)-private" ]; then
+            mkdir -p "${DRIVE}/$(hostname)-private"
+        fi
+
+        tar --exclude="${FOLDER}/lost+found" -cPpf - "$FOLDER" | \
+        pv -W -s $(du -sb --exclude "lost+found" "$FOLDER" | awk '{print $1}') | \
+        pbzip2 -c > "${DRIVE}/$(hostname)-private/${DATE}.tbz"
+    fi
+}
+
+backup_media() {
+    MEDIA=$(uuid_mounted "dc52b977-77a3-4148-be65-4fee43ea714e")
+    DRIVE=$(uuid_mounted "bc3a143a-bcb5-424d-95f1-8ada50c08bfb")
+
+    rsync --progress --exclude "lost+found" --exclude ".Trash-1000" -avh "$MEDIA" "$DRIVE"
+}
+
+###############################################################################
+# LOGIC
+
+# run with low priority
+#ionice -c 3 -p $$
+#renice +12 -p $$
+
+if [ -z "$@" ]; then
+    case "$(hostname)" in
+        "deli")
+            backup_home
+            backup_private
+            ;;
+
+        "minime")
+            backup_media
+            ;;
+
+        *)
+            echo "I'm not programmed to automatically backup this host. Please specify a target instead!"
+            exit 1
+            ;;
+    esac
+else
+    for target in "$@"; do
+        if type "backup_${target}" | grep -q 'function' 2>/dev/null; then
+            eval backup_${target}
+        else
+            echo "Unknown target: $target"
+        fi
+    done
+fi
