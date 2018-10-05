@@ -53,7 +53,5 @@ if [ -n "$SSH_CLIENT" ] || [ "$SSH_TTY" ]; then
 			motd
 		fi
     fi
-else
-    exit 0
 fi
 
