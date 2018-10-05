@@ -22,66 +22,51 @@ zsh_usr_symbol() {
 }
 
 # Get the status of the working tree (copied and modified from git.zsh)
-zsh_git_status() {
-    INDEX=$(git status --porcelain 2> /dev/null)
-    STATUS=""
+zsh_git_color() {
+    INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
+    COLOR=""
 
-    # Not-staged
-    if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
-        # Not-staged, Untracked
-        STATUS="%{$R%}?$STATUS"
-    fi
-    
-    if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
-        # Not-staged, Unmerged
-        STATUS="%{$R%}UU$STATUS"
-    fi
-    
-    if $(echo "$INDEX" | grep '^ D ' &> /dev/null); then
-        # Not-staged, Deleted
-        STATUS="%{$R%}D$STATUS"
-    fi
-    
-    # Modified
-    if $(echo "$INDEX" | grep '^.M ' &> /dev/null); then
-        STATUS="%{$R%}M$STATUS"
-    elif $(echo "$INDEX" | grep '^AM ' &> /dev/null); then
-        STATUS="%{$R%}M$STATUS"
-    elif $(echo "$INDEX" | grep '^ T ' &> /dev/null); then
-        STATUS="%{$R%}M$STATUS"
-    fi
-  
-    # Staged
-    if $(echo "$INDEX" | grep '^D  ' &> /dev/null); then
-        # Staged, Deleted
-        STATUS="%{$G%}D$STATUS"
-    fi
-  
-    if $(echo "$INDEX" | grep '^R' &> /dev/null); then
-        # Staged, Renamed
-        STATUS="%{$G%}R$STATUS"
-    fi
-  
-    if $(echo "$INDEX" | grep '^M' &> /dev/null); then
-        # Modified
-        STATUS="%{$G%}M$STATUS"
-    fi
-  
-    if $(echo "$INDEX" | grep '^A' &> /dev/null); then
-        # Staged, Added 
-        STATUS="%{$G%}A$STATUS"
-    fi
+	if $(echo "$INDEX" | grep -q '??'); then
+		# Magenta - Untracked files 
+		COLOR="%{$M%}"
+	fi	
 
-    echo $STATUS
+	if $(echo "$INDEX" | grep -q M) || $(echo "$INDEX" | grep -q 'D'); then
+		# Red - Modified / Deleted
+		COLOR="%{$R%}"
+	fi
+
+	if $(echo "$INDEX" | grep -q A); then
+		# Yellow - Added, but not committed files 
+		COLOR="%{$Y%}"
+	fi	
+
+	if [[ $(echo $COLOR | wc -c) -lt 6 ]]; then
+		# no untracked, added, modified, or deleted files
+		# e.g.: no local changes
+		
+		if $(git status -sb | grep -q ahead); then
+			# Green - We're ahead of the master
+			COLOR="%{$G%}"
+		fi
+	fi
+
+    echo $COLOR    
 }
 
 # get the name of the branch we are on (copied and modified from git.zsh)
 zsh_git_prompt() {
-    ZSH_THEME_GIT_PROMPT_PREFIX="%{$Y%}‹"
-    ZSH_THEME_GIT_PROMPT_SUFFIX="%{$Y%}›%{$RESET%} "
-
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_prompt_ahead)$(zsh_git_status)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+	if $(git rev-parse --is-inside-work-tree 2>/dev/null | grep -q true); then
+		echo -n "‹$(zsh_git_color)" 
+		
+		if [[ $(git branch | wc -c) -ne 0 ]]; then
+			echo -n $(git branch | awk '{print $2}')
+		else
+			echo -n "master"
+		fi
+		
+		echo "%{$RESET%}› "
+	fi
 }
 
 zsh_remote_host() {
@@ -108,5 +93,3 @@ ZSH_THEME_GIT_PROMPT_DIRTY="%{$R%}*"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 ZSH_THEME_GIT_PROMPT_AHEAD="%{$B%}➔"
-
-
