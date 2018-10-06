@@ -53,7 +53,7 @@ source ~/.config/zsh/fortune.zsh
 source ~/.config/zsh/motd.zsh
 
 # set default editor
-export EDITOR=nano
+export EDITOR=nvim
 
 # add sbin to path
 export PATH=/sbin:"${PATH}"
