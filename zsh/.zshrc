@@ -81,3 +81,10 @@ fi
 case "$TERM" in
     xterm*) TERM=xterm-256color
 esac
+
+if type tmux > /dev/null; then
+    # Start zsh in tmux
+    if [ -z "$TMUX" ]; then
+        tmux
+    fi
+fi
