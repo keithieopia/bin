@@ -75,3 +75,7 @@ URxvt*scrollTtyKeypress: true
 URxvt.font: xft:Hack:style=Regular:size=10
 
 URxvt.scrollBar: false
+
+! support 256 colors
+URxvt.termName: xterm-256color
+
