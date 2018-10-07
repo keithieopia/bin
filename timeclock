@@ -1,0 +1,64 @@
+#!/bin/bash
+
+TIMESTAMP=$(date +%s)
+HUMANTIME=$(date +'%-I:%M %p')
+LOG=$HOME/.timeclock.log
+
+if [ ! -f $LOG ]; then
+	touch $LOG
+fi
+
+LINES=$(wc -l $LOG | awk '{print $1}')
+
+if [[ $1 == "start" ]]; then
+	if [ $LINES -eq 0 ] || [ $((LINES % 2)) -eq 0 ]; then
+		echo $TIMESTAMP >> $LOG
+		echo "Started: $HUMANTIME"
+	else
+		echo "Timeclock already running!"
+		exit 1
+	fi
+elif [[ $1 == "stop" ]]; then
+	if [ ! $((LINES % 2)) -eq 0 ]; then
+		echo $TIMESTAMP >> $LOG
+		echo "Stopped: $HUMANTIME"
+		
+		START=$(cat $LOG | tail -2 | head -1)
+		STOP=$(cat $LOG | tail -1)
+		DIFF=$(expr ${STOP} - ${START})
+		HUMANDIFF=$(date +%H:%M -ud @${DIFF})
+		
+		echo -n "Duration: $HUMANDIFF ("
+		echo -n "$(date -d @${START} +"%-I:%M %p") - "
+		echo "$(date -d @${STOP} +"%-I:%M %p"))"
+	
+	else
+		echo "Timeclock isn't running"
+		exit 1
+	fi
+elif [[ $1 == "log" ]]; then
+	if [ ! $((LINES % 2)) -eq 0 ]; then
+		echo "Log isn't available when timeclock running"
+		exit 1
+	else
+		while read hours; do
+			START=$(echo $hours | awk '{print $1}')
+			STOP=$(echo $hours | awk '{print $2}')
+			
+			DIFF=$(expr ${STOP} - ${START})
+			HUMANDIFF=$(date +%H:%M -ud @${DIFF})
+
+			echo -n "$(date -d @${START} +'%m/%d: [%-I:%M %p') - "
+			echo "$(date -d @${STOP} +"%-I:%M %p")] $HUMANDIFF"
+					
+		done <<< $(sed '$!N;s/\n/ /' $LOG)
+	fi
+else
+	if [ ! $((LINES % 2)) -eq 0 ]; then
+		echo -n "Status: running (since "
+		echo "$(date -d @$(tail -1 $LOG) +"%-I:%M %p"))"
+	else
+		echo "Status: stopped"
+	fi
+fi
+
