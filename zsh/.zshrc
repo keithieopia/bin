@@ -11,7 +11,7 @@ antigen apply
 
 #~/.config/zsh/base16/base16-eighties.sh
 ~/.config/zsh/base16/base16-solarized-dark.sh
-source ~/.config/zsh/prompt.zsh-theme
+source ~/.config/zsh/prompt.zsh
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
@@ -50,7 +50,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
 source ~/.config/zsh/fortune.zsh
-source ~/.config/zsh/motd.zsh
 
 # set default editor
 export EDITOR=nvim
