@@ -77,5 +77,11 @@ URxvt.font: xft:Hack:style=Regular:size=10
 URxvt.scrollBar: false
 
 ! support 256 colors
-URxvt.termName: xterm-256color
+URxvt.termName: rxvt-unicode
+XTerm*termName: xterm-256color
 
+! fix home/end keys
+URxvt.keysym.Home: \033[1~
+URxvt.keysym.End: \033[4~
+URxvt.keysym.KP_Home: \033[1~
+URxvt.keysym.KP_End:  \033[4~
