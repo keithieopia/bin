@@ -6,7 +6,7 @@ function hr() {
 
 function center() {
 	C=$(tput cols)
-	
+
 	while IFS= read -r line; do
 		printf "%$(((C+${#line})/2))s\n" "$line"
 	done
@@ -39,9 +39,7 @@ function motd() {
 
 	tput setaf 6
 	hr | center
-	tput sgr0
-	
-	tput setaf 6
+
 	{
 		# column breaks on tput color codes
 		# instead use awk to right pad with set number of spaces
@@ -54,7 +52,7 @@ function motd() {
 		echo
 	} | center
 	tput sgr0
-	
+
 	{
 		echo $LOAD  | awk '{printf ("%-10s%s", $1, "")}'
 		echo $MEM  | awk '{printf ("%-10s%s", $1, "")}'
@@ -64,12 +62,11 @@ function motd() {
 		echo
 	} | center
 
-	
-	
 	tput setaf 6
 	hr | center
 	tput sgr0
-	
+
+    # newline
 	echo
 
 	{
@@ -83,25 +80,12 @@ function motd() {
 			else
 				echo "$SECPKG security updates are ready for install"
 			fi
-		fi 
+		fi
 	} | center
-	
+
+    # trailing newline
+    echo
 }
 
 motd > /etc/motd
-
-#
-# Run only on the first remote connection for each user account
-#
-#if [ -n "$SSH_CLIENT" ] || [ "$SSH_TTY" ]; then
-#    LOGIN_COUNT=$(who | grep $(whoami) | wc -l)
-#
-#    if [[ "$LOGIN_COUNT" -lt 2 ]]; then
-#        if hash lolcat 2>/dev/null; then
-#			motd | lolcat
-#		else
-#			motd
-#		fi
-#    fi
-#fi
 
