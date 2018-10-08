@@ -11,7 +11,7 @@ antigen apply
 
 #~/.config/zsh/base16/base16-eighties.sh
 ~/.config/zsh/base16/base16-solarized-dark.sh
-source ~/.config/zsh/keithieopia.zsh-theme
+source ~/.config/zsh/prompt.zsh-theme
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
