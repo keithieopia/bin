@@ -6,6 +6,7 @@ set ruler
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'altercation/vim-colors-solarized'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 
