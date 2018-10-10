@@ -73,7 +73,8 @@ CACHE="$HOME/.cache/weather"
 # YOU PROBABLY SHOULDN'T CHANGE ANYTHING BELOW
 #=======================================================================
 
-RADAR_URL="https://radar.weather.gov/Conus/Loop/NatLoop.gif"
+ANIM_RADAR_URL="https://radar.weather.gov/Conus/Loop/NatLoop.gif"
+STATIC_RADAR_URL="https://radar.weather.gov/Conus/RadarImg/latest.gif"
 
 check_age() {
 	if [ -f "${CACHE}/radar.gif" ]; then
@@ -164,7 +165,7 @@ animate_wallpaper() {
         echo "frame: $(awk -F '-' '{print $2}' <<< $FRAME) of $NUM_FRAMES"
 	
 		if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
-            (cd $(dirname $0) && change-wallpaper "$FRAME")
+            $(dirname $0)/change-wallpaper "$FRAME"
 		else
             gsettings set org.gnome.desktop.background picture-uri "file://$FRAME"
 		fi
@@ -172,18 +173,34 @@ animate_wallpaper() {
 	done
 }
 
-while :
-do
-	check_age
-		
-	for i in {1..30}; do
-		# this will run for about 8 minutes:
-		#   8 frames per radar (the gif file from noaa)
-		#   2 second pause between each frame ($FRAME_RATE)
-		#   loop 30 times
-		#   -----------------------
-		#   480 seconds = 8 minutes
-		
-		animate_wallpaper
+if [[ $1 == "--animate" ]] || [[ $1 == "-a" ]]; then
+	RADAR_URL=$ANIM_RADAR_URL
+
+	while :
+	do
+		check_age
+			
+		for i in {1..30}; do
+			# this will run for about 8 minutes:
+			#   8 frames per radar (the gif file from noaa)
+			#   2 second pause between each frame ($FRAME_RATE)
+			#   loop 30 times
+			#   -----------------------
+			#   480 seconds = 8 minutes
+			
+			animate_wallpaper
+		done
 	done
-done
+else
+	RADAR_URL=$STATIC_RADAR_URL
+	
+	check_age
+	
+	IMAGE=$(find ${CACHE}/gif/ -name "*.png")
+	
+	if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
+        $(dirname $0)/change-wallpaper "$IMAGE"
+	else
+		gsettings set org.gnome.desktop.background picture-uri "file://$IMAGE"
+	fi
+fi
