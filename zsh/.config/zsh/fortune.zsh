@@ -1,3 +1,5 @@
 if hash fortune 2>/dev/null; then
-    print -P '%F{blue}$(fortune -as)%f\n'
+	tput setaf 5
+	fortune -as
+	tput sgr0
 fi
