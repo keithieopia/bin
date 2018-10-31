@@ -49,7 +49,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
-source ~/.config/zsh/fortune.zsh
 
 # set default editor
 export EDITOR=nvim
@@ -85,5 +84,22 @@ if type tmux > /dev/null; then
     # Start zsh in tmux
     if [ -z "$TMUX" ]; then
         tmux
+        
+        # exit zsh when we exit tmux
+        exit
     fi
+fi
+
+#
+# output only if we're in a virtual terminal 
+#
+if tty | grep -q /dev/pts; then
+    if [ -f ~/.config/zsh/remind.zsh ]; then
+	    # gnu stow managed; see "remind" dir in 
+	    # dotfiles repo
+	    source ~/.config/zsh/remind.zsh
+    fi
+
+	source ~/.config/zsh/fortune.zsh
+	echo
 fi
