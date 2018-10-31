@@ -23,19 +23,32 @@ HELP
 }
 
 colorize () {
-    TITLE="1;97"
-    ERROR="0;31"
-    SUCCESS="0;32"
-    WARN="0;33"
-    PROMPT="0;37"
-    OPTION="2;37"
-    ESC="\033["
+    case ${1:-NORMAL} in
+		TITLE)
+			tput bold
+			tput setaf 7
+			;;
+		ERROR)
+			tput setaf 1
+			;;
+		SUCCESS)
+			tput setaf 2
+			;;
+		WARN)
+			tput setaf 3
+			;;
+		PROMPT)
+			tput bold
+			tput setaf 7
+			;;
+		OPTION)
+			tput dim
+			tput setaf 7
+			;;
+    esac
 
-    COLOR=\$${1:-NORMAL}
-
-    echo -ne "${ESC}`eval echo ${COLOR}`m"
     cat
-    echo -ne "${ESC}0m"
+    tput sgr0
 }
 
 function unlockContainer() {
@@ -59,8 +72,9 @@ function mountContainer() {
 }
 
 function makeContainer() {
-    echo "Container '$1' doesn't exist; create it?" | colorize TITLE
-    echo -n "(y/N): " | colorize PROMPT
+    echo "Container '$1' doesn't exist" | colorize ERROR
+    echo
+    echo -n "Create container? (y/N): " | colorize PROMPT
     read answer
     echo
 
@@ -92,8 +106,7 @@ function makeContainer() {
             read SIZE
             echo
 
-            echo "Use default options for encryption?" | colorize TITLE
-            echo -n "(Y/n): " | colorize PROMPT
+            echo -n "Use defaults for encryption? (Y/n): " | colorize PROMPT
             read answer
             echo
 
@@ -107,7 +120,7 @@ function makeContainer() {
                         echo " 4. ripemd160" | colorize OPTION
                         echo " 5. whirlpool" | colorize OPTION
                         echo
-                        echo -n "Hash?: " | colorize PROMPT
+                        echo -n "Hash? (1-5): " | colorize PROMPT
                         read answer
 
                         case ${answer} in
@@ -141,7 +154,7 @@ function makeContainer() {
                         echo " 2. twofish" | colorize OPTION
                         echo " 3. serpent" | colorize OPTION
                         echo
-                        echo -n "Cipher?: " | colorize PROMPT
+                        echo -n "Cipher? (1-3): " | colorize PROMPT
                         read answer
 
                         case ${answer} in
@@ -168,7 +181,7 @@ function makeContainer() {
                         echo " 1. 256" | colorize OPTION
                         echo " 2. 512" | colorize OPTION
                         echo
-                        echo -n "Bits?: " | colorize PROMPT
+                        echo -n "Bits? (1-2): " | colorize PROMPT
                         read answer
 
                         case ${answer} in
