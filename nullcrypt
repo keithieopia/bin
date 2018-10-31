@@ -259,7 +259,7 @@ case $1 in
         exit
         ;;
     * )
-        if mount | grep $MOUNT_DIR/$1 > /dev/null; then
+        if mount | awk '{print $3}' | grep -w "$MOUNT_DIR/$1" > /dev/null; then
 
             umount $MOUNT_DIR/$1
             rmdir $MOUNT_DIR/$1
