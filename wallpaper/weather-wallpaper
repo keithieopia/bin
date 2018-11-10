@@ -80,7 +80,7 @@ check_age() {
 	if [ -f "${CACHE}/radar.gif" ]; then
 		AGE=$(stat -c '%Y' "${CACHE}/radar.gif")
 		TIME=$(date '+%s')
-		
+
 		if ((TIME-AGE > UPDATE)); then
 			download_radar
 			dissect_radar
@@ -164,11 +164,7 @@ animate_wallpaper() {
 	for FRAME in ${CACHE}/gif/radar-*.png; do
         echo "frame: $(awk -F '-' '{print $2}' <<< $FRAME) of $NUM_FRAMES"
 	
-		if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
-            $(dirname $0)/change-wallpaper "$FRAME"
-		else
-            gsettings set org.gnome.desktop.background picture-uri "file://$FRAME"
-		fi
+		$HOME/bin/change-wallpaper "$FRAME"
 		sleep "${FRAME_RATE}s"
 	done
 }
@@ -193,14 +189,15 @@ if [[ $1 == "--animate" ]] || [[ $1 == "-a" ]]; then
 	done
 else
 	RADAR_URL=$STATIC_RADAR_URL
-	
-	check_age
-	
-	IMAGE=$(find ${CACHE}/gif/ -name "*.png")
-	
-	if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
-        $(dirname $0)/change-wallpaper "$IMAGE"
-	else
-		gsettings set org.gnome.desktop.background picture-uri "file://$IMAGE"
-	fi
+
+    while :
+    do
+	    check_age
+
+	    IMAGE=$(find ${CACHE}/gif/ -name "*.png")
+
+	   	$HOME/bin/change-wallpaper "$IMAGE"
+
+	    sleep 15m
+    done
 fi
