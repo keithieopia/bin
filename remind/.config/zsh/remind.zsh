@@ -1,9 +1,9 @@
-if hash remind 2>/dev/null; then
+if type remind >/dev/null 2>&1; then
 	#
 	# this downloads events from google calendar and converts them
 	# to remind's format 
 	#
-	GOOGLE_REMIND="$HOME/.remind.d/googleREM"
+	GOOGLE_REMIND="$HOME/.config/remind/google-calendar"
 
 	# provides $GOOGLE_CALS (BASH array)
 	source ~/.bash_secrets
