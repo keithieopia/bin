@@ -9,10 +9,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle ssh-agent
 antigen apply
 
-#~/.config/zsh/base16/base16-eighties.sh
-~/.config/zsh/base16/base16-solarized-dark.sh
-source ~/.config/zsh/prompt.zsh
-
 # reset frozen terminals by misbehaving applications
 ttyctl -f
 
@@ -94,12 +90,11 @@ fi
 # output only if we're in a virtual terminal 
 #
 if tty | grep -q /dev/pts; then
-    if [ -f ~/.config/zsh/remind.zsh ]; then
-	    # gnu stow managed; see "remind" dir in 
-	    # dotfiles repo
-	    source ~/.config/zsh/remind.zsh
-    fi
-
+    source ~/.config/zsh/remind.zsh
 	source ~/.config/zsh/fortune.zsh
 	echo
 fi
+
+#~/.config/zsh/base16/base16-eighties.sh
+~/.config/zsh/base16/base16-solarized-dark.sh
+source ~/.config/zsh/prompt.zsh
