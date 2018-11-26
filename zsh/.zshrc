@@ -1,18 +1,17 @@
 source ~/.config/zsh/antigen.zsh
 antigen use oh-my-zsh
+
 antigen bundle git
 antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle pass
+antigen bundle ssh-agent
+antigen bundle docker
+antigen bundle pip
+antigen bundle sudo
+antigen bundle ufw
 
-if type pass > /dev/null; then
-	antigen bundle pass
-fi
-
-if [ -f "$HOME/.ssh/environment-" ]; then
-	antigen bundle ssh-agent
-fi
-
-antigen apply
+antigen bundle apply
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
@@ -107,7 +106,10 @@ fi
 # output only if we're in a virtual terminal 
 #
 if tty | grep -q /dev/pts; then
-    source ~/.config/zsh/remind.zsh
+	if [ -f "~/.config/zsh/remind.zsh" ]; then
+		source ~/.config/zsh/remind.zsh
+	fi
+
 	source ~/.config/zsh/fortune.zsh
 	echo
 fi
