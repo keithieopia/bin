@@ -17,9 +17,9 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
+alias wget='wget -c'
 
 # Fix noisy apps to be silent
-alias kate='kate >/dev/null 2>&1'
 alias retext='retext >/dev/null 2>&1'
 
 # defaults to optional programs
@@ -58,14 +58,14 @@ alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias epoch='date +%s'
 alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
-alias cp-progress='rsync -WavPh $1 $2' # cp with progress indicator
+alias copy='rsync -WaPh ' # cp with progress indicator
 alias lsd='ls -l | grep "^d"' # list only dirs
 alias ll='ls -lhA --color | less -R'
 alias ports='sudo lsof -i -n -P' # list open ports / running network services
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
 
 # sudo
-alias snano='sudo nano'
+alias sedit='sudo nvim'
 alias ufw='sudo ufw'
 
 # services
@@ -73,5 +73,6 @@ alias start='sudo systemctl start '
 alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
 alias status='systemctl status '
+alias syslog='journalctl -u '
 
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
