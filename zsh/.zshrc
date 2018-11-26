@@ -1,12 +1,17 @@
 source ~/.config/zsh/antigen.zsh
-
 antigen use oh-my-zsh
-
 antigen bundle git
 antigen bundle command-not-found
-antigen bundle pass
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle ssh-agent
+
+if type pass > /dev/null; then
+	antigen bundle pass
+fi
+
+if [ -f "$HOME/.ssh/environment-" ]; then
+	antigen bundle ssh-agent
+fi
+
 antigen apply
 
 # reset frozen terminals by misbehaving applications
@@ -76,14 +81,26 @@ case "$TERM" in
     xterm*) TERM=xterm-256color
 esac
 
-if type tmux > /dev/null; then
-    # Start zsh in tmux
-    if [ -z "$TMUX" ]; then
-        tmux
-        
-        # exit zsh when we exit tmux
-        exit
-    fi
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	# If running inside ssh, do nothing
+else
+	#
+	# Run the following if not in SSH
+	#
+	
+	# Set the color scheme
+	~/.config/zsh/base16/base16-solarized-dark.sh
+	
+	# if we have tmux, and it's not running, start it
+	if type tmux > /dev/null; then
+		if [ -z "$TMUX" ]; then
+			tmux
+			
+			# exit zsh when we exit tmux
+			exit
+		fi
+	fi
 fi
 
 #
@@ -95,6 +112,4 @@ if tty | grep -q /dev/pts; then
 	echo
 fi
 
-#~/.config/zsh/base16/base16-eighties.sh
-~/.config/zsh/base16/base16-solarized-dark.sh
 source ~/.config/zsh/prompt.zsh
