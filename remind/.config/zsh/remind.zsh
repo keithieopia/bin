@@ -10,7 +10,7 @@ if type remind >/dev/null 2>&1; then
 
 	# if current reminders file is older than a day, delete it
 	if [[ $(find "$GOOGLE_REMIND" -mtime +1 -print) ]]; then
-		rm "$GOOGLE_REMIND"
+		rm "$GOOGLE_REMIND" 2> /dev/null
 	fi
 
 	# if there isn't a reminders file, download it
