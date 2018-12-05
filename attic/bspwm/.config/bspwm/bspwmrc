@@ -1,0 +1,47 @@
+#! /bin/sh
+
+bspc config border_width          3
+bspc config window_gap            6
+bspc config split_ratio           0.52
+bspc config borderless_monocle    true
+bspc config gapless_monocle       true
+bspc config focus_by_distance     true
+bspc config history_aware_focus   true
+bspc config focus_follows_pointer true
+
+bspc monitor -d term web code media float
+
+# Open apps on a certain desktop
+bspc rule -a Gimp desktop=^4 state=floating follow=on
+
+# colors
+bspc config normal_border_color  "#111111" # Black
+bspc config active_border_color  "#252525" # Black
+bspc config focused_border_color "#15A88B" # Teal
+
+bspc rule -a mpv state=tiled
+bspc rule -a Gimp desktop=^5 follow=on state=floating
+
+# Prevent lemonbar from being covered
+bspc rule -a lemonbar layer=above manage=on border=off
+
+# padding for lemonbar
+bspc config bottom_padding 20
+
+# bspwm specific apps to auto start:
+sxhkd &
+
+# general apps to auto start:
+~/bin/mount-cache.sh &
+compton &
+~/.fehbg &
+unclutter &
+urxvtd -q -f -o &
+pcmanfm -d &
+~/bin/wm/lemonade.sh &
+zim --plugin trayicon &
+autocutsel -fork &
+~/bin/wm/greeting.sh &
+
+(sleep 60s && ~/bin/dropbox.sh) &
+(sleep 60s && ~/bin/wm/battmon.sh) &

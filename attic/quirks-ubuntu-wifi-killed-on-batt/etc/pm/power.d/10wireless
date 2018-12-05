@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# ubuntu obsessively turns off the wifi on battery even if we're using
+# it. Turning this "feature" off in the settings seems temporary as it
+# is automatically re-enabled after a period of time.
+/sbin/iwconfig wlp1s0 power off

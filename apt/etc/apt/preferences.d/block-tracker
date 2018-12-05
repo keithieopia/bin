@@ -1,0 +1,23 @@
+Package: tracker
+Pin: release *
+Pin-Priority: -1
+
+Package: tracker-gui
+Pin: release *
+Pin-Priority: -1
+
+Package: libtracker-control-1.0-0
+Pin: release *
+Pin-Priority: -1
+
+Package: libtracker-miner-1.0-0
+Pin: release *
+Pin-Priority: -1
+
+Package: tracker-miner-fs
+Pin: release *
+Pin-Priority: -1
+
+Package: tracker-extract
+Pin: release *
+Pin-Priority: -1
