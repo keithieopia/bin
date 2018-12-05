@@ -1,0 +1,42 @@
+#!/bin/bash
+
+HOST="10.0.0.50"
+HOST_DIR="/mnt/tv-movies"
+LOCAL_USER="timothy"  # don't use $USER as this script runs as root under NetworkManager
+LOCAL_DIR="/home/$LOCAL_USER/Videos"
+
+mount-dir() {
+    # following file contains home gateway mac as $HOME_GATEWAY
+    source /home/$LOCAL_USER/.bash_secrets 
+
+    # This gets the current gateway's mac
+    GATEWAY_MAC=$(arping -f -I $(ip route show match 0/0 | awk '{print $5, $3}') | awk -F'[][]' '{print $2}' | tr -d "\n")
+
+    # see if we're connected to home network
+    if [ "$GATEWAY_MAC" = "$HOME_GATEWAY" ]; then
+        # see if server is accessible
+        if ping -c 1 $HOST &> /dev/null; then
+            sshfs $LOCAL_USER@$HOST:$HOST_DIR $LOCAL_DIR -o allow_other,IdentityFile=/home/$LOCAL_USER/.ssh/id_ed25519
+        fi
+    fi
+}
+
+umount-dir() {
+    fusermount -u $LOCAL_DIR
+}
+
+
+if [ -z ${2+x} ]; then 
+    # not running as NetworkManager script, assuming user wants to mount
+    mount-dir
+else
+    case "$2" in
+        up)
+            sleep 5
+            mount-dir
+            ;;
+        down)
+            fusermount -u $LOCAL_DIR
+            ;;
+    esac
+fi

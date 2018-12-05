@@ -1,0 +1,4 @@
+#!/bin/bash
+# http://www.commandlinefu.com/commands/view/6663/pretend-to-be-busy-in-office-to-enjoy-a-cup-of-coffee
+
+hexdump -C /dev/urandom | grep 'ca fe'

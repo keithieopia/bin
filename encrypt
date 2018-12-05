@@ -1,0 +1,67 @@
+#!/bin/bash
+
+usage () {
+cat <<HELP
+Wrapper for GPG symmetric encryption
+
+Encrypt files or directories using AES256 or automatically
+decrypt a file created with this utility (files have an ".gpg" extension)
+
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2016-2017 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+if [ -z "$1" ]; then
+    tput setaf 1; echo "You must specify something to encrypt!"; tput sgr0
+    exit 1
+elif [ "$1" == "-h" ]; then
+    usage
+    exit
+fi
+
+
+if [ -d "$@" ]; then
+    tput setaf 4; echo "Encrypting directory..."; tput sgr0
+
+    NAME=$(basename "$@")
+
+    if hash pigz 2>/dev/null; then
+        tar cf - "$@" | \
+        pv -W -s $(du -sb "$@" | awk '{print $1}') | \
+        pigz -c | \
+        gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+    else
+        tar zcf - "$@" | \
+        pv -W -s $(du -sb "$@" | awk '{print $1}') | \
+        gpg --symmetric --cipher-algo AES256 --output "$NAME.tgz.gpg"
+    fi
+else
+
+    if [ -f "$@" ]; then
+
+        FILE="$@"
+
+        if [[ ${FILE: -8} == ".tgz.gpg" ]]; then
+            tput setaf 4; echo "Decrypting directory..."; tput sgr0
+
+            if hash pigz 2>/dev/null; then
+                gpg --decrypt $FILE | pigz -dc | tar xf -
+            else
+                gpg --decrypt $FILE | tar xf -
+            fi
+        elif [[ ${FILE: -4} == ".gpg" ]]; then
+            tput setaf 4; echo "Decrypting file..."; tput sgr0
+            gpg --output "$(basename $FILE .gpg)" --decrypt "$FILE"
+        else
+            tput setaf 4; echo "Encrypting file..."; tput sgr0
+            pv $FILE | gpg --symmetric --cipher-algo AES256 --output "$FILE.gpg"
+        fi
+    else
+        tput setaf 1; echo "That file does not exist!"; tput sgr0
+        exit 1
+    fi
+fi

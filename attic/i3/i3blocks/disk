@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR="${BLOCK_INSTANCE:-$HOME}"
+WARN=90
+CRIT=95
+
+USED=$(df -h -P -l "$DIR" | tail -1 | awk '{print $5}' | tr -d %)
+
+echo -e "${USED}%"
+echo -e "${USED}%"
+
+if (( $USED >= $CRIT )); then
+    $HOME/bin/i3blocks/colors error
+elif (( $USED >= $WARN )); then
+    $HOME/bin/i3blocks/colors warn
+fi

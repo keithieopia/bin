@@ -1,0 +1,32 @@
+#!/bin/bash
+
+URL="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US"
+DIR=$(mktemp -d)
+
+cd "$DIR"
+curl -Lo "$DIR/firefox.tar.bz2" "$URL"
+
+if [ -d "$HOME/.local/share/firefox" ]; then
+    rm -r "$HOME/.local/share/firefox"
+fi
+
+tar -xjf "$DIR/firefox.tar.bz2" -C "$HOME/.local/share"
+
+if [ ! -L "$HOME/.local/bin/firefox" ]; then
+    ln -s "$HOME/.local/share/firefox/firefox" "$HOME/.local/bin/firefox"
+fi
+
+MENU_ENTRY="$HOME/.local/share/applications/firefox-quantum.desktop"
+
+if [ ! -f "$MENU_ENTRY" ]; then
+    cat << 'EOF' > "$MENU_ENTRY"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=/home/timothy/.local/share/firefox/firefox %u
+Icon=/home/timothy/.local/share/firefox/browser/chrome/icons/default/default64.png
+Name=Firefox Quantum
+Comment=Custom definition for Firefox
+Categories=Network;
+EOF
+fi

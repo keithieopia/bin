@@ -1,0 +1,66 @@
+#!/bin/bash
+
+########################################################################
+#
+# sunlight-wallpaper
+# ------------------
+# Updating wallpaper of what Earth would look like from space, with live 
+# clouds and sunlight. Since this is meant as wallpaper, we use a 
+# Mercator projection instead of a globe.
+#
+# The image is created and distributed by die.net, this script only
+# downloads and sets it as wallpaper. Most credit belongs to them:
+#
+#   [   Main Site   ]->  https://www.die.net/earth/
+#   [ How it's Made ]->  https://www.die.net/earth/how.html
+#
+# REPO
+# ----
+# https://github.com/keithieopia/bin/blob/master/wallpaper/sunlight-wallpaper
+#
+# LICENSE
+# -------
+# Seeing die.net does all the heavy lifting, I hereby dedicate this to 
+# the public domain and waive any rights I may have to it.
+#
+# I know some areas do not legally recognize public domain dedications, 
+# like European civil law. If you live in one of those countries, 
+# you may:
+#
+#   (a) do whatever you want with it (WTFPL)
+#   (b) steal this as your own and pretend you didn't get it from me
+#
+########################################################################
+
+#=======================================================================
+# CONFIGURATION
+#=======================================================================
+
+# the update interval for the world image, in seconds
+# (default: 1800 seconds = 30 minutes)
+#
+# please be nice to die.net and not set this too low!
+INTERVAL=1800
+
+# die.net (the server with the images) doesn't support wget or curl, 
+# so we have to spoof our user agent. The actual browser we pick 
+# doesn't matter
+# (default: MS Edge, lastest build as of writing) 
+USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
+
+
+#=======================================================================
+# YOU PROBABLY SHOULDN'T CHANGE ANYTHING BELOW
+#=======================================================================
+
+while :
+do
+	IMAGE="/tmp/earth-$(date +'%s').jpg"
+
+	wget http://static.die.net/earth/mercator/1600.jpg \
+		--header="User-Agent: $USER_AGENT" -O "$IMAGE"
+
+	gsettings set org.gnome.desktop.background picture-uri "file://$IMAGE"
+
+	sleep $INTERVAL
+done

@@ -1,0 +1,22 @@
+#!/bin/bash
+# freedns.afraid.org updater script
+
+if [ -f "$HOME/.bash_secrets" ]; then
+	source "$HOME/.bash_secrets"
+else
+	echo "~/.bash_secrets does not exist!"
+	exit 1
+fi
+
+UPDATEURL="http://freedns.afraid.org/dynamic/update.php?${FREEDNS_API}"
+
+registered=$(nslookup $FREEDNS_DOMAIN | tail -n2 | grep A | sed s/[^0-9.]//g)
+
+current=$(wget -q -O - http://checkip.dyndns.org | sed s/[^0-9.]//g)
+
+if [ "$current" != "$registered" ]; then
+	wget -q -O /dev/null $UPDATEURL 
+    echo "DDNS updated on: $(date +'%F %H:%M:%S')"
+else
+	echo "DDNS IP is current"
+fi

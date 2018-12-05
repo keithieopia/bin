@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DIARY_DIR="$HOME/.diary"
+DATE=$(date +%Y-%m-%d)
+GPG=$(which gpg2)
+
+#GPG_KEYID="user@example.com"
+# ~/.bash_secrets provides $GPG_KEYID
+source $HOME/.bash_secrets
+
+TMP_FILE=$(mktemp)
+
+if [ ! -d ${DIARY_DIR} ]; then
+	mkdir -p ${DIARY_DIR}
+fi
+
+if [ -f "${DIARY_DIR}/${DATE}.gpg" ]; then
+	$GPG --output "${TMP_FILE}" --yes --decrypt "${DIARY_DIR}/${DATE}.gpg" && \
+	$EDITOR ${TMP_FILE} && \
+	$GPG --output "${DIARY_DIR}/${DATE}.gpg" --armor --yes --encrypt --recipient ${GPG_KEYID} ${TMP_FILE}
+else
+	$EDITOR ${TMP_FILE} && $GPG --output "${DIARY_DIR}/${DATE}.gpg" --armor --encrypt --recipient ${GPG_KEYID} ${TMP_FILE}
+fi
+
+shred -fuz ${TMP_FILE}

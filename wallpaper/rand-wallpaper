@@ -1,0 +1,40 @@
+#!/bin/bash
+
+CACHE="$HOME/.cache/desktoppr"
+
+json_get_value() {
+	# json_get_value [KEY TO FIND] [JSON STRING]
+	# given a key, return it's value from a json encoded string
+	#
+	# there's better ways of doing this like using jshon or jq, but
+	# those usually are not installed by default. This only requires
+	# grep and perl which are commonly available
+	#
+	# caveat: this won't work if there's a space between keys and values
+	#         such as {"key": "value"}
+	#                        ^-- note this space
+	#
+	#         NATGEO's json feed doesn't do this so I'm not bothering
+	#         with fixing the perl regex
+
+	grep -Po  '"'"$1"'":.*?[^\\]",' <<< "$2" | perl -pe 's/"'"$1"'"://; s/^"//; s/",$//'
+}
+
+# create cache dir if it doesn't exist
+if [ ! -d "$CACHE" ]; then
+	mkdir -p "$CACHE"
+fi
+
+JSON=$(curl https://api.desktoppr.co/1/wallpapers/random -s)
+IMG_URL=$(json_get_value "url" "$JSON" | head -1)
+IMG_PATH="$CACHE/$(basename $IMG_URL)"
+
+# Download the wallpaper
+curl -o "$IMG_PATH" "$IMG_URL"
+
+# set the wallpaper
+if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
+    (cd $(dirname $0) && change-wallpaper "$IMG_PATH")
+else
+    gsettings set org.gnome.desktop.background picture-uri "file://$IMG_PATH"
+fi

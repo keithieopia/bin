@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# For those that didn't know, Gmail provides an Atom feed listing your unread 
+# emails and even a tag listing the total number.
+#
+# This makes it trivially simple to get an unread email count using just bash
+# and curl. Perfect for a status bar script like i3blocks
+
+source ~/.bash_secrets
+
+MAIL=$(curl -u $GMAIL_USER:$GMAIL_APP_PASS --silent "https://mail.google.com/mail/feed/atom")
+
+read_dom () {
+    local IFS=\>
+    read -d \< ENTITY CONTENT
+}
+
+while read_dom; do
+    if [[ $ENTITY = "fullcount" ]]; then
+        COUNT=$CONTENT
+        break
+    fi
+done <<< "$MAIL"
+
+echo -e "<span font='FontAwesome'>\uf003</span> $COUNT"
+echo -e "<span font='FontAwesome'>\uf003</span> $COUNT"

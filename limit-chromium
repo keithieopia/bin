@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# 2 GB RAM & Swap limit
+mkdir -p /sys/fs/cgroup/memory/browsers
+echo 4000000000 > /sys/fs/cgroup/memory/browsers/memory.limit_in_bytes
+echo 4000000000 > /sys/fs/cgroup/memory/browsers/memory.memsw.limit_in_bytes
+
+# 50% of CPU limit
+mkdir -p /sys/fs/cgroup/cpu/browsers
+echo 500 > /sys/fs/cgroup/cpu/browsers/cpu.shares
+
+# Add chromium to cgroups
+pids=$(pidof chromium)
+
+for p in $pids
+do
+    echo "cgrouping $p..."
+    echo $p > /sys/fs/cgroup/memory/browsers/cgroup.procs
+    echo $p > /sys/fs/cgroup/cpu/browsers/cgroup.procs
+done

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# remove the huge notice from output and query a sane server
+/usr/bin/whois -h whois.internic.net "$1" | sed '/NOTICE:/q' | head -n -4 -

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if grep -q youtube.com <<< "$1" ; then
+    URL="$1"
+else
+    URL="https://www.youtube.com/watch?v=${1}"
+fi
+
+if hash mpv 2>/dev/null; then
+    # mpv can play youtube videos directly
+
+    if hash smplayer 2>/dev/null; then
+        # smplayer is a frontend for mpv
+        smplayer "$URL"
+    else
+        mpv "$URL"
+    fi
+
+elif hash youtube-dl 2>/dev/null; then
+    # checks to see if video is valid, if so downloads it
+    # and opens with the associated video player
+    if youtube-dl -j "$URL" 2>/dev/null; then
+        FILE=$(youtube-dl --get-filename "$1")
+        youtube-dl "$URL" -o "/tmp/$FILE" && xdg-open "/tmp/$FILE"
+    else
+        echo "The URL is not supported or the youtube video doesn't exist!"
+        exit 1
+    fi
+else
+    echo "No suitable player found, falling back to opening directly in browser!"
+    xdg-open "$URL"
+    exit 1
+fi

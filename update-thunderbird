@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+# For Firefox, Mozilla provides a generic URL that gives the latest 
+# version of Firefox, e.g.: /?product=firefox-latest-ssl. 
+#
+# For Thunderbird Mozilla doesn't do that; you have to know the specific 
+# version number. The following scraps the latest version's URL from the
+# top of the website
+URL=$(curl -Ls https://www.thunderbird.net | sed -n 's/.*href="\([^"]*\).*/\1/p' | grep -m 1 "download.mozilla.org")
+
+DIR=$(mktemp -d)
+
+cd "$DIR"
+curl -Lo "$DIR/thunderbird.tar.bz2" "$URL"
+
+if [ -d "$HOME/.local/share/thunderbird" ]; then
+    rm -r "$HOME/.local/share/thunderbird"
+fi
+
+tar -xjf "$DIR/thunderbird.tar.bz2" -C "$HOME/.local/share"
+
+if [ ! -L "$HOME/.local/bin/thunderbird" ]; then
+    ln -s "$HOME/.local/share/thunderbird/thunderbird" "$HOME/.local/bin/thunderbird"
+fi
+
+MENU_ENTRY="$HOME/.local/share/applications/thunderbird.desktop"
+
+if [ ! -f "$MENU_ENTRY" ]; then
+    cat << 'EOF' > "$MENU_ENTRY"
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=/home/timothy/.local/share/thunderbird/thunderbird %u
+Icon=/home/timothy/.local/share/thunderbird/chrome/icons/default/default64.png
+Name=Thunderbird
+Comment=Custom definition for Thunderbird
+Categories=Network;
+EOF
+fi

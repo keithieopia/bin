@@ -1,0 +1,47 @@
+#!/bin/bash
+
+qdbus org.kde.plasmashell /PlasmaShell dumpCurrentLayoutJS | \
+grep -m 1 -A 1 "/Wallpaper/org.kde.image/General\": {" | \
+tail -1 | \
+sed -n 's:.*file\://\(.*\)",.*:\1:p'
+
+# Explaination:
+#   qdbus [...]
+#       dumps all of Plasma's current config as JavaScript
+#       The relevant section looks like the following:
+#       "/Wallpaper/org.kde.image/General": {
+#                   "Image": "file:///path/to/your/wallpaper.jpg",
+#
+#   grep [...]
+#       finds the Wallpaper section based on it's header and prints
+#       the line after (see example above)
+#
+#   tail -1
+#       removes the first line, leaving leaving just the line
+#       with the wallpaper's path
+#
+#   sed [...]
+#       extracts the path from the line
+
+# CAVEAT #1:
+#   KDE allows you to have different wallpapers on different
+#   workspaces, but this script only shows first workspace's
+#   wallpaper to prevent outputting duplicate lines.
+#
+#   Should you have different wallpapers for each of your workspaces,
+#   Try removing the "-m 1" args from grep and "tail -1"
+#
+# CAVEAT #2:
+#   If the path to the wallpaper is invalid, KDE is nice and instead
+#   changes it to the built-in default wallpaper.
+#
+#   The path in the config is not updated in this case nor is it
+#   marked as invalid. If you're using this in another script, you
+#   should not trust it's output and check that the wallpaper file
+#   exists.
+
+# The following is a more terse example. On a fresh KDE install it will
+# work as expected, but if the user has additional plasmoids installed
+# it might fail as it searches by any image reported by qdbus
+#
+# qdbus org.kde.plasmashell /PlasmaShell dumpCurrentLayoutJS | sed -n 's:.*\"Image\"\: \"file\://\(.*\)"\,.*:\1:p' | head -1

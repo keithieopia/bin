@@ -1,0 +1,23 @@
+#!/bin/bash
+
+WARN=50
+CRIT=80
+
+FREE=$(free -m | sed -n '2p' | awk '{print $7}')
+TOTAL=$(free -m | sed -n '2p' | awk '{print $2}')
+PERCENT=$(echo "100 - (($FREE / $TOTAL) * 100)" | bc -l)
+
+# bc's scale=2 is wonky if doing more than just division; it will round to the
+# next whole number while keeping the decimal point. Instead, just use printf to 
+# truncating the decimal
+
+#echo -e "<span font='FontAwesome'>\uf2db</span> $(printf "%.2f\n" $PERCENT)%"
+#echo -e "<span font='FontAwesome'>\uf2db</span> $(printf "%.2f\n" $PERCENT) %"
+printf "%.2f%%\n" $PERCENT
+printf "%.2f%%\n" $PERCENT
+
+if (( $(echo "$PERCENT >= $CRIT" | bc -l) )); then
+    $HOME/bin/i3blocks/colors error
+elif (( $(echo "$PERCENT >= $WARN" | bc -l) )); then
+    $HOME/bin/i3blocks/colors warn
+fi

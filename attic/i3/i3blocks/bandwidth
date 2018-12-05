@@ -1,0 +1,79 @@
+#!/bin/bash
+
+BASE_SPEED="193000" # in bytes; default T1 / 1.544Mbps
+WARN="90" # 90% of max rate
+
+IFACE=$(route | grep default | awk '{print $8}')
+CACHE_FILE="/tmp/net_$IFACE"
+
+human_bytes () {
+    if [[ $1 =~ ^-?[0-9]+$ ]]; then
+        bytes=$1
+        kilobytes=$((bytes >> 10))
+        megabytes=$((bytes >> 20))
+        gigabytes=$((bytes >> 30))
+
+        if [ $gigabytes -gt 1 ]; then
+            echo "$gigabytes gb"
+        elif [ $megabytes -gt 1 ]; then
+            echo "$megabytes mb"
+        elif [ $kilobytes -gt 1 ]; then
+            echo "$kilobytes kb"
+        else
+            echo "$bytes b"
+        fi
+    else
+        # not an integer, just return what was given
+        echo "$@"
+    fi
+}
+
+if [[ -z $IFACE ]] || grep -q "down" "/sys/class/net/$IFACE/operstate"; then
+	echo " network down"
+	echo " network down"
+	$HOME/bin/x11/i3blocks/colors error
+	
+else
+	TIME=$(date +%s)
+	TX_TOTAL=$(< /sys/class/net/$IFACE/statistics/tx_bytes)
+	RX_TOTAL=$(< /sys/class/net/$IFACE/statistics/rx_bytes)
+
+	if [ -f "$CACHE_FILE" ]; then
+		TIME_CACHE=$(stat -c %Y $CACHE_FILE)
+		ELAPSED_TIME=$(bc <<< "$TIME - $TIME_CACHE")
+	
+		read TX_CACHE RX_CACHE TX_MAX RX_MAX < "$CACHE_FILE"
+		
+		if [[ "$ELAPSED_TIME" != 0 ]]; then
+			TX=$(bc <<< "($TX_TOTAL - $TX_CACHE) / $ELAPSED_TIME")
+			RX=$(bc <<< "($RX_TOTAL - $RX_CACHE) / $ELAPSED_TIME")
+
+			echo " $(human_bytes $RX)  $(human_bytes $TX)"
+			echo " $(human_bytes $RX)  $(human_bytes $TX)"
+			
+			if (( TX > TX_MAX )); then
+				TX_MAX="$TX"
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( RX > RX_MAX )); then
+				RX_MAX="$RX"
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( $(bc -l <<< "$TX / $TX_MAX >= $WARN / 100") )); then
+				$HOME/bin/x11/i3blocks/colors warn
+			elif (( $(bc -l <<< "$RX / $RX_MAX >= $WARN / 100") )); then
+				$HOME/bin/x11/i3blocks/colors warn
+			fi
+		else
+			echo " 0 b  0 b"
+		fi
+	else
+		TX_MAX="$BASE_SPEED"
+		RX_MAX="$BASE_SPEED"
+	
+		echo " collating data"
+		echo " collating data"
+		$HOME/bin/x11/i3blocks/colors info
+	fi
+
+	# Write the cache file
+	echo "$TX_TOTAL $RX_TOTAL $TX_MAX $RX_MAX" > "$CACHE_FILE"
+fi

@@ -1,0 +1,126 @@
+#!/bin/bash
+
+########################################################################
+#
+# natgeo-wallpaper
+# -----------------
+# Grabs the "Photo of the Day" from National Geographic and sets it as
+# the wallpaper scaling it while fixing the aspect ratio in an elegant
+# manner. The old photos are preserved in the cache in case you find
+# a photo you like. See their site for the current and past photos:
+#
+# http://www.nationalgeographic.com/photography/photo-of-the-day
+#
+# REPO
+# ----
+# https://github.com/keithieopia/bin/blob/master/wallpaper/natgeo-wallpaper
+#
+# LICENSE
+# -------
+# Copyright (c) 2017 Timothy Keith
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation files
+# (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+########################################################################
+
+#=======================================================================
+# CONFIGURATION
+#=======================================================================
+
+# This is where all photos will be stored. Originals are preserved in
+# the $CACHE/originals with the wallpaper converted ones in the parent
+# $CACHE directory
+CACHE="$HOME/.cache/natgeo"
+
+
+#=======================================================================
+# YOU PROBABLY SHOULDN'T CHANGE ANYTHING BELOW
+#=======================================================================
+
+json_get_value() {
+	# json_get_value [KEY TO FIND] [JSON STRING]
+	# given a key, return it's value from a json encoded string
+	#
+	# there's better ways of doing this like using jshon or jq, but
+	# those usually are not installed by default. This only requires
+	# grep and perl which are commonly available
+	#
+	# caveat: this won't work if there's a space between keys and values
+	#         such as {"key": "value"}
+	#                        ^-- note this space
+	#
+	#         NATGEO's json feed doesn't do this so I'm not bothering
+	#         with fixing the perl regex
+
+	grep -Po  '"'"$1"'":.*?[^\\]",' <<< "$2" | perl -pe 's/"'"$1"'"://; s/^"//; s/",$//'
+}
+
+scale_image() {
+	# resize_image [ORIGINAL IMAGE] [SAVE AS IMAGE]
+	# This scales an image to full HD, and fills empty space with the
+	# same image blurred, preventing ugly bars caused by images not
+	# intended to be used as desktop wallpaper (wrong aspect ratio)
+
+	convert "$1" \
+	\( -clone 0 -blur 0x6 -resize 1920 -crop 1920x1080+0+0 +repage -fill "white" -colorize 20% \) \
+	\( -clone 0 -resize x1080 \) \
+	-delete 0 -gravity center -compose over -composite "$2"
+}
+
+# create the cache directory if it doesn't exist
+if [ ! -d "$CACHE" ]; then
+	mkdir -p "$CACHE"
+fi
+
+LOCAL_NATGEO_FILE="$CACHE/originals/natgeo-$(date +'%Y%m%d').jpg"
+LOCAL_NATGEO_WALLPAPER="$CACHE/wallpaper-$(date +'%Y%m%d').jpg"
+
+if [ ! -f "$LOCAL_NATGEO_FILE" ]; then
+	# create the cache directory if it doesn't exist
+	if [ ! -d "$CACHE/originals" ]; then
+		mkdir -p "$CACHE/originals"
+	fi
+
+	# We could just use NATGEO's HTML, but why bother since JSON is more
+	# friendly to parse.-gravity center
+	JSON=$(curl http://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.gallery.json -s)
+
+	# Example of NATGEO's json (trimmed):
+	#   {"galleryTitle":"Photo of the Day","url":"http://yourshot.nationalgeographic.com","1600":"/u/really-long-string-of-gibberish/"}
+	#
+	# Concat the url + 1600 key values to get the true url:
+	#   http://yourshot.nationalgeographic.com/u/really-long-string-of-gibberish/
+	IMG_URL=$(json_get_value "url" "$JSON" | head -1)
+	IMG_PATH=$(json_get_value "1600" "$JSON" | head -1)
+
+	curl "$IMG_URL$IMG_PATH" -o "$LOCAL_NATGEO_FILE"
+fi
+
+if [ ! -f "$LOCAL_NATGEO_WALLPAPER" ]; then
+	scale_image "$LOCAL_NATGEO_FILE" "$LOCAL_NATGEO_WALLPAPER"
+fi
+
+# set the wallpaper
+if [[ -x "$(dirname $0)/change-wallpaper" ]]; then
+    (cd $(dirname $0) && change-wallpaper "$LOCAL_NATGEO_WALLPAPER")
+else
+    gsettings set org.gnome.desktop.background picture-uri "file://$LOCAL_NATGEO_WALLPAPER"
+fi

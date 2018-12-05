@@ -1,0 +1,190 @@
+#!/bin/bash
+
+usage() {
+cat <<HELP
+Create random passwords, MAC addresses, letters, or numbers using /dev/urandom
+
+Usage: $(basename "$0") [OPTION...] FORMAT
+
+Format:
+  alpha         uppercase and lowercase letters
+  cia           CIA cryptonym; a digraph combinded with a word
+  digit         digits
+  fakeword      non-sense word based on a CVCV... pattern
+  lower         lowercase letters
+  mac           MAC address
+  pass          password (letters, numbers, symbols)
+  port          random port (1024 - ip_local_port_range)
+  upper         uppercase letters
+  word          dictionary word
+  xkcd          xkcd "correct horse battery staple" password
+
+Flags:
+  -l [NUM]      number of chars to generate (default: 10)
+  -w [NUM]      number of words to generate
+  -h            display this help
+
+
+https://github.com/keithieopia/bin/
+
+Copyright (c) 2016 - 2017 Timothy Keith
+Licensed under the MIT license.
+HELP
+}
+
+# Defaults
+LEN=10
+NUM_WORDS=1
+CASE="alpha"
+
+alpha() {
+    </dev/urandom tr -cd "[:$CASE:]" | head -c ${1:-$LEN}
+}
+
+cia() {
+    LEN=2
+    digraph=$(alpha)
+
+    tr '[:lower:]' '[:upper:]' <<< "$digraph$(word)"
+}
+
+fakeword() {
+    # Makes fake words using the following pattern:
+    #   consonant, vowel, consonant, etc...
+
+    # split string into chars on newlines for shuf
+    consonants=$(fold -w1 <<< 'aeiou')
+    vowels=$(fold -w1 <<< 'bcdfghjklmnpqrstvwxyz')
+
+    for ((i=0;i<$LEN;i++)); do
+        # depending on the current iteration's parity:
+        #   if even: output a vowel
+        #   if odd:  output a consonant
+
+        if [ $((i%2)) -eq 0 ]; then # even
+            shuf -n 1 --random-source=/dev/urandom <<< "$vowels" | tr -d '\n'
+        else # odd
+            shuf -n 1 --random-source=/dev/urandom <<< "$consonants" | tr -d '\n'
+        fi
+    done
+
+    # this echo is intentional, since tr is used to strips newlines
+    # for each character outputted
+    echo
+}
+
+mac_address() {
+    # Second char of a MAC address is reserved for multicast if it's odd.
+    # Rather than writing this specific use case, it's often quicker just to
+    # generate addresses until the second char is even
+
+    while : ; do
+        mac="$(hexdump -vn 6 -e ' /1 "%02x"' /dev/urandom)"
+        [[ "13579bdf" =~ ${mac:1:1} ]] || break
+    done
+
+    # add colons every two chars to make the hex string into a MAC address
+    echo $mac | fold -w2 - | paste -sd ':' -
+}
+
+num() {
+    </dev/urandom tr -cd '[:digit:]' | head -c ${1:-$LEN}
+}
+
+pass() {
+    </dev/urandom tr -cd '[:graph:]' | head -c ${1:-$LEN}
+}
+
+port() {
+    RANGE="$(awk '{print $2}' </proc/sys/net/ipv4/ip_local_port_range)"
+
+    shuf -n 1 -i 1024-$RANGE --random-source=/dev/urandom
+}
+
+word() {
+    # prefer to use aspell as typically it has the largest dictionary
+    if hash aspell 2>/dev/null; then
+        # sanitize it's dictionary to only words of 4-8 chars long
+        words=$(aspell dump master | grep -o -w '\w\{4,8\}' | tr '[:upper:]' '[:lower:]')
+    else
+        # no aspell, look for dict files in their typical locations
+        files=("/usr/dict/words" "/usr/share/dict/words" "/usr/share/dict/cracklib-small")
+        for file in "${files[@]}"; do
+            if [ -f $file ]; then
+                dict="$file"
+                break
+            fi
+        done
+
+        if [ -z $dict ]; then
+            echo -e "aspell is not installed and no dictionary files where found!"
+            exit 1
+        else
+            # cracklib has numbers and other non-words in its dictionary
+            # so get rid of those along with only using words 4-8 chars long
+            words=$(grep -E '^[a-zA-Z]{4,8}$' "$dict")
+        fi
+    fi
+
+    shuf -n $NUM_WORDS --random-source=/dev/urandom <<< "$words"
+}
+
+xkcd() {
+    if [[ $NUM_WORDS < 4 ]]; then
+        NUM_WORDS=4
+    fi
+
+    WORDS=$(word | paste -s -d ' ')
+    echo "${WORDS// /} ($WORDS)"
+}
+
+while getopts l:c:h option; do
+    case $1 in
+        -l) LEN=${OPTARG}   ;;
+        -w) NUM_WORDS=${OPTARG} ;;
+        -h) usage && exit   ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+
+case $1 in
+    alpha)    alpha
+              exit
+              ;;
+    cia)      cia
+              exit
+              ;;
+    digit)    num
+              exit
+              ;;
+    fakeword) fakeword
+              exit
+              ;;
+    lower)    CASE="lower"
+              alpha
+              exit
+              ;;
+    mac)      mac_address
+              exit
+              ;;
+    pass)     pass
+              exit
+              ;;
+    port)     port
+              exit
+              ;;
+    upper)    CASE="upper"
+              alpha
+              exit
+              ;;
+    word)     word
+              exit
+              ;;
+    xkcd)     xkcd
+              exit
+              ;;
+    *)        usage
+              exit 1
+esac

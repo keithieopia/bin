@@ -1,0 +1,203 @@
+#!/bin/bash
+
+########################################################################
+#
+# weather-wallpaper
+# -----------------
+# Animated U.S. weather radar as a wallpaper. For GNOME and GNOME-like
+# desktops; but this could easily be changed to a generic wallpaper 
+# setter like feh
+#
+# REPO
+# ----
+# https://github.com/keithieopia/bin/blob/master/wallpaper/weather-wallpaper
+#
+# LICENSE
+# -------
+# Copyright (c) 2017 Timothy Keith
+#
+# Permission is hereby granted, free of charge, to any person 
+# obtaining a copy of this software and associated documentation files
+# (the "Software"), to deal in the Software without restriction, 
+# including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so, 
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be 
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
+# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN 
+# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+# SOFTWARE.
+#
+########################################################################
+
+#=======================================================================
+# CONFIGURATION
+#=======================================================================
+
+# the update interval for the radar, in seconds 
+# (default: 3600 seconds = 1 hour)
+#
+# Note: don't set this lower than 4 minutes; the NOAA servers only 
+#       update their images every 10 minutes when clear or 4-6 minutes 
+#       if raining. See this for more info:
+#       http://www.srh.noaa.gov/jetstream/doppler/radarfaq.html#update
+UPDATE=3600
+
+# pause this many seconds between every frame of the animation 
+# (default: 2 seconds)
+#
+# The default may be too big of a delay for your tastes, however fast 
+# animations may be needlessly distracting; hence why video and animated 
+# gif backgrounds never really caught on.
+#
+# I find the two second pause the perfect balance between 
+# informative vs. distracting
+FRAME_RATE=2
+
+# the location to store the weather images (e.g.: the cache folder)
+# (default: ~/.cache/weather)
+#
+# A alternative folder like /tmp/weather also makes sense for the cache  
+CACHE="$HOME/.cache/weather"
+
+
+#=======================================================================
+# YOU PROBABLY SHOULDN'T CHANGE ANYTHING BELOW
+#=======================================================================
+
+ANIM_RADAR_URL="https://radar.weather.gov/Conus/Loop/NatLoop.gif"
+STATIC_RADAR_URL="https://radar.weather.gov/Conus/RadarImg/latest.gif"
+
+check_age() {
+	if [ -f "${CACHE}/radar.gif" ]; then
+		AGE=$(stat -c '%Y' "${CACHE}/radar.gif")
+		TIME=$(date '+%s')
+
+		if ((TIME-AGE > UPDATE)); then
+			download_radar
+			dissect_radar
+			append_hash
+		fi
+	else
+		download_radar
+		dissect_radar
+		append_hash
+	fi
+}
+
+download_radar() {
+	echo "Downloading radar..."
+	
+	# create the cache directory if it doesn't exist
+	if [ ! -d $CACHE ]; then
+		mkdir -p "$CACHE"
+	fi
+	
+	curl -o "${CACHE}/radar.gif" "$RADAR_URL"
+}
+
+dissect_radar() {
+	# The weather radar is nothing more than an animated gif. This cuts 
+	# out each frame of the animation and saves it as a seperate png
+	#
+	# Basically needed because most desktops don't support animated gifs
+	
+	echo "Dissecting radar frames..."
+
+	# Make the radar frames directory or delete old radar frames
+	if [ ! -d "${CACHE}/gif" ]; then
+		mkdir -p "${CACHE}/gif"
+	else
+		find "${CACHE}/gif/" -type f -name "radar-*.png" -delete 
+	fi
+
+	# cut radar the gif into frames
+	convert -coalesce "${CACHE}/radar.gif" "${CACHE}/gif/radar.png"
+	
+	# resize each frame
+	for file in ${CACHE}/gif/*
+	do
+		if [ -f "$file" ]; then
+			# background color #BEE8FF is same color as the atlantic and 
+			# pacific ocean in the radar image. Setting it prevents ugly 
+			# black borders from being scaled
+			
+			convert -background '#BEE8FF' "$file" -resize 1920x1080 -gravity center -extent 1920x1080 "$file"
+		fi
+	done
+}
+
+append_hash() {
+	# DEs tend to cache wallpapers, which is a problem for us since 
+	# radar images inherently change, but their filenames do not. 
+	#
+	# Therefore, this appends the sha1 hash of each file to it's 
+	# filename; still preserving the order of the frames but making each
+	# image unique 
+	
+	for file in ${CACHE}/gif/*
+	do
+		if [ -f "$file" ]; then
+			base=${file##*/}
+			filename="${base%.*}"
+			extension="${base##*.}"
+			
+			hash=$(sha1sum $file | awk '{print $1}')
+			
+			#echo "$file -> ${filename}-${hash}.${extension}"
+			mv $file "${CACHE}/gif/${filename}-${hash}.${extension}"
+		fi
+	done
+}
+
+animate_wallpaper() {
+    NUM_FRAMES=$(ls ${CACHE}/gif/radar-*.png | wc -l)
+
+	for FRAME in ${CACHE}/gif/radar-*.png; do
+        echo "frame: $(awk -F '-' '{print $2}' <<< $FRAME) of $NUM_FRAMES"
+	
+		$HOME/bin/change-wallpaper "$FRAME"
+		sleep "${FRAME_RATE}s"
+	done
+}
+
+if [[ $1 == "--animate" ]] || [[ $1 == "-a" ]]; then
+	RADAR_URL=$ANIM_RADAR_URL
+
+	while :
+	do
+		check_age
+			
+		for i in {1..30}; do
+			# this will run for about 8 minutes:
+			#   8 frames per radar (the gif file from noaa)
+			#   2 second pause between each frame ($FRAME_RATE)
+			#   loop 30 times
+			#   -----------------------
+			#   480 seconds = 8 minutes
+			
+			animate_wallpaper
+		done
+	done
+else
+	RADAR_URL=$STATIC_RADAR_URL
+
+    while :
+    do
+	    check_age
+
+	    IMAGE=$(find ${CACHE}/gif/ -name "*.png")
+
+	   	$HOME/bin/change-wallpaper "$IMAGE"
+
+	    sleep 15m
+    done
+fi
