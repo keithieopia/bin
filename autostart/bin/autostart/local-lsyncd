@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# provides $HOME_GATEWAY
+source $HOME/.bash_secrets
+
+count=0
+while : ; do
+  if ping -c1 10.0.0.1 &>/dev/null; then
+    break
+  else
+    echo "disconnected; waiting for network..."
+    sleep 30
+
+    # After 5 minutes, give up
+    count=$((count + 1))
+    if (("$count" >= 10)); then
+      echo "giving up waiting on network"
+      exit 1
+    fi
+  fi
+done
+
+GATEWAY_IP=$(ip route list | awk 'NR==1{print $3}')
+GATEWAY_MAC=$(ip neigh | grep "$GATEWAY_IP " | awk '{print $5}')
+
+if [ "$GATEWAY_MAC" = "$HOME_GATEWAY" ]; then
+  echo "Connected to homenet, starting lsyncd"
+  lsyncd -nodaemon /etc/lsyncd/lsyncd.conf.lua
+else
+  echo "Foriegn network, dying..."
+  exit 1
+fi
