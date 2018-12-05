@@ -8,7 +8,6 @@ first, if you came here directly from somewhere else.
 
 ## Table of Contents:
 
-- ./[attic](https://github.com/keithieopia/bin/blob/master/attic/README.md)/*
 - ./[fun](https://github.com/keithieopia/bin/blob/master/fun/README.md)/*
 - ./[wallpaper](https://github.com/keithieopia/bin/blob/master/wallpaper/README.md)/*
 - `backup`: Automatically backup using rsync and tar.gz if space is available
