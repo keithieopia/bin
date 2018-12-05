@@ -1,18 +1,14 @@
 # dotfiles [ ![Codacy Badge](https://api.codacy.com/project/badge/Grade/45075b8bb6664b8c82e1b5d1f707fe7c)](https://www.codacy.com/app/timothykeith/dotfiles) [![MIT License](https://img.shields.io/github/license/keithieopia/dotfiles.svg)](https://github.com/keithieopia/dotfiles/blob/master/LICENSE) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/keithieopia)
 
 > These are my dotfiles. There are many dotfile repos, but this one is mine.
->
 > My dotfiles are my best friend. They are my life. I must master what 
 > they config as I must master my life. 
->
 > Without me, my dotfiles are useless. Without my dotfiles, I am useless.
 >
 > -- The Linux User's Creed
 
-These are the config files I use for my environment and the various 
-shell scripts I have in my `$PATH`. Most are quite useful, but some are 
-simply novelties to see if a certain problem could be solved in a humble 
-shell script.
+These config files I use in my environment and the various shell scripts 
+I have in my `$PATH`. *You know... dotfiles*.
 
 #### Table of Contents
 - [Overview](#overview)
@@ -26,6 +22,8 @@ shell script.
 You should first fork this repository, review the code, and remove 
 things you don't want or need. Don't blindly use my settings unless you 
 know what that entails. *Here be dragons!*
+
+---
 
 ## Overview
 <a name="overview"></a>
