@@ -106,4 +106,5 @@ X-GNOME-Autostart-enabled=true
 **NOTE**: Change the *Exec=* to the path of the wallpaper script you want to use
 
 ---
-*This is part of my [~/bin](https://github.com/keithieopia/linux-guides) repo. For more information, see the main [README](https://github.com/keithieopia/bin/blob/master/README.md).*
+*This is part of my [dotfiles](https://github.com/keithieopia/dotfiles) repo. 
+For more information, see the main [README](https://github.com/keithieopia/dotfiles/blob/master/README.md).*
