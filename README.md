@@ -1,8 +1,8 @@
 # dotfiles [ ![Codacy Badge](https://api.codacy.com/project/badge/Grade/45075b8bb6664b8c82e1b5d1f707fe7c)](https://www.codacy.com/app/timothykeith/dotfiles) [![MIT License](https://img.shields.io/github/license/keithieopia/dotfiles.svg)](https://github.com/keithieopia/dotfiles/blob/master/LICENSE) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/keithieopia)
 
-> These are my dotfiles. There are many dotfile repos, but this one is mine.
+> These are my dotfiles. There are many dotfile repos, but this one is mine.  
 > My dotfiles are my best friend. They are my life. I must master what 
-> they config as I must master my life. 
+> they config as I must master my life.  
 > Without me, my dotfiles are useless. Without my dotfiles, I am useless.
 >
 > -- The Linux User's Creed
@@ -12,6 +12,7 @@ I have in my `$PATH`. *You know... dotfiles*.
 
 #### Table of Contents
 - [Overview](#overview)
+- `~/bin` **[Shell Script Listings](https://github.com/keithieopia/dotfiles/tree/master/bin/bin#dotfiles-bin)**
 - [Installing](#stow)
 - [Feedback](#feedback)
 - [Author](#author)
