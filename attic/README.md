@@ -2,17 +2,17 @@
 Previously used configs, scripts, and experiments.
 
 If you came here from somewhere else, you may want to visit the main repo's 
-[README.md](https://github.com/keithieopia/dotfiles/blob/master/README.md) 
-
+[README.md](https://github.com/keithieopia/dotfiles/blob/master/README.md)  
 
 <img alt="Mad Madam Mim as a Dragon" style="padding-right: 8px" align="left" src="https://raw.githubusercontent.com/keithieopia/dotfiles/master/.readme-assets/mad_madam_min.png">
 
-:warning: **Old Crap** :warning:
-These are old, slightly worn and dusty. They may not work anymore, so 
-use caution.
-
----
-
+:warning: **WARNING** :warning:    
+*This is old crap. It's more than likely none of this will work anymore.*  
+<br>
+<br>
+  
+---  
+  
 * `arch-linux/`
 	* [ccache](https://wiki.archlinux.org/index.php/Ccache): 
 	  speedup recompilation for Arch Linux's [makepkg](https://wiki.archlinux.org/index.php/Makepkg)
