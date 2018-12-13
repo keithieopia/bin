@@ -84,20 +84,20 @@ esac
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	# If running inside ssh, do nothing
 else
-	#
 	# Run the following if not in SSH
-	#
 	
 	# Set the color scheme
 	~/.config/zsh/base16/base16-solarized-dark.sh
+
+    # if we're *not* in a virtual terminal...
+	if ! tty | grep -q /dev/pts; then
 	
-	# if we have tmux, and it's not running, start it
-	if type tmux > /dev/null; then
-		if [ -z "$TMUX" ]; then
-			tmux
+	    # and we have tmux and it's not running, start it
+	    if type tmux > /dev/null && [ -z "$TMUX" ]; then
+	        tmux
 			
 			# exit zsh when we exit tmux
-			exit
+		    exit
 		fi
 	fi
 fi
