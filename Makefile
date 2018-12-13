@@ -39,9 +39,6 @@ web_server: everywhere servers
 home_server: everywhere servers web_server
 	sudo stow -t / emby quirk-no-lid-suspend quirk-apt-block-pkgs
 
-git_server: everywhere servers
-	sudo stow -t / cgit
-
 ##
 ## hostnames
 ##
@@ -51,7 +48,7 @@ deli: desktop
 	sudo stow -t / xorg
 
 # this is a VPS on linode
-linda: web_server git_server
+linda: web_server
 	test -L /etc/lighttpd/sites-enabled/keithieopia.conf || sudo ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighttpd/sites-enabled/
 	test -L /etc/lighttpd/sites-enabled/kerriandtimothy.conf || sudo ln -s /etc/lighttpd/sites-available/kerriandtimothy.conf /etc/lighttpd/sites-enabled/
 
