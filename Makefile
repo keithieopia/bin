@@ -4,6 +4,22 @@ HOST = $(shell hostname)
 default: $(HOST)
 
 ##
+## New machine setup
+##
+install-purge-update:
+	xargs -a ./ZZ-install/apt/remove.list sudo apt purge
+	sudo apt autoremove
+	sudo apt update
+	sudo apt upgrade
+	sudo apt autoremove
+
+install-cli: install-purge-update
+	xargs -a ./ZZ-install/apt/cli.list sudo apt install
+
+install-desktop: install-cli
+	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
+
+##
 ## Actual stow targets
 ##
 everywhere:
