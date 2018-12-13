@@ -81,13 +81,6 @@ If you came here from somewhere else, you may want to visit the main repo's
   certificates. These are systemD timers for automated renewals using 
   [certbot](https://github.com/certbot/certbot). *Note: I still use 
   this, I haven't ported any of this yet*
-* [munin](http://munin-monitoring.org/): a host and network monitor. 
-  This includes client and server settings, as well as systemD timers
-* quirks-adobe-flash: Adobe Flash's NPAPI plugin (e.g.: for Firefox) 
-  only supports ALSA and not PulseAudio. Even at that, the plugin is too
-  stupid to detect the correct sound card, resulting in no sound. This 
-  is the `~/.asoundrc` fix
-* quirks-nobeep: stop annoying PC Speaker beeping
 * [quirks-slow-system-with-usb-drives](http://lwn.net/Articles/572911/): 
   fixes freezing found across Linux distros while copying a large amount 
   of date to and from USB drives
@@ -95,15 +88,6 @@ If you came here from somewhere else, you may want to visit the main repo's
   adapter on battery, while using wifi, even when this is disabled in 
   Settings or in NetworkManager. This nukes the adapter's power feature 
   so Ubuntu can't touch it
-* [remind](https://www.roaringpenguin.com/products/remind): a easy to 
-  use console calendar, alarm, and reminder program
-* [rxvt](http://software.schmorp.de/pkg/rxvt-unicode.html): a terminal 
-  emulator, configs are actually for the rxvt-unicode fork which sets 
-  the font and color scheme, cleans up the GUI, and enables clicking on 
-  URLs
-* [samba](https://www.samba.org/): share home directories and mount 
-  points with Windows. Also enables [mDNS](https://en.wikipedia.org/wiki/Multicast_DNS) 
-  .local hostname resolution via [Avahi](https://github.com/lathiat/avahi)
 * [tlp](http://linrunner.de/en/tlp/tlp.html): simple power management 
   for laptops
 * [unbound](https://unbound.net/): A local DNS resolver. Uses [named.cache](https://www.internic.net/domain/named.cache) 
