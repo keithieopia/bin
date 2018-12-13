@@ -27,6 +27,9 @@ everywhere:
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
 	
+	git clone git@github.com:keithieopia/piu.git
+	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
+	
 desktop: everywhere
 	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
