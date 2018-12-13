@@ -23,12 +23,12 @@ install-desktop: install-cli
 ## Actual stow targets
 ##
 everywhere:
-	stow bash git nano neovim ssh wget zsh 
+	stow bash git nano neovim ssh tmux wget zsh
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
 	
 desktop: everywhere
-	stow mpv youtube-dl xdg-user-dirs
+	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
 
 servers: everywhere
