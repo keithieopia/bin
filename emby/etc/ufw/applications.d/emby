@@ -1,4 +1,0 @@
-[Emby]
-title=Emby Media Server
-description=Emby Media Server used to stream locally downloaded TV & Movies
-ports=8096,8020/tcp

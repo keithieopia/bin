@@ -23,36 +23,34 @@ install-desktop: install-cli
 ## Actual stow targets
 ##
 everywhere:
-	stow bash git nano ssh wget zsh
-
+	stow bash git nano neovim ssh wget zsh 
+	sudo stow -t / apt sshd quirk-systemd-wait-time
+	sudo ufw allow ssh
+	
 desktop: everywhere
 	stow mpv youtube-dl xdg-user-dirs
-	sudo stow -t / quirk-apt-no-recommend
+	sudo stow -t / quirk-no-wifi-powersave sudo
 
 servers: everywhere
-	sudo stow -t / quirk-oom-killer-reboot sshd
+	sudo stow -t / quirk-oom-killer-reboot
 
 web_server: everywhere servers
 	sudo stow -t / lighttpd php
 	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
 
 home_server: everywhere servers web_server
-	sudo stow -t / emby quirk-no-lid-suspend quirk-apt-block-pkgs
-
+	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave
+	sudo ufw allow from 10.0.0.0/24 to any app plex
 ##
 ## hostnames
 ##
 
 # this is my personal laptop
 deli: desktop
-	sudo stow -t / xorg
 
 # this is a VPS on linode
 linda: web_server
-	test -L /etc/lighttpd/sites-enabled/keithieopia.conf || sudo ln -s /etc/lighttpd/sites-available/keithieopia.conf /etc/lighttpd/sites-enabled/
-	test -L /etc/lighttpd/sites-enabled/kerriandtimothy.conf || sudo ln -s /etc/lighttpd/sites-available/kerriandtimothy.conf /etc/lighttpd/sites-enabled/
 
 # this is my home media server
-minime: home_server
-	test -L /etc/lighttpd/sites-enabled/minime.conf || sudo ln -s /etc/lighttpd/sites-available/minime.conf /etc/lighttpd/sites-enabled/
-	sudo stow -t / quirk-no-ipv6
+lime: home_server
+
