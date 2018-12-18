@@ -11,7 +11,7 @@ antigen bundle pip
 antigen bundle sudo
 antigen bundle ufw
 antigen bundle yarn
-
+antigen bundle wd
 antigen bundle apply
 
 # reset frozen terminals by misbehaving applications
