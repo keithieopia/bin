@@ -16,6 +16,9 @@ antigen bundle apply
 # reset frozen terminals by misbehaving applications
 ttyctl -f
 
+# typing a dir's name, cd's into it
+setopt auto_cd cdable_vars
+
 # history settings
 setopt histignorealldups sharehistory
 HISTSIZE=50

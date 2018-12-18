@@ -49,10 +49,7 @@ if type gpg2 &> /dev/null; then
 fi
 
 # new commands
-alias ..="cd .."
-alias ...="cd ..."
-alias ....="cd ...."
-alias ~='cd ~ && clear'
+alias ~='cd $HOME && clear'
 alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias epoch='date +%s'
