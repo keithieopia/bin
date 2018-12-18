@@ -10,6 +10,7 @@ antigen bundle docker
 antigen bundle pip
 antigen bundle sudo
 antigen bundle ufw
+antigen bundle yarn
 
 antigen bundle apply
 
