@@ -26,16 +26,17 @@ everywhere:
 	stow bash git nano neovim ssh tmux wget zsh
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
-	
+
 	git clone git@github.com:keithieopia/piu.git
 	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
-	
+
 desktop: everywhere
 	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
 
 servers: everywhere
 	sudo stow -t / quirk-oom-killer-reboot
+	sudo stow -t / dns
 
 web_server: everywhere servers
 	sudo stow -t / lighttpd php
