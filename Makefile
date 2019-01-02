@@ -19,6 +19,19 @@ install-cli: install-purge-update
 install-desktop: install-cli
 	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
 
+
+dns:
+	# It's not DNS
+	# There's no way it's DNS
+	# It was DNS
+	# -- sysadmin haiku
+	sudo systemctl disable systemd-resolved.service
+	sudo systemctl stop systemd-resolved
+	sudo rm /etc/resolv.conf
+	sudo cp dns/etc/resolv.conf /etc/resolv.conf
+	sudo chattr +i /etc/resolv.conf
+	sudo systemctl restart networking
+
 ##
 ## Actual stow targets
 ##
@@ -26,15 +39,15 @@ everywhere:
 	stow bash git nano neovim ssh tmux wget zsh
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
-	
+
 	git clone git@github.com:keithieopia/piu.git
 	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
-	
+
 desktop: everywhere
 	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
 
-servers: everywhere
+servers: everywhere dns
 	sudo stow -t / quirk-oom-killer-reboot
 
 web_server: everywhere servers
