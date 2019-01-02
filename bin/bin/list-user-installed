@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [[ "$1" -eq "-h" ]] || [[ "$1" -eq "--help" ]]; then
+cat <<EOF
+  lists user installed packages that are not in the base 
+  install of Ubuntu
+  
+  Note that this script does not handle packages that may 
+  be in the base install for flavours like Xubuntu or 
+  Kubuntu but not regular Ubuntu. (e.g.: this only works
+  with regular Ubuntu)
+EOF
+fi
+
+# Provides $VERSION and $ID
+source /etc/os-release
+
+if ! echo $ID | grep -q "ubuntu"; then
+	echo "This script only works on Ubuntu"
+	exit 1
+fi
+
+# $VERSION_ID in /etc/os-release does not include subversions
+# like 18.04.1, but $VERSION does, so we parse it to get the
+# true $VERSION_ID
+VERSION_ID=$(awk '{print $1}' <<< $VERSION)
+
+DEFAULT_PKGLIST=$(mktemp)
+curl -so $DEFAULT_PKGLIST http://releases.ubuntu.com/${VERSION_ID}/ubuntu-${VERSION_ID}-desktop-amd64.manifest && \
+	awk '{print $1}' $DEFAULT_PKGLIST > $DEFAULT_PKGLIST
+
+USER_PKGLIST=$(mktemp)
+dpkg --get-selections | awk '{print $1}' > $USER_PKGLIST
+
+comm -23 $USER_PKGLIST $DEFAULT_PKGLIST
