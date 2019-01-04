@@ -18,7 +18,11 @@ apt-purge-update: apt-min-install
 	sudo apt autoremove
 
 ##
-## specific tasks
+## apt repos
+##
+## these do not install their respective programs as only the repos are
+## needed for home-server's apt-cacher-ng setup. The desktop target
+## actually installs the programs
 ##
 repo-install-curl:
 	# curl should have been installed already. this target is included
@@ -31,25 +35,25 @@ repo-docker: repo-install-curl
 	sudo apt update
 	sudo apt install docker-ce
 
+repo-wine: repo-install-curl
+	sudo dpkg --add-architecture i386
+	sudo stow -t / apt-repo-wine
+	curl -fsSL https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+	sudo apt update
+
 repo-yarn: repo-install-curl
 	sudo stow -t / apt-repo-yarn
 	curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	sudo apt update
-	sudo apt install yarn
 
-repo-wine: repo-install-wine
-	sudo dpkg --add-architecture i386
+repo-all: repo-docker repo-wine repo-yarn
 
-	sudo stow -t / apt-repo-wine
-	curl -fsSL https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
-	sudo apt update
-	sudo apt install --install-recommends winehq-stable
 
+## It's not DNS
+## There's no way it's DNS
+## It was DNS
+## -- sysadmin haiku
 dns:
-	# It's not DNS
-	# There's no way it's DNS
-	# It was DNS
-	# -- sysadmin haiku
 	sudo systemctl disable systemd-resolved.service
 	sudo systemctl stop systemd-resolved
 	sudo rm /etc/resolv.conf
@@ -70,11 +74,16 @@ everywhere: apt-purge-update
 	git clone git@github.com:keithieopia/piu.git
 	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
 
-desktop: everywhere repo-yarn
+desktop: everywhere repo-yarn repo-wine
 	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
 
 	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
+
+	# not in package lists, as they depend on stow targets:
+	# repo-yarn & repo-wine
+	sudo apt install yarn
+	sudo apt install --install-recommends winehq-stable
 
 servers: everywhere dns
 	sudo stow -t / quirk-oom-killer-reboot
@@ -83,7 +92,7 @@ web-server: servers
 	sudo stow -t / lighttpd php
 	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
 
-home-server: servers web-server
+home-server: servers web-server repo-all
 	xargs -a ./ZZ-install/apt/home-server.list sudo apt install
 
 	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave apt-cacher-ng
