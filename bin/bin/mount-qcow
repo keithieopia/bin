@@ -12,7 +12,7 @@ usage: $(basename "$0") IMAGE PARTITION
 
 https://github.com/keithieopia/bin/
 
-Copyright (c) 2018 Timothy Keith
+Copyright (c) 2019 Timothy Keith
 Licensed under the MIT license.
 HELP
 
