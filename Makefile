@@ -33,7 +33,6 @@ repo-docker: repo-install-curl
 	sudo stow -t / apt-repo-docker
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 	sudo apt update
-	sudo apt install docker-ce
 
 repo-wine: repo-install-curl
 	sudo dpkg --add-architecture i386
