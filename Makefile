@@ -6,21 +6,30 @@ default: $(HOST)
 ##
 ## New machine setup
 ##
-install-purge-update:
+apt-min-install:
+	sudo apt install stow
+	sudo stow -t / apt
+
+apt-purge-update: apt-min-install
 	xargs -a ./ZZ-install/apt/remove.list sudo apt purge
 	sudo apt autoremove
 	sudo apt update
 	sudo apt upgrade
 	sudo apt autoremove
 
-install-cli: install-purge-update
-	xargs -a ./ZZ-install/apt/cli.list sudo apt install
+##
+## specific tasks
+##
 
-install-desktop: install-cli
-	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
+repo-yarn:
+	# this should have been installed already, but in case of
+	# manually running this target this is included
+	sudo apt install curl
 
-install-home-server: install-cli
-	xargs -a ./ZZ-install/apt/home-server.list sudo apt install
+	sudo stow -t / apt-repo-yarn
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	sudo apt update
+	sudo apt install yarn
 
 dns:
 	# It's not DNS
@@ -35,9 +44,11 @@ dns:
 	sudo systemctl restart networking
 
 ##
-## Actual stow targets
+## recipes based on machine type
 ##
-everywhere:
+everywhere: apt-purge-update
+	xargs -a ./ZZ-install/apt/cli.list sudo apt install
+
 	stow bash git nano neovim ssh tmux wget zsh
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
@@ -45,18 +56,22 @@ everywhere:
 	git clone git@github.com:keithieopia/piu.git
 	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
 
-desktop: everywhere
+desktop: everywhere repo-yarn
+	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
+
 	stow mpv youtube-dl xdg-user-dirs remind
 	sudo stow -t / quirk-no-wifi-powersave sudo
 
 servers: everywhere dns
 	sudo stow -t / quirk-oom-killer-reboot
 
-web_server: everywhere servers
+web-server: servers
 	sudo stow -t / lighttpd php
 	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
 
-home_server: everywhere servers web_server
+home-server: servers web-server
+	xargs -a ./ZZ-install/apt/home-server.list sudo apt install
+
 	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave apt-cacher-ng
 	sudo ufw allow from 10.0.0.0/24 to any app plex
 	sudo ufw allow from 10.0.0.0/24 to any app apt-cacher-ng
