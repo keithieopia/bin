@@ -29,6 +29,7 @@ php-json
 php-mbstring
 php-readline
 php-xml
+pv
 remind
 scdaemon
 stow
