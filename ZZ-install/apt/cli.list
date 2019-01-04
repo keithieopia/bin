@@ -1,3 +1,6 @@
+apt-transport-https
+ca-certificates
+curl
 dc3dd
 dcfldd
 fdupes
@@ -32,6 +35,7 @@ php-xml
 pv
 remind
 scdaemon
+software-properties-common
 stow
 sysstat
 tmux
@@ -39,7 +43,6 @@ tmux-plugin-manager
 toilet
 toilet-fonts
 unzip
-yarn
 youtube-dl
 zip
 zsh
