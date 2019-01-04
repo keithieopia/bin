@@ -20,15 +20,20 @@ apt-purge-update: apt-min-install
 ##
 ## specific tasks
 ##
-
 repo-install-curl:
 	# curl should have been installed already. this target is included
 	# in case we manually run any repo-* targets before the others
 	sudo apt install curl
 
+repo-docker: repo-install-curl
+	sudo stow -t / apt-repo-docker
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	sudo apt update
+	sudo apt install docker-ce
+
 repo-yarn: repo-install-curl
 	sudo stow -t / apt-repo-yarn
-	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	sudo apt update
 	sudo apt install yarn
 
