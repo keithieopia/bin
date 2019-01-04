@@ -1,7 +1,8 @@
-deb http://ftp.us.debian.org/debian/ stretch main contrib non-free 
+# See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu bionic-security main restricted universe multiverse
 
-deb http://security.debian.org/debian-security/ stretch/updates main contrib non-free
-
-deb http://ftp.us.debian.org/debian/ stretch-updates main contrib non-free
-
-deb http://ftp.us.debian.org/debian stretch-backports main contrib non-free
+deb http://archive.canonical.com/ubuntu bionic partner
