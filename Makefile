@@ -37,6 +37,14 @@ repo-yarn: repo-install-curl
 	sudo apt update
 	sudo apt install yarn
 
+repo-wine: repo-install-wine
+	sudo dpkg --add-architecture i386
+
+	sudo stow -t / apt-repo-wine
+	curl -fsSL https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+	sudo apt update
+	sudo apt install --install-recommends winehq-stable
+
 dns:
 	# It's not DNS
 	# There's no way it's DNS
