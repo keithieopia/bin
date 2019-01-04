@@ -19,22 +19,30 @@ HELP
 exit
 fi
 
-if ! [ -f $1 ]; then
+if [ -f $1 ]; then
+	# qemu-nbd works on other formats (even raw), but here we're making
+	# sure the given file is really is a disk image and not some other
+	# file like a MS Word document
+	if qemu-img info -U $1 | grep -q "file format: qcow2"; then
+		sudo modprobe nbd
+		sudo qemu-nbd -c /dev/nbd0 $1
+	else
+		echo "$1 is not a valid qcow2 image"
+		exit 1
+	fi
+else
 	echo "$1 does not appear to be a file"
 	exit 1
-else
-	sudo modprobe nbd
-	sudo qemu-nbd -c /dev/nbd0 $1
 fi
 
 if ! [ -f /dev/nbd0p${2} ] || [ -z ${2+x} ] ; then
 	echo "Partitions inside of image:"
 	lsblk /dev/nbd0 -o FSTYPE,SIZE | tail -n +3 | nl
-	
+
 	echo
 	echo -n "Mount which partition number?: "
 	read number
-	
+
 	sudo mkdir -p /mnt/qcow
 	sudo mount /dev/nbd0p${number} /mnt/qcow
 	cd /mnt/qcow
