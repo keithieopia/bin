@@ -21,11 +21,12 @@ apt-purge-update: apt-min-install
 ## specific tasks
 ##
 
-repo-yarn:
-	# this should have been installed already, but in case of
-	# manually running this target this is included
+repo-install-curl:
+	# curl should have been installed already. this target is included
+	# in case we manually run any repo-* targets before the others
 	sudo apt install curl
 
+repo-yarn: repo-install-curl
 	sudo stow -t / apt-repo-yarn
 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 	sudo apt update
