@@ -1,0 +1,4 @@
+[apt-cacher-ng]
+title=apt-get proxy
+description=apt-get proxy to cache packages for a local network
+ports=3142/tcp

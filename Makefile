@@ -19,6 +19,8 @@ install-cli: install-purge-update
 install-desktop: install-cli
 	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
 
+install-home-server: install-cli
+	xargs -a ./ZZ-install/apt/home-server.list sudo apt install
 
 dns:
 	# It's not DNS
@@ -55,8 +57,9 @@ web_server: everywhere servers
 	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
 
 home_server: everywhere servers web_server
-	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave
+	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave apt-cacher-ng
 	sudo ufw allow from 10.0.0.0/24 to any app plex
+	sudo ufw allow from 10.0.0.0/24 to any app apt-cacher-ng
 ##
 ## hostnames
 ##
