@@ -1,6 +1,7 @@
 # If no target was specified, run the one that matches our hostname
 # this target must come first!
 HOST = $(shell hostname)
+USER = $(shell whoami)
 default: $(HOST)
 
 ##
@@ -8,14 +9,20 @@ default: $(HOST)
 ##
 apt-min-install:
 	sudo apt install stow
+	sudo rm /etc/apt/apt.conf.d/20auto-upgrades
+	sudo rm /etc/apt/sources.list
 	sudo stow -t / apt
 
 apt-purge-update: apt-min-install
-	xargs -a ./ZZ-install/apt/remove.list sudo apt purge
+	-xargs -a ./ZZ-install/apt/remove.list sudo apt purge
 	sudo apt autoremove
 	sudo apt update
 	sudo apt upgrade
 	sudo apt autoremove
+
+setup-user:
+	sudo usermod -a -G users,adm,www-data $(USER)
+	chsh -s /usr/bin/zsh
 
 ##
 ## apt repos
@@ -63,17 +70,24 @@ dns:
 ##
 ## recipes based on machine type
 ##
-everywhere: apt-purge-update
+homenet:
+	sudo stow -t / apt-cacher-ng
+
+everywhere: apt-purge-update setup-user
 	xargs -a ./ZZ-install/apt/cli.list sudo apt install
 
-	stow bash git nano neovim ssh tmux wget zsh
+	rm /home/$(USER)/.bashrc
+	rm /home/$(USER)/.profile
+	rm /home/$(USER)/.bash_logout
+	stow -t /home/$(USER) bash git nano neovim ssh tmux wget zsh
+
+	sudo rm /etc/systemd/system.conf
+	sudo rm /etc/issue.net
+	sudo rm /etc/ssh/sshd_config
 	sudo stow -t / apt sshd quirk-systemd-wait-time
 	sudo ufw allow ssh
 
-	git clone git@github.com:keithieopia/piu.git
-	ln -s $HOME/dotfiles/piu/piu $HOME/bin/piu
-
-desktop: everywhere repo-yarn repo-wine
+desktop: everywhere repo-yarn repo-wine homenet
 	xargs -a ./ZZ-install/apt/desktop.list sudo apt install
 
 	stow mpv youtube-dl xdg-user-dirs remind
@@ -88,13 +102,16 @@ servers: everywhere dns
 	sudo stow -t / quirk-oom-killer-reboot
 
 web-server: servers
-	sudo stow -t / lighttpd php
-	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
+#	sudo stow -t / lighttpd php
+#	sudo mkdir -p /etc/lighttpd/sites-enabled /etc/lighttpd/conf-enabled
+	xargs -a ./ZZ-install/apt/remove-server.list sudo apt purge
+	sudo apt autoremove
 
-home-server: servers web-server repo-all
+
+home-server: servers web-server repo-all homenet
 	xargs -a ./ZZ-install/apt/home-server.list sudo apt install
 
-	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave apt-cacher-ng
+	sudo stow -t / plex quirk-no-lid-suspend quirk-no-wifi-powersave
 	sudo ufw allow from 10.0.0.0/24 to any app plex
 	sudo ufw allow from 10.0.0.0/24 to any app apt-cacher-ng
 ##
