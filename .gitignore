@@ -3,3 +3,5 @@ bin/bin/autostart
 piu
 bin/bin/piu
 lost+found/
+neovim/.local/share/nvim/plugged
+neovim/.local/share/nvim/shada
