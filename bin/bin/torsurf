@@ -1,0 +1,12 @@
+#!/bin/bash
+
+systemctl is-active --quiet tor || (sudo systemctl start tor && sleep 3)
+
+
+if [ "$1" = "-keith" ]; then
+  URL="http://keith4g2hdg6dzsvjtra3c5pyclcwpam2o5tvjx2tm44tjj7nkhyakyd.onion"
+else
+  URL="http://check.torproject.org"
+fi
+
+torsocks surf "$URL"
