@@ -73,3 +73,14 @@ alias status='systemctl status '
 alias syslog='journalctl -u '
 
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+
+# yes it's a function, but it's an alias that only triggers on a 
+# certain flag
+
+dpkg() {
+	if [ "$1" = "-i" ]; then
+		sudo /usr/bin/dpkg "$@"
+	else
+		/usr/bin/dpkg "$@"
+	fi
+}
