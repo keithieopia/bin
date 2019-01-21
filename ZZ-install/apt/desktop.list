@@ -42,9 +42,9 @@ simple-scan
 smplayer
 synaptic
 system-config-printer
-thunderbird
-thunderbird-locale-en
-thunderbird-locale-en-us
+evolution
+empathy
+checkinstall
 transmission-gtk
 ttf-bitstream-vera
 ttf-dejavu-core
