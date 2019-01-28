@@ -22,7 +22,7 @@
     tool = vimdiff
 
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = /home/timothy/.gitignore_global
 
 [receive]
     denyCurrentBranch = updateInstead
