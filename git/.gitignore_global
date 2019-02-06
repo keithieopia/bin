@@ -5,3 +5,4 @@
 # http://egorsmirnov.me/2015/05/04/global-gitignore-file.html
 
 .Trash-*
+*.save
