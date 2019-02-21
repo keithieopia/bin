@@ -1,14 +1,11 @@
 #!/bin/bash
 
 FILENAME=$(basename "$1")
-
-NAME=${FILENAME%.*}
-HASH=$(echo $NAME | egrep -o "[0-9A-F]{8}")
-UNGARBAGE=$(echo $NAME | tr -d '\\()[]' | sed -r "s/${HASH}//" | sed -r 's/1920x1080//;s/[bB]lu-[rR]ay//;s/FLAC//' | sed -r 's/__//g;s/_/ /g')
+NAME="${FILENAME%.*}""
 
 # https://trac.ffmpeg.org/wiki/Encode/H.264
 pv "$FILENAME" | ffmpeg -i pipe:0 \
 	-hide_banner -loglevel fatal \
 	-vf scale=-1:720 -c:v libx264 -crf 18 -preset medium -tune animation \
 	-c:a mp3 -scodec copy \
-	"${UNGARBAGE}_720p.mkv"
+	"${NAME}_720p.mkv"
