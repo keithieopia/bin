@@ -1,1 +1,2 @@
-Acquire::http::Proxy "http://10.0.0.50:3142";
+//Acquire::http::Proxy "http://10.0.0.50:3142";
+Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-localnet-proxy.sh";
