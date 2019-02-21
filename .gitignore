@@ -5,3 +5,5 @@ bin/bin/piu
 lost+found/
 neovim/.local/share/nvim/plugged
 neovim/.local/share/nvim/shada
+grub/etc/default/grub.ucf-dist
+*.swp
