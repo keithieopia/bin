@@ -70,3 +70,4 @@ libvulkan1
 mesa-vulkan-drivers 
 vulkan-utils 
 libreoffice-impress
+ssh-askpass
