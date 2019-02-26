@@ -22,6 +22,7 @@ netplan.io
 net-tools
 nodejs
 npm
+openssh-server
 optipng
 p7zip
 p7zip-full
