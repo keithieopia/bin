@@ -20,9 +20,9 @@ alias wget='wget -c'
 
 if uname | grep -s Linux; then
 	# GNU coreutils only
-	alias ls='ls --color=auto --group-directories-first'
+	alias ls='ls --color=auto --group-directories-first -FG'
 else
-	alias ls='ls --color=auto'
+	alias ls='ls --color=auto -FG'
 fi
 
 # Fix noisy apps to be silent
