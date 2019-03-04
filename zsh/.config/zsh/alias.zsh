@@ -12,12 +12,18 @@ alias ps='ps auxf'
 alias du='du -ch'
 alias mkdir='mkdir -p -v'
 alias dir='dir --color=auto'
-alias ls='ls --color=auto --group-directories-first'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
 alias wget='wget -c'
+
+if uname | grep -s Linux; then
+	# GNU coreutils only
+	alias ls='ls --color=auto --group-directories-first'
+else
+	alias ls='ls --color=auto'
+fi
 
 # Fix noisy apps to be silent
 alias retext='retext >/dev/null 2>&1'
