@@ -8,7 +8,7 @@ alias cp="cp -iv"
 alias mv="mv -iv"
 
 # defaults to built-in programs
-alias ps='ps auxf'
+alias ps='ps -auxf'
 alias du='du -ch'
 alias mkdir='mkdir -p -v'
 alias dir='dir --color=auto'
@@ -29,12 +29,12 @@ fi
 alias retext='retext >/dev/null 2>&1'
 
 # defaults to optional programs
-if type shred &> /dev/null; then 
+if type shred &> /dev/null; then
 	alias shred='shred -fuzvn 1'
 fi
 
 # replace built-ins with better programs if we have them
-if type colordiff &> /dev/null; then 
+if type colordiff &> /dev/null; then
 	alias diff='colordiff'
 fi
 
@@ -80,7 +80,7 @@ alias syslog='journalctl -u '
 
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
-# yes it's a function, but it's an alias that only triggers on a 
+# yes it's a function, but it's an alias that only triggers on a
 # certain flag
 
 dpkg() {
