@@ -1,4 +1,4 @@
-# run before loading oh-my-zsh compleat 
+# run before loading oh-my-zsh compleat
 # https://github.com/robbyrussell/oh-my-zsh/issues/3234
 autoload -Uz compinit
 compinit
@@ -10,7 +10,6 @@ antigen bundle git
 antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle pass
-antigen bundle ssh-agent
 antigen bundle docker
 antigen bundle pip
 antigen bundle sudo
@@ -71,17 +70,17 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	# If running inside ssh, do nothing
 else
 	# Run the following if not in SSH
-	
+
 	# Set the color scheme
 	~/.config/zsh/base16/base16-solarized-dark.sh
 
     # if we're *not* in a virtual terminal...
 	if ! tty | grep -q /dev/pts; then
-	
+
 	    # and we have tmux and it's not running, start it
 	    if type tmux > /dev/null && [ -z "$TMUX" ]; then
 	        tmux
-			
+
 			# exit zsh when we exit tmux
 		    exit
 		fi
@@ -89,7 +88,7 @@ else
 fi
 
 #
-# output only if we're in a virtual terminal 
+# output only if we're in a virtual terminal
 #
 if tty | grep -q /dev/pts; then
 	if [ -f "~/.config/zsh/remind.zsh" ]; then
