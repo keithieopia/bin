@@ -1,3 +1,8 @@
+# update dotfiles automatically
+if [ -f "${HOME}/.config/zsh/dotfiles-autoupdate.zsh" ]; then
+	source "${HOME}/.config/zsh/dotfiles-autoupdate.zsh"
+fi
+
 # run before loading oh-my-zsh compleat
 # https://github.com/robbyrussell/oh-my-zsh/issues/3234
 autoload -Uz compinit
