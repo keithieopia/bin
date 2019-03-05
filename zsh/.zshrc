@@ -3,21 +3,37 @@
 autoload -Uz compinit
 compinit
 
-# antigen & oh-my-zsh plugin manager
-source ~/.config/zsh/antigen.zsh  # must be first
-antigen use oh-my-zsh             # must be second
-antigen bundle git
-antigen bundle command-not-found
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle pass
-antigen bundle docker
-antigen bundle pip
-antigen bundle sudo
-antigen bundle ufw
-antigen bundle yarn
-antigen bundle compleat          # fyi this is not a misspelled
-antigen bundle wd
-antigen bundle apply             # must be last
+# clone zgen if not present
+if [ ! -d "${HOME}/.zgen" ]; then
+	git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+fi
+
+# sanity check for above failing: 
+# source zgen only if it exists
+if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
+	source "${HOME}/.zgen/zgen.zsh"
+
+	if ! zgen saved; then
+		# specify plugins here
+		zgen oh-my-zsh
+		zgen oh-my-zsh plugins/git
+		zgen oh-my-zsh plugins/sudo
+		zgen oh-my-zsh plugins/command-not-found
+		zgen oh-my-zsh plugins/pass
+		zgen oh-my-zsh plugins/compleat
+		zgen oh-my-zsh plugins/yarn
+		zgen oh-my-zsh plugins/wd
+		
+		# Linux only plugins
+		if uname | grep -s Linux >/dev/null; then
+			zgen oh-my-zsh plugins/ufw
+		fi
+
+		# generate the init script from plugins above
+        zgen save
+	fi
+fi
+
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
