@@ -18,7 +18,7 @@ alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
 alias wget='wget -c'
 
-if uname | grep -s Linux; then
+if uname | grep -s Linux > /dev/null; then
 	# GNU coreutils only
 	alias ls='ls --color=auto --group-directories-first -FG'
 else
