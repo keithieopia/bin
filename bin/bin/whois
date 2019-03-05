@@ -1,4 +1,20 @@
 #!/bin/bash
 
-# remove the huge notice from output and query a sane server
-/usr/bin/whois -h whois.internic.net "$1" | sed '/NOTICE:/q' | head -n -4 -
+if [ "$1" = "-h" ]; then
+cat <<EOF
+DESCRIPTION:
+  a lightweight netcat replacement for the original whois program
+  normally whois results include a giant block of legal text, this
+  script parses that out to increase readability
+
+USAGE:
+  whois [DOMAIN]
+
+INFO:
+  github.com/keithieopia/bin
+  MIT License
+EOF
+exit
+fi
+
+echo "$@" | nc whois.internic.net 43 | sed '/NOTICE:/q' | head -n -4 -
