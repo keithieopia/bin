@@ -8,7 +8,7 @@ DESCRIPTION:
   script parses that out to increase readability
 
 USAGE:
-  whois [DOMAIN]
+  whois [DOMAIN / IP]
 
 INFO:
   github.com/keithieopia/bin
