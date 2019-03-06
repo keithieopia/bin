@@ -1,29 +1,28 @@
 # dotfiles: ~/bin
-These are the shell scripts I have in my `$PATH`. Most are quite useful, 
-but some are simply novelties to see if a certain problem could be 
+These are the shell scripts I have in my `$PATH`. Most are quite useful,
+but some are simply novelties to see if a certain problem could be
 solved in a humble shell script.
 
-You may want to visit the main repo [README.md](https://github.com/keithieopia/dotfiles/blob/master/README.md) 
+You may want to visit the main repo [README.md](https://github.com/keithieopia/dotfiles/blob/master/README.md)
 first, if you came here directly from somewhere else.
 
 ## Table of Contents:
 
 - `fun/`
 	- `busy`: Look busy to those annoying people who shoulder surf
-	- `disco`: 
-	   Randomly colored lights in the terminal. For a more wholesome 
-	   experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M) 
+	- `disco`:
+	   Randomly colored lights in the terminal. For a more wholesome
+	   experience, [play this](https://www.youtube.com/watch?v=A_sY2rjxq6M)
 	   simultaneously.  
 	   *Author: [Aaron Toponce](https://pthree.org/2016/01/21/using-your-monitors-as-a-cryptographically-secure-pseudorandom-number-generator/) // License: public domain*
 	- `quotes`: Random curated quotes in a easy to understand all-in-one format (compared to [fortune](https://en.wikipedia.org/wiki/Fortune_%28Unix%29))
 	- `swatch-internet-time`: get the current [internet time](https://en.wikipedia.org/wiki/Swatch_Internet_Time) / .beat time; a form of decimal time created by Swatch for their "Beat" watches
-	- `rand-uncyclopedia`: 
-	  random nonsensical snippets from [Uncyclopedia](http://uncyclopedia.wikia.com/wiki/Main_Page). 
-	  A hilarious replacement for fortune or MOTDs. Found in a /r/linux 
+	- `rand-uncyclopedia`:
+	  random nonsensical snippets from [Uncyclopedia](http://uncyclopedia.wikia.com/wiki/Main_Page).
+	  A hilarious replacement for fortune or MOTDs. Found in a /r/linux
 	  reddit thread: "*[A simple and hilarious replacement for fortune](https://www.reddit.com/r/linux/comments/6lx7qr/a_simple_and_hilarious_replacement_for_fortune/)*".  
 	  *Author: [/u/keenerd](https://www.reddit.com/user/keenerd) // License: assumed to be attribution-only*
 
-- [wallpaper/](https://github.com/keithieopia/bin/blob/master/wallpaper/README.md)
 - `backup`: Automatically backup using rsync and tar.gz if space is available
 - `base64-img`: Convert an image to base64, suitable for [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) for HTML or CSS
 - `clean`: Erases files, directories, browser cache, junk files, history files, and slack space
@@ -56,6 +55,5 @@ first, if you came here directly from somewhere else.
 - `youtube-play`: Stream a youtube video using mpv, or fallback to downloading and playing it locally
 
 ## Usage
-Complex shell scripts *usually* include a help/usage statement that can 
+Complex shell scripts *usually* include a help/usage statement that can
 be invoked by passing the typical `-h` flag.
-
