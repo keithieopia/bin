@@ -66,6 +66,7 @@ alias lsd='ls -l | grep "^d"' # list only dirs
 alias ll='ls -lhA --color | less -R'
 alias ports='sudo lsof -i -n -P' # list open ports / running network services
 alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
+alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # sudo
 alias sedit='sudo nvim'
