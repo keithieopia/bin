@@ -71,3 +71,4 @@ mesa-vulkan-drivers
 vulkan-utils 
 libreoffice-impress
 ssh-askpass
+xserver-xorg-input-evdev
