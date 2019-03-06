@@ -13,7 +13,7 @@ I have in my `$PATH`. *You know... dotfiles*.
 #### Table of Contents
 - [Overview](#overview)
 - `~/bin` **[Shell Script Listings](https://github.com/keithieopia/dotfiles/tree/master/bin/bin#dotfiles-bin)**
-- [Installing](#stow)
+- [Installing](#install)
 - [Feedback](#feedback)
 - [Author](#author)
 
@@ -28,54 +28,47 @@ know what that entails. *Here be dragons!*
 <a name="overview"></a>
 Here's a high level overview if you just want to see what I use:
 
-| Category           | Program                                                                              |
-| ------------------ | ------------------------------------------------------------------------------------ |
-| **Distro**:        | [Xubuntu](https://xubuntu.org/)                                                      |
-| **Browser**:       | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                                |
-| **Shell**:         | [Zsh](http://zsh.sourceforge.net/)                                                   |
-| **Shell Plugins**: | [Antigen](http://antigen.sharats.me/) & [Oh-My-Zsh](http://ohmyz.sh/)                |
-| **Shell Theme**:   | [Solarized Dark](https://ethanschoonover.com/solarized/)                             |
-| **Editor**:        | [Neovim](https://neovim.io/)                                                         |
-| **IDE**:           | [Geany](https://www.geany.org/)                                                      |
+| Category           | Program                                                                     |
+| ------------------ | --------------------------------------------------------------------------- |
+| **Distro**:        | [Xubuntu](https://xubuntu.org/)                                             |
+| **Browser**:       | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                       |
+| **Shell**:         | [Zsh](http://zsh.sourceforge.net/)                                          |
+| **Shell Plugins**: | [zgen](https://github.com/tarjoilija/zgen) & [Oh-My-Zsh](http://ohmyz.sh/)  |
+| **Shell Theme**:   | [Solarized Dark](https://ethanschoonover.com/solarized/)                    |
+| **Editor**:        | [Neovim](https://neovim.io/)                                                |
+| **IDE**:           | [Geany](https://www.geany.org/) & [Atom](https://atom.io/)                  |
 
 ## Installation / Managing
-<a name="stow"></a>
-These dotfiles are managed with [stow](http://www.gnu.org/software/stow/),
-which allows you to group dotfiles based on the programs they configure.
-Thus, you can pick and choose which dotfiles you want to install.  
+<a name="install"></a>
 
-For instance, to install all the related bash dotfiles:
+Installation and day-to-day management requires only git as a dependency. No
+other tools or symlinking are required:
 
-```console
-$ cd ~  
-$ git clone https://github.com/keithieopia/dotfiles.git  
-$ cd ~/dotfiles  
-$ stow bash
-```
 
-Some dirs are for system config files, like those found in `/etc`. For
-those, pass the `-t /` flag as root. Example for OpenSSH server configs:
+### Install
 
 ```console
-$ sudo stow -t / sshd
+$ mkdir ~/dotfiles-staging  
+$ git clone --separate-git-dir=~/.dotfiles https://github.com/keithieopia/dotfiles.git dotfiles-staging
+$ cp -r ~/dotfiles-staging ~
+$ rm -r ~/dotfiles-staging/
 ```
 
-### This seems to be a pain... how do you *really* manage it?
-
-With a Makefile, believe it or not. It has targets for all my machines
-by hostname, which auto installs all of the relevant stow targets. It
-sounds more complicated than it is, but makes installation a breeze. All
-I end up running is:
+Setting an `alias` will make management easier, the below is already included in
+`.config/zsh/alias.zsh`:
 
 ```console
-$ cd ~/dotfiles && make
+$ alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 ```
+### Management
 
-...and I'm all setup! For new hosts not in the Makefile, I have some
-default targets, like "desktop" or "servers" that I can use. If you have
-several hosts with different stow targets, I recommend you tryout using
-`make` instead of overthinking the problem.
+Day-to-day workflow is the same, just simply replace `git` with `dots`. For instance:
 
+```console
+$ dots add ~/.bashrc
+$ dots commit
+$ dots push
+```
 
 ## Feedback
 I would love your feedback! If you found any of these configs or scripts
