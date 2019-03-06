@@ -12,7 +12,7 @@ I have in my `$PATH`. *You know... dotfiles*.
 
 #### Table of Contents
 - [Overview](#overview)
-- `~/bin` **[Shell Script Listings](https://github.com/keithieopia/dotfiles/tree/master/bin/bin#dotfiles-bin)**
+- `~/bin` **[Shell Script Listings](https://github.com/keithieopia/dotfiles/tree/master/bin#dotfiles-bin)**
 - [Installing](#install)
 - [Feedback](#feedback)
 - [Author](#author)
