@@ -1,9 +1,6 @@
-remind/.config/remind/google-calendar
-bin/bin/autostart
-piu
-bin/bin/piu
+.config/remind/google-calendar
+bin/autostart
+bin/piu
 lost+found/
-neovim/.local/share/nvim/plugged
-neovim/.local/share/nvim/shada
-grub/etc/default/grub.ucf-dist
-*.swp
+.local/share/nvim/plugged
+.local/share/nvim/shada
