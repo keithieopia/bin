@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if pgrep -x dd > /dev/null; then
-    pkill -SIGUSR1 dd
-else
-    echo "dd is not running!"
-    exit 1
-fi

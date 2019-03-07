@@ -2,59 +2,67 @@
 # alias
 #
 
-# safer commands
-alias rm="rm -Iv"
-alias cp="cp -iv"
-alias mv="mv -iv"
+# helper function to see if programs are installed
+have() { command -v foo >/dev/null 2>&1 ; }
 
-# defaults to built-in programs
+################################################################################
+# default flags to built-in programs
+##
+
 alias ps='ps -auxf'
-alias du='du -ch'
-alias mkdir='mkdir -p -v'
+alias du='du -ach 2>/dev/null | sort -h | less'
+alias mkdir='mkdir -pv'
 alias dir='dir --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
 alias wget='wget -c'
+alias free='free -ht'
 
-if uname | grep -s Linux > /dev/null; then
+# safer commands
+alias rm="rm -Iv"
+alias cp="cp -iv"
+alias mv="mv -iv"
+
+have shred && alias shred='shred -fuzvn 1'
+
+################################################################################
+# if available, replace coreutils with more feature rich programs
+##
+
+have colordiff && alias diff='colordiff'
+have dcfldd && alias dd='dcfldd'
+have top && alias top='htop'
+have pydf && alias df='pydf'
+have ncdu && alias du='ncdu'
+have gpg2 && alias gpg='gpg2'
+
+################################################################################
+# ls
+##
+
+if ls --version | grep -q GNU; then
 	# GNU coreutils only
-	alias ls='ls --color=auto --group-directories-first -FG'
+	alias ls='ls --color --group-directories-first -AFh'
 else
-	alias ls='ls --color=auto -FG'
+	# BSD like
+	alias ls='ls -AFhG'
 fi
 
-# Fix noisy apps to be silent
-alias retext='retext >/dev/null 2>&1'
+# k is a zsh plugin (see .zshrc)
+alias l='k -h --group-directories-first'
+alias ll='k -h --group-directories-first | less -R'
+alias lsd='k -h -d' # list only directories
 
-# defaults to optional programs
-if type shred &> /dev/null; then
-	alias shred='shred -fuzvn 1'
-fi
+# steam trains are nice, but this suits me better
+alias sl='ls $@ | lolcat'
 
-# replace built-ins with better programs if we have them
-if type colordiff &> /dev/null; then
-	alias diff='colordiff'
-fi
-
-if type dcfldd &> /dev/null; then
-	alias dd='dcfldd'
-fi
-
-if type htop &> /dev/null; then
-	alias top='htop'
-fi
-
-if type pydf &> /dev/null; then
-	alias df='pydf'
-fi
-
-if type gpg2 &> /dev/null; then
-	alias gpg='gpg2'
-fi
-
+################################################################################
 # new commands
+##
+
+# navigation
 alias ~='cd $HOME && clear'
 alias ..="cd .."
 alias ...="cd ../.."
@@ -62,19 +70,34 @@ alias ....="cd ../../.."
 
 alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
-alias epoch='date +%s'
-alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
+alias timestamp='date +%s'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias copy='rsync -WaPh ' # cp with progress indicator
-alias lsd='ls -l | grep "^d"' # list only dirs
-alias ll='ls -lhA --color | less -R'
-alias ports='sudo lsof -i -n -P' # list open ports / running network services
-alias psgrep='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
+alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
 alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
+alias ddstatus='pgrep -x dd && pkill -SIGUSR1 dd || echo "dd is not running!"'
+alias search="ddg" # see functions.zsh 
+
+# git
+alias push='git push'
+alias clone='git clone'
+alias undopush='git push -f origin HEAD^:master'
+alias undocommit='git reset --soft HEAD~1'
+
+# permissions
+alias chrw='chmod ug+rw'
+alias chx='chmod +x'
+alias mine='sudo chown ${USER}:${USER}'
+
+# networking
+alias openports='sudo lsof -i -n -P' # list open ports / running network services
+alias ip='curl ifconfig.me'
+alias whois='echo $1 | nc whois.internic.net 43 | sed '/NOTICE:/q' | head -n -4 -'
 
 # sudo
+alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
 alias sedit='sudo nvim'
-alias ufw='sudo ufw'
 
 # services
 alias start='sudo systemctl start '
@@ -82,16 +105,3 @@ alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
 alias status='systemctl status '
 alias syslog='journalctl -u '
-
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
-
-# yes it's a function, but it's an alias that only triggers on a
-# certain flag
-
-dpkg() {
-	if [ "$1" = "-i" ]; then
-		sudo /usr/bin/dpkg "$@"
-	else
-		/usr/bin/dpkg "$@"
-	fi
-}

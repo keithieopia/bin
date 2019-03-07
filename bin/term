@@ -1,6 +1,0 @@
-#!/bin/sh
-
-if ! urxvtc "$@" 2>/dev/null; then
-  urxvtd -q -o -f
-  urxvtc "$@"
-fi

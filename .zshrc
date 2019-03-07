@@ -28,6 +28,7 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen oh-my-zsh plugins/compleat
 		zgen oh-my-zsh plugins/yarn
 		zgen oh-my-zsh plugins/wd
+		zgen load supercrabtree/k
 
 		# Linux only plugins
 		if uname | grep -s Linux >/dev/null; then
@@ -35,7 +36,7 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		fi
 
 		# generate the init script from plugins above
-        zgen save
+		zgen save
 	fi
 fi
 
