@@ -56,6 +56,10 @@ fi
 
 # new commands
 alias ~='cd $HOME && clear'
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
 alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias epoch='date +%s'
