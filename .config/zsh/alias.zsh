@@ -42,7 +42,7 @@ have gpg2 && alias gpg='gpg2'
 # ls
 ##
 
-if ls --version | grep -q GNU; then
+if ls --version 2>/dev/null | grep -q GNU; then
 	# GNU coreutils only
 	alias ls='ls --color --group-directories-first -AFh'
 else
@@ -74,7 +74,6 @@ alias timestamp='date +%s'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias copy='rsync -WaPh ' # cp with progress indicator
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
-alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias dsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
 alias ddstatus='pgrep -x dd && pkill -SIGUSR1 dd || echo "dd is not running!"'
 alias search="ddg" # see functions.zsh 
