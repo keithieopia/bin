@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 success() {
     echo -e "$(tput setaf 2)$@$(tput sgr0)"
@@ -16,29 +16,40 @@ error() {
 if [ -z "$1" ]; then
     error "You must specify an image to mount!"
 else
-    if [ ! -f "$*" ]; then
+    if [ ! -f "$1" ]; then
         error "That image does not exist!"
     fi
 fi
 
- if [ "$EUID" -ne 0 ]; then
-    if [ -z "$SUDO_COMMAND" ]; then
-        warn "This script must be run as root, recalling self with sudo..."
-        sudo $0 $*
-        exit 0
-    else
-        error "This script must be run as root"
-    fi
+if test "$(id -u)" -ne "0"; then
+	error "This script must be run as root"
+	exit 1
 fi
 
-if [ -d "/mnt/cdrom" ]; then
-    if mount | grep /mnt/cdrom > /dev/null; then
-        error "A CD-ROM has already been mounted..."
-    fi
-else
-    mkdir -p /mnt/cdrom
+mkdir -p /mnt/cdrom
+
+
+if mount | grep -q /mnt/cdrom; then
+	warn "A CD-ROM has already been mounted, unmounting..."
+
+	if uname | grep -q Linux; then
+		umount /mnt/cdrom
+	elif uname | grep -q FreeBSD; then
+		DEVICE=$(mount | grep /mnt/cdrom | awk '{print $1} | head -1')
+		umount /mnt/cdrom
+		
+		if echo $DEVICE | grep -q md; then
+			mdconfig -d -u $(echo $DEVICE | tail -c 2)
+		fi
+	fi
 fi
 
-mount -o loop -t iso9660 "$*" /mnt/cdrom
+if uname | grep -q Linux; then
+	mount -o loop -t iso9660 "$1" /mnt/cdrom
+elif uname | grep -q FreeBSD; then
+	MD=$(mdconfig -a -t vnode -f "$1")
+	mount -t cd9660 /dev/$MD /mnt/cdrom
+fi
+
 cd /mnt/cdrom
 ls -l
