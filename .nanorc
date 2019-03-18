@@ -1,9 +1,6 @@
 ## Use auto-indentation.
 set autoindent
 
-## Do backwards searches by default.
-set backwards
-
 ## Constantly display the cursor position in the statusbar.  Note that
 ## this overrides "quickblank".
 #set const
@@ -81,19 +78,24 @@ set wordbounds
 ## Spellcheck program
 set speller "aspell -x -c"
 
-## Syntax Highlighting
+# syntax highlighting
 
-# Ubuntu has these, but not Debian, so they're in this repo:
-include ~/.config/nano/default.nanorc
-include ~/.config/nano/javascript.nanorc
-include ~/.config/nano/json.nanorc
-include ~/.config/nano/changelog.nanorc
-
-include /usr/share/nano/css.nanorc
-include /usr/share/nano/html.nanorc
-include /usr/share/nano/man.nanorc
-include /usr/share/nano/nanorc.nanorc
-include /usr/share/nano/php.nanorc
-include /usr/share/nano/python.nanorc
-include /usr/share/nano/sh.nanorc
-include /usr/share/nano/xml.nanorc
+include /usr/local/share/nano/c.nanorc
+include /usr/local/share/nano/changelog.nanorc
+include /usr/local/share/nano/cmake.nanorc
+include /usr/local/share/nano/css.nanorc
+include /usr/local/share/nano/default.nanorc
+include /usr/local/share/nano/go.nanorc
+include /usr/local/share/nano/html.nanorc
+include /usr/local/share/nano/javascript.nanorc
+include /usr/local/share/nano/json.nanorc
+include /usr/local/share/nano/makefile.nanorc
+include /usr/local/share/nano/nanorc.nanorc
+include /usr/local/share/nano/patch.nanorc
+include /usr/local/share/nano/php.nanorc
+include /usr/local/share/nano/postgresql.nanorc
+include /usr/local/share/nano/python.nanorc
+include /usr/local/share/nano/ruby.nanorc
+include /usr/local/share/nano/rust.nanorc
+include /usr/local/share/nano/sh.nanorc
+include /usr/local/share/nano/xml.nanorc
