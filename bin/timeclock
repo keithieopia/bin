@@ -6,43 +6,153 @@ if [ ! -f $LOG ]; then
 	touch $LOG
 fi
 
+
+TIMESTAMP=$(date +%s)
+BIWEEKLY_OFFSET=0
+BIWEEKLY_KNOWN="2019-01-21"
+BIWEEKLY_START=$(date -jf "%Y-%m-%d %H%M%S" "$BIWEEKLY_KNOWN 000000" +%s)
+
+while [ $TIMESTAMP -gt $BIWEEKLY_START ]; do
+	BIWEEKLY_OFFSET=$(echo "${BIWEEKLY_OFFSET} + 14" | bc)
+	BIWEEKLY_START=$(date -v+${BIWEEKLY_OFFSET}d -jf "%Y-%m-%d %H%M%S" "${BIWEEKLY_KNOWN} 000000" +%s)
+done
+
+PERIOD_START=$(date -v-14d -jf "%s" $BIWEEKLY_START "+%s")
+PERIOD_END=$(date -v-1d -jf "%s" $BIWEEKLY_START "+%s")
+
+
 LINES=$(wc -l $LOG | awk '{print $1}')
+LINES=$(echo "$LINES - 1" | bc) # remove ending newline from count
 
-if [ -n "$1" ]; then
-	if echo $1 | grep -q "start"; then
-		if [ "$(( LINES % 2))" -ne 0 ]; then
-			echo "already clocked in"
-			exit 1
+human_hours() {
+	h=$(echo "${1}/3600" | bc)
+	m=$(echo "(${1}%3600)/60" | bc)
+	printf "%01d:%02d\n" $h $m
+}
+
+log() {
+	SET=$(echo "$LINES + 2" | bc)
+	PREVDATE="0000"
+
+	while [ $SET -gt 0 ]; do
+		TIMES=$(cat $LOG | tail -${SET} | head -2)
+		START=$(echo "$TIMES" | tail -2 | head -1)
+		END=$(echo "$TIMES" | tail -1)
+
+		CURRDATE=$(date -jf '%s' $START '+%m%d')
+		if [ "$PREVDATE" -eq "$CURRDATE" ]; then
+			echo -n "      | "
+			echo -n $(date -jf '%s' $START '+%I:%M %p') 
+		else
+			echo -n $(date -jf '%s' $START '+%m/%d | %I:%M %p')
 		fi
+		PREVDATE=$CURRDATE
 
-		echo "clocked in"
-		date +%s >> "$LOG"
-	elif echo $1 | grep -q "stop"; then
-		if [ "$(( LINES % 2))" -eq 0 ]; then
-			echo "already clocked out"
-			exit 1
+		if [ $START -ne $END ]; then 
+			echo -n " - "
+			date -jf '%s' $END '+%I:%M %p'
+		else
+			echo " ~ " 
 		fi
-
-		date +%s >> "$LOG"
-
-		START=$(cat $LOG | tail -2 | head -1)
-		END=$(cat $LOG | tail -1)
-		DIFF=$(expr "${END}" - "${START}")
-
-		echo "clocked out!"
-		echo -n "worked a total of "
 		
-		h=$(echo "${DIFF}/3600" | bc)
-		m=$(echo "(${DIFF}%3600)/60" | bc)
-		printf "%01d:%02d\n" $h $m
-	else
-		echo "unknown command"
-		exit 1
+		SET=$(echo "$SET - 2" | bc)
+	done
+}
+
+payperiod_total() {
+	WORKED=0
+
+	if [ "$((LINES % 2))" -ne 0 ]; then
+		SET=$(echo "$LINES + 1" | bc)
+		HOURS=$(cat "$LOG" | head -${SET})
+	else 
+		SET=$(echo "$LINES + 2" | bc)
+		HOURS=$(cat $LOG)
 	fi
+	
+	while [ $SET -gt 0 ]; do
+		TIMES=$(echo "$HOURS" | tail -${SET} | head -2)
+
+		START=$(echo "$TIMES" | tail -2 | head -1)
+		END=$(echo "$TIMES" | tail -1)
+
+		if [ $START -gt $PERIOD_START ] && [ $START -lt $PERIOD_END ]; then
+			WORKED=$(echo "($END - $START) + $WORKED" | bc)
+		fi
+
+		SET=$(echo "$SET - 2" | bc)
+	done
+
+	echo -n "PAYPERIOD:    "
+	human_hours $WORKED
+}
+
+
+
+echo -n "$(date -jf '%s' $PERIOD_START '+%-m/%d') - $(date -jf '%s' $PERIOD_END '+%-m/%d')"
+echo " | $(echo "($PERIOD_END - $TIMESTAMP) / 86400" | bc) days left"
+echo "------------------------------"
+echo 
+	
+if [ -n "$1" ]; then
+	case $1 in
+		start)
+			if [ "$(( LINES % 2))" -ne 0 ]; then
+				echo "ERROR: already clocked in"
+				exit 1
+			fi
+
+			date +%s >> "$LOG"
+		
+			echo "STATUS:       clocked in"
+
+			payperiod_total
+			;;
+
+		stop)
+			if [ "$(( LINES % 2))" -eq 0 ]; then
+				echo "ERROR: already clocked out"
+				exit 1
+			fi
+
+			date +%s >> "$LOG"
+
+			echo "STATUS:       clocked out!"
+
+			START=$(cat $LOG | tail -2 | head -1)
+			END=$(cat $LOG | tail -1)
+
+			echo -n "HOURS WORKED: "
+			human_hours $(echo "$END - $START" | bc)
+		
+			payperiod_total
+			;;
+
+		log)
+			log
+			;;
+
+		*)
+			echo "unknown command"
+			exit 1
+			;;
+	esac
 else
 	if [ "$(( LINES % 2))" -ne 0 ]; then
-		echo "currently on the clock"
+		echo "STATUS:       on the clock "
+		
+		START=$(cat $LOG | tail -1)
+		END=$(date +%s)
+
+		echo -n "STARTED:      $(date -jf '%s' $START '+%-I:%M %p') ("
+
+		echo -n $(human_hours $(echo "$END - $START" | bc))
+		echo " hours)"
 	else
-		echo "currently clocked out"
+		echo "clocked out"
+		echo "-----------"
+		echo
 	fi
+
+	payperiod_total
 fi
