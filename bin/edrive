@@ -1,0 +1,64 @@
+#!/bin/sh
+
+if test "$(id -u)" -ne "0"; then
+	echo "this script must run as root"
+	exit 1
+fi
+
+if [ -z "$1" ]; then
+	for file in $(find /dev -name 'da*p*'); do
+		if geli version $file > /dev/null 2>&1; then
+			echo "Found geli partition at $file"
+			DRIVE=$(basename $file)
+		fi 
+	done
+
+	if [ -z "$DRIVE" ]; then
+		echo "Could not find any geli partitions"
+		exit 1
+	fi
+else
+	if ! [ -c "/dev/$1" ]; then
+		echo "/dev/$1 does not exist!"
+		exit 1
+	fi
+
+	if ! geli version /dev/$1 > /dev/null; then
+		echo "/dev/$1 is not a geli partition"
+		exit 1
+	fi 
+
+	DRIVE="$1"
+fi
+
+if mount | grep -q "/dev/${DRIVE}.eli on /mnt/$DRIVE"; then
+	#sudo umount /mnt/backup
+	#sudo geli detach /dev/$1
+	
+	echo "$DRIVE is already unlocked and mounted"
+	read -r -p "Close it? [Y/n] " input
+	case $input in
+		[nN])
+			echo "Nothing to do, exiting..."
+			exit
+			;;
+		*)
+			echo "Closing $DRIVE"
+			sudo umount /mnt/$DRIVE
+			sudo geli detach /dev/$DRIVE
+			if ! [ "$(ls -A /mnt/$DRIVE)" ]; then
+				sudo rmdir /mnt/$DRIVE
+			fi
+			;;
+
+	esac
+else
+	sudo geli attach /dev/$DRIVE && {
+		sudo mkdir -p /mnt/$DRIVE
+		sudo mount /dev/${DRIVE}.eli /mnt/$DRIVE
+	
+		cd /mnt/$DRIVE
+		ls
+	}
+fi
+
