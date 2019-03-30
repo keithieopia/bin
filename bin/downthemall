@@ -1,112 +1,102 @@
 #!/usr/bin/env bash
 
-PROG="curl -g -C - -O"
 JOBS=3
-EXT=0
+JOBLOG=/tmp/$(basename $0)
+YOUTUBEDL="youtube-dl --no-playlist --no-warnings -c --"
+PROG="curl --progress-bar -g -L -O -C - --"
 LIST=0
 
 usage () {
 cat <<HELP
 Download a list of URLs simultaneously
 
-Usage: $(basename "$0") [-yc] [-j NUM] [-f FILE] [-w URL] [-x EXT]
-   -c : use curl to download (default)
-   -y : use youtube-dl to download
+Usage: $(basename "$0") [-yc] [-j NUM] [-f FILE]
+	-c : use curl to download
+		 (default is youtube-dl)
 
-   -j : number of simultaneous downloads
-   
-   -f : file containing list of URLs to download
-   -w : download all of the files linked in the provided webpage 
-        use this for open directories, file listings, or index pages)
+	-j : number of simultaneous downloads
 
-   -x : limit downloads to the following file extensions
-        you probably want this -w, unless you truly want to download 
-        everything on the page
+	-f : file containing list of URLs to download
 
 Note:
-   $(basename "$0") has built-in sane defaults, only
-   advanced users should set the above flags
+	$(basename "$0") has built-in sane defaults, only
+	advanced users should set the above flags
 
 
 https://github.com/keithieopia/bin/
 
-Copyright (c) 2018 Timothy Keith
+Copyright (c) 2018-2019 Timothy Keith
 Licensed under the MIT license.
 HELP
 }
 
-while getopts "hyc:j:w:x:f:" opt; do
-  case $opt in
-	h)
-	  usage
-	  exit
-	  ;;
-    y)
-      hash youtube-dl 2>/dev/null || { echo >&2 "This option requires the program \"youtube-dl\" to be installed"; exit 1; }
 
-	  PROG="youtube-dl"
-      ;;
-    c)
-	  hash curl 2>/dev/null || { echo >&2 "This option requires the program \"curl\" to be installed"; exit 1; }
-      ;;
-    j)
-      JOBS=$OPTARG
-      ;;
-    x)
-      EXT=$OPTARG
-      ;;
-    w)
-	  hash lynx 2>/dev/null || { echo >&2 "This option requires the program \"lynx\" to be installed"; exit 1; }
+while getopts "hyc:j:f:" opt; do
+	case $opt in
+		h)
+		usage
+		exit
+		;;
 
-      LIST=$(mktemp)
-      lynx -dump -listonly "$OPTARG" | awk '{$1=""}1' | sed -e 's/^[ \t]*//' > $LIST
-      ;;
-    f)
-      if [ -f "$OPTARG" ]; then
-		LIST=$OPTARG
-      else
-		echo "ERROR: could not find file: $OPTARG"
+		c)
+		hash curl 2>/dev/null || { echo >&2 "This option requires the program \"curl\" to be installed"; exit 1; }
+		PROG=$CURL
+		;;
+
+		y)
+		hash youtube-dl 2>/dev/null || { echo >&2 "This option requires the program \"youtube-dl\" to be installed"; exit 1; }
+		PROG=$YOUTUBEDL
+		;;
+
+		j)
+		JOBS=$OPTARG
+		;;
+
+		f)
+		if [ -f "$OPTARG" ]; then
+			LIST=$OPTARG
+		else
+			echo "ERROR: could not find file: $OPTARG"
+			exit 1
+		fi
+		;;
+
+		\?)
+		echo "Invalid option: -$OPTARG" >&2
 		exit 1
-	  fi
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      exit 1
-      ;;
-    :)
-      echo "Option -$OPTARG requires an argument." >&2
-      exit 1
-      ;;
-  esac
+		;;
+
+		:)
+		echo "Option -$OPTARG requires an argument." >&2
+		exit 1
+		;;
+	esac
 done
-
-if [ $OPTIND -eq 1 ]; then 
-	usage
-	exit 1
-fi
-
 shift $((OPTIND -1))
-
-
 
 if [[ "$LIST" == "0" ]]; then
 	if [ -f "./download.txt" ]; then
 		LIST="download.txt"
 	else
 		echo "ERROR: No input provided."
-		echo "       Set the -f or -w flag or create a download.txt in the current directory"
-		echo "       with the URLs you wish to download!"
+		echo "	Set the -f flag or create a download.txt in the current directory"
+		echo "	with the URLs you wish to download!"
 		exit 1
-	fi	
+	fi
 fi
 
 # Remove blank lines
-sed -i '/^$/d' "$LIST" 
+cat $LIST | tr -s '\n' '\n' > list.tmp
+mv list.tmp $LIST
 
-if [[ "$EXT" != "0" ]]; then
-	NEWLIST=$(mktemp)
-	cat $LIST | grep "\.${EXT}$" > $NEWLIST
-	LIST=$NEWLIST
+if [ -z "$PROG" ]; then
+	EXT=$(head -1 $PROG | awk -F . '{print $NF}')
+
+	if grep -qiE '3gp|avi|flv|gif|jpg|jpeg|m4v|mkv|mp4|mpg|mpeg|png|webm|wmv|zip'; then
+		PROG=$CURL
+	else
+		PROG=$YOUTUBEDL
+	fi
 fi
 
-parallel -j $JOBS -a $LIST $PROG "{}"
+parallel --will-cite -j $JOBS --joblog $JOBLOG --bar -a $LIST $PROG "{}"
