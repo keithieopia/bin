@@ -1,9 +1,0 @@
-# Run:
-#   git config --global core.excludesfile ~/.gitignore_global
-#
-# Source:
-# http://egorsmirnov.me/2015/05/04/global-gitignore-file.html
-
-.Trash-*
-*.save
-*.swp

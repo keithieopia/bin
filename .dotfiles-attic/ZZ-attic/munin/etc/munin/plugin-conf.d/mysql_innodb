@@ -1,3 +1,0 @@
-[mysql_innodb]
-env.warning 0
-env.critical 0

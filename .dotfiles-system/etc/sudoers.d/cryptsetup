@@ -1,2 +1,0 @@
-# Allow members of group sudo to execute cryptsetup or nullcrypt
-%sudo	ALL=(ALL) NOPASSWD: /sbin/cryptsetup *,/home/timothy/bin/nullcrypt *
