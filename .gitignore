@@ -1,6 +1,1 @@
-.config/remind/google-calendar
-bin/autostart
-bin/piu
-lost+found/
-.local/share/nvim/plugged
-.local/share/nvim/shada
+*
