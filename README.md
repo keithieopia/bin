@@ -30,13 +30,13 @@ Here's a high level overview if you just want to see what I use:
 
 | Category           | Program                                                                     |
 | ------------------ | --------------------------------------------------------------------------- |
-| **Distro**:        | [Xubuntu](https://xubuntu.org/)                                             |
+| **Distro**:        | [FreeBSD 12.0](https://www.freebsd.org/)                                    |
 | **Browser**:       | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                       |
 | **Shell**:         | [Zsh](http://zsh.sourceforge.net/)                                          |
 | **Shell Plugins**: | [zgen](https://github.com/tarjoilija/zgen) & [Oh-My-Zsh](http://ohmyz.sh/)  |
 | **Shell Theme**:   | [Solarized Dark](https://ethanschoonover.com/solarized/)                    |
 | **Editor**:        | [Neovim](https://neovim.io/)                                                |
-| **IDE**:           | [Geany](https://www.geany.org/) & [Atom](https://atom.io/)                  |
+| **IDE**:           | [CodeLite](https://codelite.org/)                                           |
 
 ## Installation / Managing
 <a name="install"></a>
