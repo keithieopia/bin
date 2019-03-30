@@ -1,7 +1,0 @@
-[Unit]
-Description=Update unbound's root.hints
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache
-

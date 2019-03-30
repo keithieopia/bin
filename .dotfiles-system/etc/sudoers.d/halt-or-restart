@@ -1,2 +1,0 @@
-# Allow members of group sudo to restart or halt the system
-%sudo	ALL=(ALL) NOPASSWD: /sbin/halt,/bin/systemctl restart
