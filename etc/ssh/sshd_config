@@ -1,95 +1,68 @@
-################################################################################
-# 2019-01-01 Mozilla Recommendations
-# https://infosec.mozilla.org/guidelines/openssh#modern-openssh-67
-################################################################################
+#Port 22
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress ::
 
-# Supported HostKey algorithms by order of preference.
+# Perferred order for keys
 HostKey /etc/ssh/ssh_host_ed25519_key
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 
-KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256
-
-Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com
-
-# LogLevel VERBOSE logs user's key fingerprint on login. Needed to have a clear audit track of which key was using to log in.
-LogLevel VERBOSE
-
-################################################################################
-# end mozilla recommendations
-################################################################################
-
-
-## General Settings
-################################################################################
-Port 22
-Protocol 2
-TCPKeepAlive yes
+# Ciphers and keying
+RekeyLimit default 10m
+Ciphers aes256-ctr,chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
+KexAlgorithms curve25519-sha256@libssh.org
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com
 
 # Logging
-SyslogFacility AUTH
+#SyslogFacility AUTH
+#LogLevel INFO
 
-# check file permissions
-StrictModes yes
+# Authentication:
 
-
-## Authentication
-################################################################################
-
-# pubkey logins only
-PermitEmptyPasswords no
-PasswordAuthentication no
-PubkeyAuthentication yes
-
-PermitRootLogin no
-
-# rhost crap
-HostbasedAuthentication no
-IgnoreRhosts yes
-
-## Timeouts
-################################################################################
-
-# 30 seconds to send login info on connect
 LoginGraceTime 30
-
+#PermitRootLogin no
+#StrictModes yes
 MaxAuthTries 2
+#MaxSessions 10
 
-# Max of 5 minutes idling before disconnect
-ClientAliveInterval 300
-ClientAliveCountMax 0
+#PubkeyAuthentication yes
 
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile	.ssh/authorized_keys
 
-## MOTD / Banner
-################################################################################
-Banner /etc/issue.net
-PrintMotd no
-PrintLastLog yes
+#AuthorizedPrincipalsFile none
 
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
 
-## Tunneling and Xorg
-################################################################################
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#HostbasedAuthentication no
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
 
-#X11Forwarding yes
-#X11DisplayOffset 10
-X11Forwarding no
+# Change to yes to enable built-in password authentication.
+#PasswordAuthentication no
+#PermitEmptyPasswords no
 
+# Change to no to disable PAM authentication
+#ChallengeResponseAuthentication yes
 
-## Other Settings - (Distro Defaults)
-################################################################################
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
 
-# Change to yes to enable challenge-response passwords (beware issues with
-# some PAM modules and threads)
-ChallengeResponseAuthentication no
+# GSSAPI options
+#GSSAPIAuthentication no
+#GSSAPICleanupCredentials yes
 
-# Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
-
-Subsystem sftp /usr/lib/openssh/sftp-server
-
-# Set this to 'yes' to enable PAM authentication, account processing,
+# Set this to 'no' to disable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will
 # be allowed through the ChallengeResponseAuthentication and
 # PasswordAuthentication.  Depending on your PAM configuration,
@@ -98,4 +71,39 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-UsePAM yes
+#UsePAM yes
+
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
+#X11Forwarding yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes
+#PrintLastLog yes
+#TCPKeepAlive yes
+#PermitUserEnvironment no
+#Compression delayed
+ClientAliveInterval 300
+ClientAliveCountMax 2
+#UseDNS yes
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#UseBlacklist no
+#VersionAddendum FreeBSD-20180909
+
+# no default banner path
+Banner /etc/issue.net
+
+# override default of no subsystems
+Subsystem	sftp	/usr/libexec/sftp-server
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server
