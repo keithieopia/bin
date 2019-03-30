@@ -19,7 +19,6 @@ PERIOD_START=$(date -v-14d -jf "%s" $BIWEEKLY_START "+%s")
 PERIOD_END=$(date -v-1d -jf "%s" $BIWEEKLY_START "+%s")
 
 LINES=$(wc -l $LOG | awk '{print $1}')
-LINES=$(echo "$LINES - 1" | bc) # remove ending newline from count
 
 
 human_hours() {
