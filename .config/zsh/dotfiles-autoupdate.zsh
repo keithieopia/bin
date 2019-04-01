@@ -6,5 +6,5 @@ LAST_FETCH=$(stat -f %m "$HOME/.git/FETCH_HEAD")
 
 if ((TIME - LAST_FETCH >= UPDATE_AFTER)); then
   # run in a subshell to avoid changing our current working dir
-  (cd $HOME/dotfiles && git pull) > /dev/null
+  (cd $HOME && git pull) > /dev/null
 fi
