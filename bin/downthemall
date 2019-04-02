@@ -3,7 +3,7 @@
 JOBS=3
 JOBLOG=/tmp/$(basename $0)
 YOUTUBEDL="youtube-dl --no-playlist --no-warnings -c --"
-PROG="curl --progress-bar -g -L -O -C - --"
+CURL="curl --progress-bar -g -L -O -C - --"
 LIST=0
 
 usage () {
@@ -90,12 +90,13 @@ cat $LIST | tr -s '\n' '\n' > list.tmp
 mv list.tmp $LIST
 
 if [ -z "$PROG" ]; then
-	EXT=$(head -1 $PROG | awk -F . '{print $NF}')
+	PROG=$YOUTUBEDL
+	EXT=$(head -1 $LIST | awk -F . '{print $NF}')
 
-	if grep -qiE '3gp|avi|flv|gif|jpg|jpeg|m4v|mkv|mp4|mpg|mpeg|png|webm|wmv|zip'; then
-		PROG=$CURL
-	else
-		PROG=$YOUTUBEDL
+	if [ $(echo $EXT | wc -c) -lt 5 ]; then
+		if echo $EXT | grep -qiE '3gp|avi|flv|gif|jpg|jpeg|m4v|mkv|mp4|mpg|mpeg|png|webm|wmv|zip'; then
+			PROG=$CURL
+		fi
 	fi
 fi
 
