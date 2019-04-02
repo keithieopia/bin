@@ -33,7 +33,7 @@
     forcepostreceive = !git commit --amend --no-edit && git push -f live
 
 [gpg]
-	program = /usr/bin/gpg2
+	program = /usr/bin/env gpg2
 
 [credential]
 	helper = cache
