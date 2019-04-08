@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ ! -d "$HOME/.local/bin" ]; then
     mkdir -p "$HOME/.local/bin"
 fi
 
-wget -O - https://yt-dl.org/downloads/latest/youtube-dl | tee "$HOME/.local/bin/youtube-dl" > /dev/null
+curl --progress-bar -g -L -O -C - https://yt-dl.org/downloads/latest/youtube-dl | tee "$HOME/.local/bin/youtube-dl" > /dev/null
 chmod a+x "$HOME/.local/bin/youtube-dl"
 
 youtube-dl --version
