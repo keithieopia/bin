@@ -1,26 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 JOBS=3
-JOBLOG=/tmp/$(basename $0)
-YOUTUBEDL="youtube-dl --no-playlist --no-warnings -c --"
-CURL="curl --progress-bar -g -L -O -C - --"
-LIST=0
+CURL_ARGS="--progress-bar -g -L -O -C -"
+ARIA2_ARGS="--summary-interval=0 --file-allocation=none --console-log-level=error --auto-file-renaming=false -c -j 3 -x 3 -s 3 -k 1M"
+YOUTUBEDL_ARGS="--no-playlist --no-warnings -c --"
 
-usage () {
+if [ "$1" == "-h" ]; then
 cat <<HELP
-Download a list of URLs simultaneously
+Download a list of video URLs simultaneously with youtube-dl
 
-Usage: $(basename "$0") [-yc] [-j NUM] [-f FILE]
-	-c : use curl to download
-		 (default is youtube-dl)
-
-	-j : number of simultaneous downloads
-
-	-f : file containing list of URLs to download
-
-Note:
-	$(basename "$0") has built-in sane defaults, only
-	advanced users should set the above flags
+Usage: $(basename "$0") [-h] [FILE]
 
 
 https://github.com/keithieopia/bin/
@@ -28,57 +17,30 @@ https://github.com/keithieopia/bin/
 Copyright (c) 2018-2019 Timothy Keith
 Licensed under the MIT license.
 HELP
-}
+fi
 
+if type aria2c >/dev/null; then
+	PROG="youtube-dl --external-downloader aria2c --external-downloader-args \"$ARIA2_ARGS\" $YOUTUBEDL_ARGS"
+elif type curl >/dev/null; then
+	PROG="youtube-dl --external-downloader curl --external-downloader-args \"$CURL_ARGS\" $YOUTUBEDL_ARGS"
+else
+	PROG="youtube-dl $YOUTUBEDL_ARGS"
+fi
 
-while getopts "hyc:j:f:" opt; do
-	case $opt in
-		h)
-		usage
-		exit
-		;;
-
-		c)
-		hash curl 2>/dev/null || { echo >&2 "This option requires the program \"curl\" to be installed"; exit 1; }
-		PROG=$CURL
-		;;
-
-		y)
-		hash youtube-dl 2>/dev/null || { echo >&2 "This option requires the program \"youtube-dl\" to be installed"; exit 1; }
-		PROG=$YOUTUBEDL
-		;;
-
-		j)
-		JOBS=$OPTARG
-		;;
-
-		f)
-		if [ -f "$OPTARG" ]; then
-			LIST=$OPTARG
-		else
-			echo "ERROR: could not find file: $OPTARG"
-			exit 1
-		fi
-		;;
-
-		\?)
-		echo "Invalid option: -$OPTARG" >&2
-		exit 1
-		;;
-
-		:)
-		echo "Option -$OPTARG requires an argument." >&2
-		exit 1
-		;;
-	esac
-done
-shift $((OPTIND -1))
-
-if [[ "$LIST" == "0" ]]; then
+if [ -z "$1" ]; then
 	if [ -f "./download.txt" ]; then
 		LIST="download.txt"
 	else
 		echo "ERROR: No input provided."
+		echo "	Set the -f flag or create a download.txt in the current directory"
+		echo "	with the URLs you wish to download!"
+		exit 1
+	fi
+else
+	if [ -f "$1" ]; then
+		LIST="$1"
+	else
+		echo "ERROR: invalid download list given"
 		echo "	Set the -f flag or create a download.txt in the current directory"
 		echo "	with the URLs you wish to download!"
 		exit 1
@@ -89,15 +51,7 @@ fi
 cat $LIST | tr -s '\n' '\n' > list.tmp
 mv list.tmp $LIST
 
-if [ -z "$PROG" ]; then
-	PROG=$YOUTUBEDL
-	EXT=$(head -1 $LIST | awk -F . '{print $NF}')
-
-	if [ $(echo $EXT | wc -c) -lt 5 ]; then
-		if echo $EXT | grep -qiE '3gp|avi|flv|gif|jpg|jpeg|m4v|mkv|mp4|mpg|mpeg|png|webm|wmv|zip'; then
-			PROG=$CURL
-		fi
-	fi
-fi
+# unique joblog file for each download.txt 
+JOBLOG="/tmp/$(basename $0).$(openssl dgst -md5 $LIST | tail -c 7)"
 
 parallel --will-cite -j $JOBS --joblog $JOBLOG --bar -a $LIST $PROG "{}"
