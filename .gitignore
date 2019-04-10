@@ -7,3 +7,4 @@ lost+found/
 .zgen/
 .zcompdump
 .bash_history
+.ssh/id_*
