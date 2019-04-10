@@ -8,3 +8,4 @@ lost+found/
 .zcompdump
 .bash_history
 .ssh/id_*
+.ssh/known_hosts
