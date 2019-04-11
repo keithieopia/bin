@@ -47,28 +47,28 @@ other tools or symlinking are required:
 
 ### Install
 
-```console
-$ mkdir ~/dotfiles-staging  
-$ git clone --separate-git-dir=~/.dotfiles https://github.com/keithieopia/dotfiles.git dotfiles-staging
-$ cp -r ~/dotfiles-staging ~
-$ rm -r ~/dotfiles-staging/
-```
-
-Setting an `alias` will make management easier, the below is already included in
-`.config/zsh/alias.zsh`:
+1. Make sure both `curl` and `git` are installed.
+2. Run:
 
 ```console
-$ alias dots='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+$ curl -L dot.keithieopia.com | sh
 ```
-### Management
 
-Day-to-day workflow is the same, just simply replace `git` with `dots`. For instance:
+#### But `curl | sh` is insecure!
+
+You're absolutely right. [dot.keithieopia.com](http://dot.keithieopia.com) serves 
+this [deploy.sh](https://github.com/keithieopia/dotfiles/blob/deploy/deploy.sh) script 
+(available in the deploy branch of this repo). `deploy.sh` basically does the following:
 
 ```console
-$ dots add ~/.bashrc
-$ dots commit
-$ dots push
+$ cd ~
+$ git clone --no-checkout https://github.com/keithieopia/dotfiles.git .
+$ git reset --hard
 ```
+
+**WARNING**: The above will clobber any existing dotfiles in your $HOME. You may want to run `git status` 
+before running `git reset --hard`. Or you can use `deploy.sh`, which will sanely warn before clobbering.
+
 
 ## Feedback
 I would love your feedback! If you found any of these configs or scripts
