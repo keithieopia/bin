@@ -13,3 +13,7 @@
 - `test-colors` 
 	- Daniel Crisman's submission to the [TLDP's Bash Prompt HOWTO](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html)
 	- License: [GNU FDL](https://www.gnu.org/copyleft/fdl.html)
+
+- `curl | sh` dotfile install script
+	- Based on Hiroyuki Matsuo's [dotfiles](https://github.com/h-matsuo/dotfiles) and related [online script](http://dot.soncho.net)
+	- License: [MIT](https://opensource.org/licenses/MIT)
