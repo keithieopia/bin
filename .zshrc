@@ -40,6 +40,22 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 	fi
 fi
 
+# include profile.d scripts
+if [ -d "/etc/profile.d" ]; then
+	PROFILEDIR="/etc/profile.d"
+elif [ -d "/usr/local/profile.d" ]; then
+	PROFILEDIR="/usr/local/profile.d"
+else
+	PROFILEDIR=0
+fi
+
+if [ "$PROFILEDIR" -ne 0 ]; then
+	for script in $PROFILEDIR/*.sh ; do
+		if [ -r $script ] ; then
+    		. $script
+		fi
+    done
+fi
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
