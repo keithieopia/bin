@@ -41,15 +41,14 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 fi
 
 # include profile.d scripts
+PROFILEDIR="false"
 if [ -d "/etc/profile.d" ]; then
 	PROFILEDIR="/etc/profile.d"
 elif [ -d "/usr/local/profile.d" ]; then
 	PROFILEDIR="/usr/local/profile.d"
-else
-	PROFILEDIR=0
 fi
 
-if [ "$PROFILEDIR" -ne 0 ]; then
+if ! echo $PROFILEDIR | grep -q "false"; then
 	for script in $PROFILEDIR/*.sh ; do
 		if [ -r $script ] ; then
     		. $script
