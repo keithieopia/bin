@@ -21,9 +21,6 @@
 [diff]
     tool = vimdiff
 
-[core]
-	excludesfile = /home/timothy/.gitignore_global
-
 [receive]
     denyCurrentBranch = updateInstead
     
@@ -33,7 +30,7 @@
     forcepostreceive = !git commit --amend --no-edit && git push -f live
 
 [gpg]
-	program = /usr/bin/env gpg2
+	program = gpg2
 
 [credential]
 	helper = cache
