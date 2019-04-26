@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 change_gnome_wallpaper() {
     gsettings set org.gnome.desktop.background picture-uri "file://$@"
@@ -30,7 +30,7 @@ change_xfce_wallpaper() {
 	xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$@"
 }
 
-if grep -q plasma <<< "$DESKTOP_SESSION"; then
+if echo $DESKTOP_SESSION | grep -q plasma; then
     # KDE / Plasma
     change_kde_wallpaper "$@"
 elif pgrep xfwm4 > /dev/null; then
