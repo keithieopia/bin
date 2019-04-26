@@ -1,0 +1,43 @@
+#!/bin/sh
+
+TIME=$(date +%s)
+CACHEDIR="${HOME}/.cache/wallpaper"
+UPDATEAFTER=21600 # 6 hours
+
+mkdir -p "${CACHEDIR}"
+
+if [ -f ${CACHEDIR}/report.png ]; then
+	LASTUPDATE=$(stat -f %m ${CACHEDIR}/report.png)
+
+	if [ "$TIME" -lt "$(expr $LASTUPDATE + $UPDATEAFTER)" ]; then
+		echo "weather report is up-to-date"
+		exit
+	fi
+fi
+
+# download latest weather radar
+curl -s https://radar.weather.gov/Conus/RadarImg/latest.gif -o "${CACHEDIR}/radar.gif"
+
+# set the background color to #BEE8FF and scale the image to 1080p
+# #BEE8FF is same color as the atlantic and pacific ocean in the image
+# if we don't use it, we get black borders when the image is scaled
+convert -background '#BEE8FF' "${CACHEDIR}/radar.gif" -resize 1920x1080 -extent 1920x1080 "${CACHEDIR}/radar.gif"
+
+# covers the rather large timestamp
+convert "${CACHEDIR}/radar.gif" -fill '#BEE8FF' -draw "rectangle 20,790 350,850" "${CACHEDIR}/radar.gif"
+
+# downloads the weather report image
+curl -s wttr.in/bwi_transparency=190.png -o "${CACHEDIR}/report.png"
+
+# this cuts out the actual weather report from the rest
+mogrify -crop 880x410+0+90 "${CACHEDIR}/report.png"
+
+# paste the report onto the radar
+composite -gravity SouthWest -geometry +20+50 "${CACHEDIR}/report.png" "${CACHEDIR}/radar.gif" "${CACHEDIR}/wallpaper.jpg"
+
+# avoid window manager caching
+rm "${CACHEDIR}/wallpaper-*"
+mv "${CACHEDIR}/wallpaper.jpg" "${CACHEDIR}/wallpaper-${TIME}.jpg"
+
+# below script is also available in dotfiles repo
+$HOME/bin/change-wallpaper "${CACHEDIR}/wallpaper-${TIME}.jpg"
