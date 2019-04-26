@@ -40,22 +40,6 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 	fi
 fi
 
-# include profile.d scripts
-PROFILEDIR="false"
-if [ -d "/etc/profile.d" ]; then
-	PROFILEDIR="/etc/profile.d"
-elif [ -d "/usr/local/profile.d" ]; then
-	PROFILEDIR="/usr/local/profile.d"
-fi
-
-if ! echo $PROFILEDIR | grep -q "false"; then
-	for script in $PROFILEDIR/*.sh ; do
-		if [ -r $script ] ; then
-    		. $script
-		fi
-    done
-fi
-
 # reset frozen terminals by misbehaving applications
 ttyctl -f
 
@@ -71,6 +55,14 @@ HISTFILE=~/.bash_history
 # Aliases & Functions
 source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/functions.zsh
+
+if [ -f "${HOME}/.bash_aliases" ]; then
+	source "${HOME}/.bash_aliases"
+fi
+
+if [ -f "${HOME}/.bash_functions" ]; then
+	source "${HOME}/.bash_functions"
+fi
 
 # set default editor
 export EDITOR=nvim
@@ -128,6 +120,8 @@ fi
 # output only if we're in a virtual terminal
 #
 if tty | grep -q /dev/pts; then
+	clear
+
 	if [ -f "~/.config/zsh/remind.zsh" ]; then
 		source ~/.config/zsh/remind.zsh
 	fi
