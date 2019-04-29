@@ -6,37 +6,52 @@ UPDATEAFTER=21600 # 6 hours
 
 mkdir -p "${CACHEDIR}"
 
+UPDATE=1
 if [ -f ${CACHEDIR}/report.png ]; then
 	LASTUPDATE=$(stat -f %m ${CACHEDIR}/report.png)
 
 	if [ "$TIME" -lt "$(expr $LASTUPDATE + $UPDATEAFTER)" ]; then
-		echo "weather report is up-to-date"
-		exit
+		UPDATE=0
 	fi
 fi
 
-# download latest weather radar
-curl -s https://radar.weather.gov/Conus/RadarImg/latest.gif -o "${CACHEDIR}/radar.gif"
+if [ "$UPDATE" -eq 1 ]; then
+	rm "${CACHEDIR}/report.png"
+	rm "${CACHEDIR}/radar.gif"
 
-# set the background color to #BEE8FF and scale the image to 1080p
-# #BEE8FF is same color as the atlantic and pacific ocean in the image
-# if we don't use it, we get black borders when the image is scaled
-convert -background '#BEE8FF' "${CACHEDIR}/radar.gif" -resize 1920x1080 -extent 1920x1080 "${CACHEDIR}/radar.gif"
+	# download latest weather radar
+	curl -s https://radar.weather.gov/Conus/RadarImg/latest.gif -o "${CACHEDIR}/radar.gif"
 
-# covers the rather large timestamp
-convert "${CACHEDIR}/radar.gif" -fill '#BEE8FF' -draw "rectangle 20,790 350,850" "${CACHEDIR}/radar.gif"
+	# downloads the weather report image
+	curl -s wttr.in/bwi.png -o "${CACHEDIR}/report.png"
 
-# downloads the weather report image
-curl -s wttr.in/bwi_transparency=190.png -o "${CACHEDIR}/report.png"
+	# set the background color to #BEE8FF and scale the image to 1080p
+	# #BEE8FF is same color as the atlantic and pacific ocean in the image
+	# if we don't use it, we get black borders when the image is scaled
+	convert -background '#BEE8FF' "${CACHEDIR}/radar.gif" -resize 1920x1080 -extent 1920x1080 "${CACHEDIR}/radar.gif"
 
-# this cuts out the actual weather report from the rest
-mogrify -crop 880x410+0+90 "${CACHEDIR}/report.png"
+	# covers the rather large timestamp
+	convert "${CACHEDIR}/radar.gif" -fill '#BEE8FF' -draw "rectangle 20,790 350,850" "${CACHEDIR}/radar.gif"
+
+	# this cuts out the actual weather report from the rest
+	mogrify -crop 880x410+0+90 "${CACHEDIR}/report.png"
+fi
+
+rm "${CACHEDIR}/weather.png"
+rm "${CACHEDIR}/calendar.png"
 
 # paste the report onto the radar
-composite -gravity SouthWest -geometry +20+50 "${CACHEDIR}/report.png" "${CACHEDIR}/radar.gif" "${CACHEDIR}/wallpaper.jpg"
+composite -gravity SouthWest -geometry +20+50 -blend 80 "${CACHEDIR}/report.png" "${CACHEDIR}/radar.gif" "${CACHEDIR}/weather.png"
+
+# generate calendar
+remind -mc+2w110 "$HOME/.remind" | convert -font "Ubuntu-Mono" -pointsize 16 label:@- "${CACHEDIR}/calendar.png"
+mogrify -negate "${CACHEDIR}/calendar.png"
+
+#convert - -rotate 90 -fill '#000000BE' -opaque none "${CACHEDIR}/calendar.png"
+composite -gravity NorthWest -geometry +20+50 -blend 80 "${CACHEDIR}/calendar.png" "${CACHEDIR}/weather.png" "${CACHEDIR}/wallpaper.jpg"
 
 # avoid window manager caching
-rm "${CACHEDIR}/wallpaper-*"
+find "${CACHEDIR}" -name "wallpaper-*.jpg" -exec rm {} \;
 mv "${CACHEDIR}/wallpaper.jpg" "${CACHEDIR}/wallpaper-${TIME}.jpg"
 
 # below script is also available in dotfiles repo
