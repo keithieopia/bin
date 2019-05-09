@@ -1,7 +1,8 @@
 #!/bin/sh
 
+HOME="/home/timothy" # home isn't set when run from crontab
 TIME=$(date +%s)
-CACHEDIR="${HOME}/.cache/wallpaper"
+CACHEDIR="$HOME/.cache/wallpaper"
 UPDATEAFTER=21600 # 6 hours
 
 mkdir -p "${CACHEDIR}"
