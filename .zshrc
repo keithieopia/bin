@@ -3,6 +3,12 @@ if [ -f "${HOME}/.config/zsh/dotfiles-autoupdate.zsh" ]; then
 	source "${HOME}/.config/zsh/dotfiles-autoupdate.zsh"
 fi
 
+# fix for slow git completion
+# must come before loading plugins
+__git_files () {
+    _wanted files expl 'local files' _files
+}
+
 # run before loading oh-my-zsh compleat
 # https://github.com/robbyrussell/oh-my-zsh/issues/3234
 autoload -Uz compinit
