@@ -1,0 +1,15 @@
+#!/bin/sh
+# fftabs - outputs current open tabs in Firefox
+
+# requires jq and lz4jsoncat, latter one is available at:
+# https://github.com/andikleen/lz4json
+
+# For FreeBSD, change the following in lz4jsoncat.c:
+#   #include <endian.h>  -->  #include <sys/endian.h>
+#   #include "lz4.h"     -->  #include "/usr/local/include/lz4.h"
+#
+#   compile with gmake, not make
+
+PROFILE=$(find $HOME/.mozilla/firefox -name '*.default')
+lz4jsoncat ${PROFILE}/sessionstore-backups/recovery.jsonlz4 | \
+jq -j '.windows[0].tabs[].entries[] | .url, "\n"'
