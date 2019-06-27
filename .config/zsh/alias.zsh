@@ -39,6 +39,13 @@ have ncdu && alias du='ncdu'
 have gpg2 && alias gpg='gpg2'
 
 ################################################################################
+# aliases for Linux programs to point to the FreeBSD alternate command
+##
+if uname | grep -q FreeBSD; then
+	alias dig="drill"
+fi
+
+################################################################################
 # ls
 ##
 
@@ -91,12 +98,14 @@ alias mine='sudo chown ${USER}:${USER}'
 
 # networking
 alias openports='sudo lsof -i -n -P' # list open ports / running network services
-alias ip='curl ifconfig.me'
+alias whatismyip='curl ifconfig.me'
 alias whois='echo $1 | nc whois.internic.net 43 | sed '/NOTICE:/q' | head -n -4 -'
 
 # sudo
 alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
 alias sedit='sudo nvim'
+alias halt='sudo halt'
+alias reboot='sudo reboot'
 
 # services
 alias start='sudo systemctl start '
