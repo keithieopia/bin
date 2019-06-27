@@ -34,3 +34,5 @@
 
 [credential]
 	helper = cache
+[core]
+	editor = nvim
