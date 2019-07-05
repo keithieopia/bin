@@ -6,7 +6,7 @@ set autoindent
 #set const
 
 ## Use cut-to-end-of-line by default.
-set cut
+#set cut
 
 ## Set the line length for wrapping text and justifying paragraphs.
 ## If the value is 0 or less, the wrapping point will be the screen
@@ -80,22 +80,22 @@ set speller "aspell -x -c"
 
 # syntax highlighting
 
-include /usr/local/share/nano/c.nanorc
-include /usr/local/share/nano/changelog.nanorc
-include /usr/local/share/nano/cmake.nanorc
-include /usr/local/share/nano/css.nanorc
-include /usr/local/share/nano/default.nanorc
-include /usr/local/share/nano/go.nanorc
-include /usr/local/share/nano/html.nanorc
-include /usr/local/share/nano/javascript.nanorc
-include /usr/local/share/nano/json.nanorc
-include /usr/local/share/nano/makefile.nanorc
-include /usr/local/share/nano/nanorc.nanorc
-include /usr/local/share/nano/patch.nanorc
-include /usr/local/share/nano/php.nanorc
-include /usr/local/share/nano/postgresql.nanorc
-include /usr/local/share/nano/python.nanorc
-include /usr/local/share/nano/ruby.nanorc
-include /usr/local/share/nano/rust.nanorc
-include /usr/local/share/nano/sh.nanorc
-include /usr/local/share/nano/xml.nanorc
+#include /usr/local/share/nano/c.nanorc
+#include /usr/local/share/nano/changelog.nanorc
+#include /usr/local/share/nano/cmake.nanorc
+#include /usr/local/share/nano/css.nanorc
+#include /usr/local/share/nano/default.nanorc
+#include /usr/local/share/nano/go.nanorc
+#include /usr/local/share/nano/html.nanorc
+#include /usr/local/share/nano/javascript.nanorc
+#include /usr/local/share/nano/json.nanorc
+#include /usr/local/share/nano/makefile.nanorc
+#include /usr/local/share/nano/nanorc.nanorc
+#include /usr/local/share/nano/patch.nanorc
+#include /usr/local/share/nano/php.nanorc
+#include /usr/local/share/nano/postgresql.nanorc
+#include /usr/local/share/nano/python.nanorc
+#include /usr/local/share/nano/ruby.nanorc
+#include /usr/local/share/nano/rust.nanorc
+#include /usr/local/share/nano/sh.nanorc
+#include /usr/local/share/nano/xml.nanorc
