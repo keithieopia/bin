@@ -104,11 +104,7 @@ esac
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	# If running inside ssh, do nothing
 else
-	# Run the following if not in SSH
-
-	# Set the color scheme
-	~/.config/base16/base16-solarized-dark.sh
-
+	# Run the following if not in SSH and
     # if we're *not* in a virtual terminal...
 	if ! tty | grep -q /dev/pts; then
 
@@ -126,8 +122,6 @@ fi
 # output only if we're in a virtual terminal
 #
 if tty | grep -q /dev/pts; then
-	clear
-
 	if [ -f "~/.config/zsh/remind.zsh" ]; then
 		source ~/.config/zsh/remind.zsh
 	fi
