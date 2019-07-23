@@ -1,188 +1,188 @@
-#!/bin/bash +x
+#!/usr/bin/env python3
 
-LOG=$HOME/.timeclock.log
+import sys, os
+from datetime import datetime
 
-if [ ! -f $LOG ]; then
-	touch $LOG
-fi
+LOGFILE = "/home/timothy/.timeclock.log"
+PAYPERIOD_KNOWN = "2019-01-21"
+PAYPERIOD_DAYS = "14"
 
-LINES=$(wc -l $LOG | awk '{print $1}')
+def print_red(msg): print("\033[91m{}\033[00m" .format(msg)) 
+def print_green(msg): print("\033[92m{}\033[00m" .format(msg)) 
 
-BIWEEKLY_OFFSET=0
-BIWEEKLY_KNOWN="2019-01-21"
+#def usage():
+	# TODO
 
-DAY=86400             # in seconds
-FOURTEENDAYS=1209600  # in seconds
+def find_payperiod(ts):
+	interval = int(PAYPERIOD_DAYS) * 86400
+	
+	dt = datetime.strptime(PAYPERIOD_KNOWN, '%Y-%m-%d')
+	offset = int( timestamp(dt) )
+	
+	while offset < int(ts):
+		offset = offset + interval
+		
+	return ((offset - interval), offset)
 
-#BIWEEKLY_START=$(date -jf "%Y-%m-%d %H%M%S" "$BIWEEKLY_KNOWN 000000" +%s)
-BIWEEKLY_START=$(date -d "$BIWEEKLY_KNOWN 00:00:00" +%s)
+def curr_payperiod():
+	t = timestamp()
+	(start, end) = map(datetime.fromtimestamp, find_payperiod(t)) 
+	return (start,end)
 
-while [ $(date +%s) -gt $BIWEEKLY_START ]; do
-	#BIWEEKLY_OFFSET=$(echo "$BIWEEKLY_OFFSET + $FOURTEENDAYS" | bc)
-	#BIWEEKLY_START=$(date -v+${BIWEEKLY_OFFSET}d -jf "%Y-%m-%d %H%M%S" "${BIWEEKLY_KNOWN} 000000" +%s)
+def payperiod_days_left():
+	(start, end) = curr_payperiod()
+	end = int( timestamp(end) )
+	ts = int( timestamp() )
+	return int( ((end - ts) / 86400) - 1 )
 
-	BIWEEKLY_START=$(echo "$BIWEEKLY_START + $FOURTEENDAYS" | bc)	
-done
-
-#PERIOD_START=$(date -v-14d -jf "%s" $BIWEEKLY_START "+%s")
-PERIOD_START=$(echo "$BIWEEKLY_START - $FOURTEENDAYS" | bc)
-
-#PERIOD_END=$(date -v-1d -jf "%s" $BIWEEKLY_START "+%s")
-PERIOD_END=$(echo "$BIWEEKLY_START - $DAY" | bc)
-
-payperiod_start() {
-	BIWEEKLY_OFFSET=0
-	#BIWEEKLY_START=$(date -jf "%Y-%m-%d %H%M%S" "$BIWEEKLY_KNOWN 000000" +%s)
-	BIWEEKLY_START=$(date -d "$BIWEEKLY_KNOWN 00:00:00" +%s)
-
-	while [ "$1" -gt $BIWEEKLY_START ]; do
-		#BIWEEKLY_OFFSET=$(echo "${BIWEEKLY_OFFSET} + 14" | bc)
-		#BIWEEKLY_START=$(date -v+${BIWEEKLY_OFFSET}d -jf "%Y-%m-%d %H%M%S" "${BIWEEKLY_KNOWN} 000000" +%s)
-
-		BIWEEKLY_START=$(echo "$BIWEEKLY_START + $FOURTEENDAYS" | bc)
-	done
-
-	#date -v-14d -jf "%s" $BIWEEKLY_START "+%s"
-	echo "$BYWEEKLY_START - $FOURTEENDAYS" | bc
-}
-
-human_hours() {
-	h=$(echo "${1}/3600" | bc)
-	m=$(echo "(${1}%3600)/60" | bc)
-	printf "%01d:%02d\n" $h $m
-}
-
-log() {
-	SET=$LINES
-	PREVDATE="0000"
-	PREV_PAYPERIOD=0
-
-	while [ $SET -gt 0 ]; do
-		LINE=$(awk "NR==$SET" $LOG)
-		START=$(echo $LINE | awk '{print $1}')
-		END=$(echo $LINE | awk '{print $2}')
-
-		if [[ "$1" == "-a" ]] || [ $START -gt $PERIOD_START ]; then
-			PAYPERIOD_START=$(payperiod_start $START) 
-			if [[ "$1" = "-a" ]] && [ $PAYPERIOD_START -ne $PREV_PAYPERIOD ]; then
-				echo "---------------------------"
-				PREV_PAYPERIOD=$PAYPERIOD_START
-			fi
+def payperiod_total():
+	t = timestamp()
+	(pstart, pend) = map(int, map(timestamp, map(datetime.fromtimestamp, find_payperiod(t))))
+	worked = 0
+	
+	with open(LOGFILE) as f:
+		for line in f:
+			line = line.split()
 			
-			#CURRDATE=$(date -jf '%s' $START '+%m%d')
-			CURRDATE=$(date -d "@${START}" '+%m%d')
-			if [ "$PREVDATE" -eq "$CURRDATE" ]; then
-				echo -n "      | "
-				#echo -n $(date -jf '%s' $START '+%I:%M %p') 
-				echo -n $(date -d"@${START}" '+%I:%M %p') 
-			else
-				#echo -n $(date -jf '%s' $START '+%m/%d | %I:%M %p')
-				echo -n $(date -d "@${START}" '+%m/%d | %I:%M %p')
-			fi
-			PREVDATE=$CURRDATE
+			if len(line) == 2:
+				(start, end) = map(int, line)
+				
+				if start > pstart:
+					worked = worked + (end - start)
 
-			if [ -z $END ]; then 
-				echo " ~ " 
-			else
-				echo -n " - "
-				#date -jf '%s' $END '+%I:%M %p'
-				date -d "@${END}" '+%I:%M %p'
-			fi
-		fi
+	return worked
 
-		SET=$(echo "$SET - 1" | bc)
-	done
-}
+def print_payperiod_total():
+	return secs_to_hour_min( payperiod_total() )
 
-payperiod_total() {
-	WORKED=0
-	SET=$LINES
+def secs_to_hour_min(worked):
+	worked_hours = int(worked / 3600)
+	worked_mins  = int( (worked - (worked_hours * 3600)) / 60 )
 
-	while [ $SET -gt 0 ]; do
-		LINE=$(awk "NR==$SET" $LOG)
-		START=$(echo $LINE | awk '{print $1}')
-		END=$(echo $LINE | awk '{print $2}')
+	return str(worked_hours) + ":" + "{:0<2}".format( str(worked_mins))
 
-		if [ ! -z $END ] && \
-		   [ $START -gt $PERIOD_START ] && \
-		   [ $START -lt $PERIOD_END ]; then
-
-			WORKED=$(echo "($END - $START) + $WORKED" | bc)
-		fi
-
-		SET=$(echo "$SET - 1" | bc)
-	done
-
-	echo -n "PAYPERIOD:    "
-	human_hours $WORKED
-}
-
-
-#OUT="$(date -jf '%s' $PERIOD_START '+%-m/%d') -"
-OUT="$(date -d "@$PERIOD_START" '+%-m/%d') -"
-
-#OUT="$OUT $(date -jf '%s' $PERIOD_END '+%-m/%d')"
-OUT="$OUT $(date -d "@$PERIOD_END" '+%-m/%d')"
-
-OUT="$OUT | $(echo "($PERIOD_END - $(date +%s)) / $DAY" | bc) days left"
-
-echo $OUT
-printf -- '-%.0s' $(seq $(echo -n $OUT | wc -c)) # draws a line
-echo -e "\n"
-
-
-case $1 in
-	start)
-		if [ "$(tail -1 $LOG | wc -w)" -eq 1 ]; then
-			echo "ERROR: already clocked in"
-			exit 1
-		fi
-
-		echo -n $(date +%s) >> "$LOG"
-
-		echo "STATUS:       started working"
-
-		payperiod_total
-		;;
-
-	stop)
-		if [ "$(tail -1 $LOG | wc -w)" -eq 2 ]; then
-			echo "ERROR:        already clocked out"
-			exit 1
-		fi
-
-		echo "STATUS:       stopped working"
-
-		START=$(tail -1 $LOG | awk '{print $1}')
-		END=$(date +%s)
-
-		echo " $END" >> $LOG
-
-		echo -n "HOURS WORKED: "
-		human_hours $(echo "$END - $START" | bc)
+def print_status():
+	(start, end) = curr_payperiod()
+	period = start.strftime("%-m/%d") + " - " + end.strftime("%-m/%d")
+	days = str(payperiod_days_left())
+	
+	line = period + " | " + days + " days left"
+	print(line)
+	print( ('-' * len(line)) + "\n")
+	
+	print("STATUS:     ", end="")
+	if status() == "in":
+		print_green("on the clock")
 		
-		payperiod_total
-		;;
-	log)
-		log $2
-		;;
-
-	*)
-		if [ "$(tail -1 $LOG | wc -w)" -eq 1 ]; then
-			echo "STATUS:       on the clock "
+		ts = get_last_line().strip()
+		th = ts_to_human(ts)
+		print("STARTED:    " + th[1], end="")
 		
-			START=$(tail -1 $LOG | awk '{print $1}')
-			END=$(date +%s)
+		worked = secs_to_hour_min(int(timestamp()) - int(ts))
+		print(" (" + worked + " hours)")
+		
+	else:
+		print_red("off the clock")
 
-			#echo -n "STARTED:      $(date -jf '%s' $START '+%-I:%M %p') ("
-			echo -n "STARTED:      $(date -d "@$START" '+%-I:%M %p') ("
+	print ("PAYPERIOD:  " + print_payperiod_total())
 
-			echo -n $(human_hours $(echo "$END - $START" | bc))
-			echo " hours)"
-		else
-			echo "STATUS:       clocked out"
-		fi
+def ts_to_human(t):
+	t = datetime.fromtimestamp( int(t) )
+	return (t.strftime("%-m/%d"), t.strftime("%-I:%M %p"))
 
-		payperiod_total
-		;;
-esac
+def log(showall = False):
+	last = 0
+	(pstart, pend) = map(timestamp, curr_payperiod())
+	
+	with open(LOGFILE) as f:
+		for line in f:
+			line = line.split()
+
+			if line[0] >= pstart or showall == True:
+				start = ts_to_human(line[0])			
+
+				if start[0] != last:
+					last = start[0]
+					print("{:>5}".format(start[0]) + " | ", end="")
+				else:
+					print("      | ", end="")
+
+				if len(line) == 2:
+					end = ts_to_human(line[1])
+					print('{:<8}'.format(start[1]) + " - " + end[1])
+				else:
+					print('{:<8}'.format(start[1]) + " ~ ")
+
+def get_last_line():
+	for line in open(LOGFILE):
+		pass
+
+	return line
+
+def status():
+	line = get_last_line()
+
+	if len(line.split()) == 2:
+		return "out"
+	else:
+		return "in"
+
+def timestamp(now = datetime.now()):
+	return str(int(datetime.timestamp(now)))
+
+def start():
+	if status() == "in":
+		print_red("Already clocked in!")
+		sys.exit(1)
+	else:
+		now = datetime.now()
+
+		with open(LOGFILE, "a+") as f:
+			f.write("\n")
+			f.write( timestamp(now) )
+			f.close()
+
+		print_green("Clocked in at " + now.strftime("%-I:%M %p"))
+
+def stop():
+	if status() == "out":
+		print_red("Already clocked out!")
+		sys.exit(1)
+	else:
+		now = datetime.now()
+		started = get_last_line()
+
+		with open(LOGFILE, "rb+") as f:
+			f.seek(0, os.SEEK_END)
+			f.write( (" " + timestamp(now)).encode() )
+			f.close()
+
+		print_red("Clocked out at " + now.strftime("%-I:%M %p") + "\n")
+
+		worked = get_last_line().split()
+		worked = int(worked[1]) - int(worked[0])
+		
+		print("Worked " + secs_to_hour_min(worked) + " hours, grand total " + print_payperiod_total() + " hours")
+		
+		
+if len(sys.argv) == 1:
+	print_status()
+
+elif sys.argv[1] == "log":
+	log()
+
+elif sys.argv[1] == "all":
+	log(True)
+
+elif sys.argv[1] == "start":
+	start()
+
+elif sys.argv[1] == "stop":
+	stop()
+
+elif sys.argv[1] == "status":
+	print("Clocked " + status())
+
+else:
+	print_red("Unknown command " + sys.argv[1])
+	sys.exit(1)
