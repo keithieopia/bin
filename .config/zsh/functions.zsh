@@ -24,6 +24,11 @@ function dpkg() {
 	fi
 }
 
+function remove-old-kernels() {
+	if grep -q fedora /etc/os-release; then
+		sudo dnf remove $(dnf repoquery --installonly --latest-limit=-2 -q)
+	fi
+}
 
 ################################################################################
 # Archiving
@@ -219,3 +224,4 @@ function base64-img() {
   IMAGE_BASE64=$(base64 -w 0 $1 | tr -d '\n')
   echo "data:image/${FILETYPE};base64,${IMAGE_BASE64}"
 }
+
