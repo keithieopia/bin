@@ -33,7 +33,7 @@ def payperiod_days_left():
 	(start, end) = curr_payperiod()
 	end = int( timestamp(end) )
 	ts = int( timestamp() )
-	return int( ((end - ts) / 86400) - 1 )
+	return int( (end - ts) / 86400 )
 
 def payperiod_total():
 	t = timestamp()
