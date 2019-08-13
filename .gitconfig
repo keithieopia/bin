@@ -8,7 +8,7 @@
     status = auto
     branch = auto
     interactive = auto
-	ui = true
+    ui = true
 
 [merge]
     tool = vimdiff
@@ -26,13 +26,13 @@
     
 [alias]
     history = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --branches --date-order
-	pushall = !git remote | xargs -L1 git push --all
+    pushall = !git remote | xargs -L1 git push --all
     forcepostreceive = !git commit --amend --no-edit && git push -f live
 
 [gpg]
-	program = gpg2
+    program = gpg2
 
 [credential]
-	helper = cache
+    helper = cache
 [core]
-	editor = nvim
+    editor = nvim
