@@ -1,0 +1,3 @@
+#!/bin/sh
+
+virt-viewer --connect qemu+ssh://$1/system "$2"

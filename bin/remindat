@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if grep -q "now" <<< $1; then
+  shift
+  paplay "/usr/share/sounds/freedesktop/stereo/complete.oga" &
+  notify-send "$@"
+elif grep -iq "am\|pm" <<< $1; then
+  TIME="$1"
+  shift 1
+elif grep -iq "am\|pm" <<< $2; then
+  TIME="$1 $2"
+  shift 2
+elif grep -iq "h\|m" <<< $1; then
+  NUM=$(echo "$1" | rev | cut -c2- | rev)
+  UNIT=$(echo -n "$1" | tail -c 1)
+
+  case $UNIT in
+    h)
+      TIME="now + $NUM hour"
+      ;;
+    m)
+      TIME="now + $NUM minute"
+      ;;
+    *)
+      echo "unknown time: $NUM $UNIT"
+      exit 1
+  esac
+
+  shift
+
+elif grep -iq "hour\|minute" <<< $2; then
+  TIME="now + $1 $2"
+  shift 2
+fi
+
+at $TIME <<< "$0 now \"$@\""
