@@ -4,7 +4,7 @@ import sys, os
 from datetime import datetime
 
 LOGFILE = "/home/timothy/.timeclock.log"
-PAYPERIOD_KNOWN = "2019-01-21"
+PAYPERIOD_KNOWN = "2019-08-18"
 PAYPERIOD_DAYS = "14"
 
 def print_red(msg): print("\033[91m{}\033[00m" .format(msg)) 
