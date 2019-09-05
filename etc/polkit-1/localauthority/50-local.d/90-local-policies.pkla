@@ -1,0 +1,6 @@
+[Allow the following users (when in an active session on the local console) to mount a system disk partition]
+Identity=unix-user:*
+Action=org.freedesktop.udisks.filesystem-mount-system-internal
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
