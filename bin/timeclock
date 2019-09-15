@@ -4,7 +4,7 @@ import sys, os
 from datetime import datetime
 
 LOGFILE = "/home/timothy/.timeclock.log"
-PAYPERIOD_KNOWN = "2019-08-18"
+PAYPERIOD_KNOWN = "2019-08-04"
 PAYPERIOD_DAYS = "14"
 
 def print_red(msg): print("\033[91m{}\033[00m" .format(msg)) 
@@ -56,10 +56,14 @@ def print_payperiod_total():
 	return secs_to_hour_min( payperiod_total() )
 
 def secs_to_hour_min(worked):
-	worked_hours = int(worked / 3600)
-	worked_mins  = int( (worked - (worked_hours * 3600)) / 60 )
+	#worked_hours = int(worked / 3600)
+	#worked_mins  = int( (worked - (worked_hours * 3600)) / 60 )
+	worked_mins  = int( worked / 60 )
+	worked_hours = int( worked_mins / 60 )
+	worked_mins  = worked_mins - (worked_hours * 60)
 
-	return str(worked_hours) + ":" + "{:0<2}".format( str(worked_mins))
+	#return str(worked_hours) + ":" + "{:0<2}".format( str(worked_mins))
+	return str(worked_hours) + ":" + str(worked_mins)
 
 def print_status():
 	(start, end) = curr_payperiod()
@@ -91,25 +95,38 @@ def ts_to_human(t):
 	return (t.strftime("%-m/%d"), t.strftime("%-I:%M %p"))
 
 def log(showall = False):
-	last = 0
+	curr_day = 0
+	curr_period_end = 0
+	curr_period_total = 0
 	(pstart, pend) = map(timestamp, curr_payperiod())
-	
+
 	with open(LOGFILE) as f:
 		for line in f:
 			line = line.split()
 
 			if line[0] >= pstart or showall == True:
-				start = ts_to_human(line[0])			
+				start = ts_to_human(line[0])
 
-				if start[0] != last:
-					last = start[0]
+				period_end = find_payperiod(line[0])
+				if period_end != curr_period_end and curr_day != 0:
+					print("")
+					print( ("PERIOD TOTAL: " + secs_to_hour_min(curr_period_total) ).rjust(27, ' ') )
+					print( '-' * 27 ) # prints a line
+
+					curr_period_end = period_end
+					curr_period_total = 0
+				elif len(line) == 2:
+					curr_period_total += int(line[1]) - int(line[0])
+
+				if start[0] != curr_day:
+					curr_day = start[0]
 					print("{:>5}".format(start[0]) + " | ", end="")
 				else:
 					print("      | ", end="")
 
 				if len(line) == 2:
 					end = ts_to_human(line[1])
-					print('{:<8}'.format(start[1]) + " - " + end[1])
+					print('{:<8}'.format(start[1]) + " - " + end[1].rjust(8, ' '))
 				else:
 					print('{:<8}'.format(start[1]) + " ~ ")
 
@@ -163,8 +180,7 @@ def stop():
 		worked = int(worked[1]) - int(worked[0])
 		
 		print("Worked " + secs_to_hour_min(worked) + " hours, grand total " + print_payperiod_total() + " hours")
-		
-		
+
 if len(sys.argv) == 1:
 	print_status()
 
