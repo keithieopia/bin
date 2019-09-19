@@ -56,14 +56,11 @@ def print_payperiod_total():
 	return secs_to_hour_min( payperiod_total() )
 
 def secs_to_hour_min(worked):
-	#worked_hours = int(worked / 3600)
-	#worked_mins  = int( (worked - (worked_hours * 3600)) / 60 )
 	worked_mins  = int( worked / 60 )
 	worked_hours = int( worked_mins / 60 )
 	worked_mins  = worked_mins - (worked_hours * 60)
 
-	#return str(worked_hours) + ":" + "{:0<2}".format( str(worked_mins))
-	return str(worked_hours) + ":" + str(worked_mins)
+	return str(worked_hours) + ":" + str(worked_mins).zfill(2)
 
 def print_status():
 	(start, end) = curr_payperiod()
