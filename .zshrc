@@ -92,6 +92,15 @@ if [ -d ~/.go ]; then
     export PATH=$GOROOT/bin:"${PATH}"
 fi
 
+# set npm path
+if [ -d ~/.npm-packages ]; then
+	export NPM_PACKAGES="$HOME/.npm-packages"
+	export PATH=$NPM_PACKAGES/bin:"${PATH}"
+	unset MANPATH
+	MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
+	export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+fi
+
 if type ccache > /dev/null; then
     export PATH="/usr/lib/ccache/bin/:$PATH"
 fi
