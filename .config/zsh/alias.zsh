@@ -10,7 +10,7 @@ have() { command -v foo >/dev/null 2>&1 ; }
 ##
 
 alias ps='ps -auxf'
-alias du='du -ach 2>/dev/null | sort -h | less'
+alias du='du -h'
 alias mkdir='mkdir -pv'
 alias dir='dir --color=auto'
 alias grep='grep --color=auto'
@@ -81,7 +81,9 @@ alias timestamp='date +%s'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias copy='rsync -WaPh ' # cp with progress indicator
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
-alias dsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
+alias dirsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
+alias duless='du -ach 2>/dev/null | sort -h | less'
+
 alias ddstatus='pgrep -x dd && pkill -SIGUSR1 dd || echo "dd is not running!"'
 alias search="ddg" # see functions.zsh 
 
