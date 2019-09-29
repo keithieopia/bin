@@ -1,0 +1,46 @@
+#!/bin/sh
+
+STORE="${HOME}/.enotes"
+TMPDIR="/tmp/shm/$(basename $0)"
+PBKDF_ITER=100000
+
+if ! [ -d $TMPDIR ]; then
+    mkdir -p $TMPDIR
+fi
+
+if ! [ -d $STORE ]; then
+	mkdir -p $STORE
+fi
+
+if ! [ -z $1 ]; then
+	if [ -f "${STORE}/${1}.enc" ]; then
+		openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter $PBKDF_ITER -salt -a -d -in ${STORE}/${1}.enc
+	else
+		echo "File does not exist!"
+		exit 1
+	fi
+	exit
+fi
+
+FILE=$(mktemp ${TMPDIR}/XXXXXX)
+
+$EDITOR $FILE
+
+if test -s $FILE; then
+	EFILE="${STORE}/$(basename $FILE).enc"
+	openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter $PBKDF_ITER -salt -a -e -in $FILE -out $EFILE
+
+	if [ $? -eq 0 ]; then
+		rm $FILE
+		echo "File encrypted as $EFILE"
+	else
+		rm $EFILE
+		rm $FILE
+		echo "File encryption failed"
+		exit 1
+	fi
+else
+	echo "File to encrypt is empty!"
+	rm $FILE
+	exit 1
+fi
