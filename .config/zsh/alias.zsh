@@ -83,7 +83,7 @@ alias copy='rsync -WaPh ' # cp with progress indicator
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
 alias dirsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
 alias duless='du -ach 2>/dev/null | sort -h | less'
-
+alias wifi-scan='nmcli dev wifi list'
 alias ddstatus='pgrep -x dd && pkill -SIGUSR1 dd || echo "dd is not running!"'
 alias search="ddg" # see functions.zsh 
 
