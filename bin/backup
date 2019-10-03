@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Find "backup" folder regardless of external drive's UUID or name
+FOLDER=$(find /run/media/timothy -name "backup" -type d -print -quit)
+
+if ! [ -d $FOLDER ]; then
+  echo "Could not find backup drive!"
+  exit 1
+fi
+
+if ! grep -q "Borg Backup" ${FOLDER}/README 2>/dev/null; then
+  echo "Found backup drive, but could not find borg repo!"
+  exit 1
+fi
+
+# Backup name and time format:
+# home-YYYY-MM-DD-HHMM
+BACKUPNAME="home-$(date +%F-%H%M)"
+
+borg create -e ~/.cache -s --progress ${FOLDER}::${BACKUPNAME} ~
