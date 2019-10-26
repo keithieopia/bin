@@ -13,7 +13,9 @@ Format:
   fakeword      non-sense word based on a CVCV... pattern
   lower         lowercase letters
   mac           MAC address
-  pass          password (letters, numbers, symbols)
+  pass          randomly generated password (letters, numbers, symbols)
+  password      slightly more memorable but less secure password 
+                (dictionary word, 4 digit number, then 2 letters)
   port          random port (1024 - ip_local_port_range)
   upper         uppercase letters
   word          dictionary word
@@ -102,31 +104,53 @@ port() {
 }
 
 word() {
-    # prefer to use aspell as typically it has the largest dictionary
-    if hash aspell 2>/dev/null; then
-        # sanitize it's dictionary to only words of 4-8 chars long
-        words=$(aspell dump master | grep -o -w '\w\{4,8\}' | tr '[:upper:]' '[:lower:]')
+    if test -f "$HOME/.diceware.txt"; then
+        # we already downloaded the EFF wordlist, so let's use it
+        words=$(awk '{print $2}' "$HOME/.diceware.txt")
     else
-        # no aspell, look for dict files in their typical locations
-        files=("/usr/dict/words" "/usr/share/dict/words" "/usr/share/dict/cracklib-small")
-        for file in "${files[@]}"; do
-            if [ -f $file ]; then
-                dict="$file"
-                break
-            fi
-        done
-
-        if [ -z $dict ]; then
-            echo -e "aspell is not installed and no dictionary files where found!"
-            exit 1
+        # try to download the EFF's diceware wordlist
+        curl -s -o "$HOME/.diceware.txt" "https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt"
+        
+        if [ $? -eq 0 ]; then
+            # curl succeeded, so now we use the downloaded wordlist
+            words=$(cat "$HOME/.diceware.txt")
         else
-            # cracklib has numbers and other non-words in its dictionary
-            # so get rid of those along with only using words 4-8 chars long
-            words=$(grep -E '^[a-zA-Z]{4,8}$' "$dict")
+            # curl failed, so try aspell next as it typically has the largest dictionary
+            if hash aspell 2>/dev/null; then
+                # sanitize it's dictionary to only words of 4-8 chars long
+                words=$(aspell dump master | grep -o -w '\w\{4,8\}' | tr '[:upper:]' '[:lower:]')
+            else
+                # no aspell, look for dict files in their typical locations
+                files=("/usr/dict/words" "/usr/share/dict/words" "/usr/share/dict/cracklib-small")
+                for file in "${files[@]}"; do
+                    if [ -f $file ]; then
+                        dict="$file"
+                        break
+                    fi
+                done
+                
+                if [ -z $dict ]; then
+                    # SPACEBALLS: THE ERROR MESSAGE
+                    # "We ain't found !@#$" 
+                    echo -e "could not download a wordlist, aspell is not installed, and no other dictionary files where found!"
+                    exit 1
+                else
+                    # cracklib has numbers and other non-words in its dictionary
+                    # so get rid of those along with only using words 4-8 chars long
+                    words=$(grep -E '^[a-zA-Z]{4,8}$' "$dict")
+                fi
+            fi
         fi
     fi
 
     shuf -n $NUM_WORDS --random-source=/dev/urandom <<< "$words"
+}
+
+password() {
+    RAND_WORD=$(word)
+    RAND_NUM=$(shuf -n 1 -i 1000-9999 --random-source=/dev/urandom)
+    RAND_LETTERS=$(shuf -n 2 --random-source=/dev/urandom <<< $(fold -w1 <<< 'abcdefghijklmnopqrstuvwxyz') | tr -d '\n')
+    echo ${RAND_WORD^}${RAND_NUM}${RAND_LETTERS}
 }
 
 xkcd() {
@@ -170,6 +194,9 @@ case $1 in
               exit
               ;;
     pass)     pass
+              exit
+              ;;
+    password) password
               exit
               ;;
     port)     port
