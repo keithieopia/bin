@@ -77,6 +77,7 @@ alias ....="cd ../../.."
 
 alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
 alias trash="mv -t ~/.local/share/Trash/files --backup=t"
+alias yd="youtube-dl"
 alias timestamp='date +%s'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias copy='rsync -WaPh ' # cp with progress indicator
@@ -102,6 +103,7 @@ alias mine='sudo chown ${USER}:${USER}'
 alias openports='sudo lsof -i -n -P' # list open ports / running network services
 alias whatismyip='curl ifconfig.me'
 alias whois='echo $1 | nc whois.internic.net 43 | sed '/NOTICE:/q' | head -n -4 -'
+alias downthemall='youtube-dl -a download.txt'
 
 # sudo
 alias fuck='sudo $(history -p !!)' # some people are nice and call this "please"
