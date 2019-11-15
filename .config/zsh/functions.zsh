@@ -30,6 +30,10 @@ function remove-old-kernels() {
 	fi
 }
 
+function hexview() {
+	hexdump -vC "$@" | less
+}
+
 ################################################################################
 # Archiving
 ##
