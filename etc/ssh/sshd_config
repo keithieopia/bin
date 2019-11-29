@@ -68,7 +68,6 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
 #PermitEmptyPasswords no
 PasswordAuthentication yes
 
@@ -145,4 +144,4 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
-AuthenticationMethods publickey,password publickey,keyboard-interactive
+AuthenticationMethods publickey,password keyboard-interactive
