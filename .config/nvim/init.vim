@@ -3,6 +3,7 @@ set number              " display line numbers
 set ignorecase          " set search to case insensitive
 set smartcase           " except when the search has capital letters
 set ruler
+set updatetime=250      " make gitgutter more responsive
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'altercation/vim-colors-solarized'
