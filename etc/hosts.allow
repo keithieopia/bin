@@ -1,0 +1,1 @@
+sshd: ALL: aclexec /usr/local/bin/sshgeofilter.sh %a
