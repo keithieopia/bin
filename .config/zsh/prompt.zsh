@@ -1,95 +1,57 @@
 # Sunrise theme for oh-my-zsh
 # Intended to be used with Solarized: http://ethanschoonover.com/solarized
 
-# Color shortcuts
-R=$fg_no_bold[red]
-G=$fg_no_bold[green]
-M=$fg_no_bold[magenta]
-Y=$fg_no_bold[yellow]
-B=$fg_no_bold[blue]
-RESET=$reset_color
-
 zsh_usr_symbol() {
     if [ "$USER" = "root" ]; then
-        PROMPTCOLOR="%{$R%}" 
-        PROMPTSYMBOL="#"
+		echo "%{%F{red}%}#%{%f%}"
     else
-        PROMPTCOLOR="" 
-        PROMPTSYMBOL="$"
+    	echo "$"
     fi
-    
-    echo "$PROMPTCOLOR$PROMPTSYMBOL%{$RESET%}"
 }
 
 # Get the status of the working tree (copied and modified from git.zsh)
-zsh_git_color() {
-    INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
-    COLOR=""
+zsh_git() {
+	if git -C $PWD rev-parse --is-inside-work-tree 2>/dev/null | grep -q true; then
 
-	if $(echo "$INDEX" | grep -q '??'); then
-		# Magenta - Untracked files 
-		COLOR="%{$M%}"
-	fi	
+		BRANCH="$(git -C $PWD branch --no-color | grep '*' | sed 's/* //g')"
+    	INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
+    	COLOR="%{%F{blue}%}"
 
-	if $(echo "$INDEX" | grep -q M) || $(echo "$INDEX" | grep -q 'D'); then
-		# Red - Modified / Deleted
-		COLOR="%{$R%}"
-	fi
-
-	if $(echo "$INDEX" | grep -q A); then
-		# Yellow - Added, but not committed files 
-		COLOR="%{$Y%}"
-	fi	
-
-	if [[ $(echo $COLOR | wc -c) -lt 6 ]]; then
-		# no untracked, added, modified, or deleted files
-		# e.g.: no local changes
-		
-		if $(git status -sb | grep -q ahead); then
-			# Green - We're ahead of the master
-			COLOR="%{$G%}"
+		if $(echo "$INDEX" | grep -q '??'); then # Untracked files
+			COLOR="%{%F{magenta}%}"
 		fi
-	fi
 
-    echo $COLOR    
-}
-
-# get the name of the branch we are on (copied and modified from git.zsh)
-zsh_git_prompt() {
-	if $(git rev-parse --is-inside-work-tree 2>/dev/null | grep -q true); then
-		echo -n "‹$(zsh_git_color)" 
-		
-		if [[ $(git branch | wc -c) -ne 0 ]]; then
-			echo -n $(git branch | awk '{print $2}')
-		else
-			echo -n "master"
+		if $(echo "$INDEX" | grep -q M) || $(echo "$INDEX" | grep -q 'D'); then # Modified / Deleted
+			COLOR="%{%F{red}%}"
 		fi
-		
-		echo "%{$RESET%}› "
+
+		if $(echo "$INDEX" | grep -q A); then # Added, but not committed files
+			COLOR="%{%F{yellow}%}"
+		fi
+
+		if $(git status -sb | grep -q ahead); then # We're ahead of the master
+			COLOR="%{%F{green}%}"
+		fi
+
+		export RPS1="${COLOR}${BRANCH}%{%f%}"
 	fi
 }
 
 zsh_remote_host() {
-    ZSH_THEME_HOST_PROMPT_PREFIX="%{$Y%}‹"
-    ZSH_THEME_HOST_PROMPT_SUFFIX="%{$Y%}›%{$RESET%} "
-
     if [ "$SSH_CONNECTION" ]; then
-        echo "$ZSH_THEME_HOST_PROMPT_PREFIX$(whoami)@$(hostname)$ZSH_THEME_HOST_PROMPT_SUFFIX"
-    else
-        echo " "
+    	echo -n "%{%F{yellow}%}"
+		echo -n "$(whoami)@$(hostname)"
+        echo "%{%f%}"
     fi
 }
 
 
-# %B sets bold text
-PROMPT='$(zsh_remote_host)%B%2~%b $(zsh_git_prompt)$(zsh_usr_symbol)%{$RESET%} '
+precmd() {
+	# This is needed so that the git branch shown is $PWD
+	# and not the previous dir. precmd() is a zsh built-in
+	# that runs before the prompt is set
+	zsh_git
+}
 
-local return_code="%(?..%{$R%}%? ↵%{$RESET%})"
-RPS1="${return_code}"
-
-
-
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$R%}*"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$B%}➔"
+export PROMPT="$(zsh_remote_host) %{%B%}%2~%{%b%} $(zsh_usr_symbol) "
+export RPS1="%(?..%{$R%}%? ↵%{$RESET%}) $RPS1"

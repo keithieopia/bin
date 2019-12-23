@@ -10,3 +10,4 @@ lost+found/
 .ssh/id_*
 .ssh/known_hosts
 .ssh/authorized_keys
+.google_authenticator
