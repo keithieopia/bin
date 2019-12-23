@@ -11,12 +11,11 @@ zsh_usr_symbol() {
 
 # Get the status of the working tree (copied and modified from git.zsh)
 zsh_git() {
-	if git rev-parse --is-inside-work-tree 2>/dev/null | grep -q true; then
+	if git -C $PWD rev-parse --is-inside-work-tree 2>/dev/null | grep -q true; then
 
-		BRANCH="$(git branch | awk '{print $2}' | xargs)"
+		BRANCH="$(git -C $PWD branch --no-color | grep '*' | sed 's/* //g')"
     	INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
     	COLOR="%{%F{blue}%}"
-
 
 		if $(echo "$INDEX" | grep -q '??'); then # Untracked files
 			COLOR="%{%F{magenta}%}"
@@ -34,9 +33,7 @@ zsh_git() {
 			COLOR="%{%F{green}%}"
 		fi
 
-   		echo -n "$COLOR"
-   		echo -n "$BRANCH"
-   		echo "%{%f%}"
+		export RPS1="${COLOR}${BRANCH}%{%f%}"
 	fi
 }
 
@@ -48,5 +45,13 @@ zsh_remote_host() {
     fi
 }
 
+
+precmd() {
+	# This is needed so that the git branch shown is $PWD
+	# and not the previous dir. precmd() is a zsh built-in
+	# that runs before the prompt is set
+	zsh_git
+}
+
 export PROMPT="$(zsh_remote_host) %{%B%}%2~%{%b%} $(zsh_usr_symbol) "
-export RPS1="%(?..%{$R%}%? ↵%{$RESET%}) $(zsh_git)"
+export RPS1="%(?..%{$R%}%? ↵%{$RESET%}) $RPS1"
