@@ -33,7 +33,7 @@ zsh_git() {
 			COLOR="%{%F{green}%}"
 		fi
 
-		export RPS1="${COLOR}${BRANCH}%{%f%}"
+		echo "${COLOR}${BRANCH}%{%f%}"
 	fi
 }
 
@@ -45,13 +45,24 @@ zsh_remote_host() {
     fi
 }
 
+preexec() {
+	# this is to prevent non-zero exit statuses from sticking past multiple successful commands
+	preexec_called=1
+}
 
 precmd() {
+	EXIT_STATUS=$?
+	if [ "$EXIT_STATUS" != 0 ] && [ "$preexec_called" = 1 ]; then
+		RPS1="%{%F{red}%}$EXIT_STATUS ✘%{%f%} "
+		unset preexec_called
+	else
+		RPS1=""
+	fi
+
 	# This is needed so that the git branch shown is $PWD
 	# and not the previous dir. precmd() is a zsh built-in
 	# that runs before the prompt is set
-	zsh_git
+	RPS1="$RPS1$(zsh_git)"
 }
 
 export PROMPT="$(zsh_remote_host) %{%B%}%2~%{%b%} $(zsh_usr_symbol) "
-export RPS1="%(?..%{$R%}%? ↵%{$RESET%}) $RPS1"
