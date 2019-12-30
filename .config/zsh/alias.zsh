@@ -31,12 +31,18 @@ have shred && alias shred='shred -fuzvn 1'
 # if available, replace coreutils with more feature rich programs
 ##
 
-have colordiff && alias diff='colordiff'
 have dcfldd && alias dd='dcfldd'
 have top && alias top='htop'
 have pydf && alias df='pydf'
 have ncdu && alias du='ncdu'
 have gpg2 && alias gpg='gpg2'
+
+###############################################################################
+# colors: taste the rainbow
+##
+
+have colordiff && alias diff='colordiff'
+have pygmentize && alias cat='pygmentize -O style=monokai -f console256 -g '
 
 ################################################################################
 # aliases for Linux programs to point to the FreeBSD alternate command
@@ -49,7 +55,12 @@ fi
 # ls
 ##
 
-if ls --version 2>/dev/null | grep -q GNU; then
+if zgen list | grep -q "k.plugin.zsh"; then
+	# k is a zsh plugin (see .zshrc)
+	alias ls='k -h --group-directories-first'
+	alias lsl='k -h --group-directories-first | less -R'
+	alias lsd='k -h -d' # list only directories
+elif ls --version 2>/dev/null | grep -q GNU; then
 	# GNU coreutils only
 	alias ls='ls --color --group-directories-first -AFh'
 else
@@ -57,13 +68,21 @@ else
 	alias ls='ls -AFhG'
 fi
 
-# k is a zsh plugin (see .zshrc)
-alias l='k -h --group-directories-first'
-alias ll='k -h --group-directories-first | less -R'
-alias lsd='k -h -d' # list only directories
-
 # steam trains are nice, but this suits me better
-alias sl='ls $@ | lolcat'
+have lolcat && alias sl='ls $@ | lolcat' || function sl() {
+	# settle for a Monty Python insult if we don't have lolcat
+	tput setaf 5
+	echo "  You empty headed animal food trough wiper"
+	echo "  I fart in your general direction"
+	echo "  Your mother was a hamster and your father smelt of elderberries"
+	echo
+	tput bold
+	sleep 1 && /bin/ls -Fhx "$@"
+	tput sgr0
+	tput setaf 5
+	echo
+	echo "  Now go away or I shall taunt you a second time!"
+}
 
 ################################################################################
 # new commands
