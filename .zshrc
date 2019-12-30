@@ -60,6 +60,7 @@ HISTFILE=~/.bash_history
 
 # Aliases & Functions
 source ~/.config/zsh/alias.zsh
+source ~/.config/zsh/find-missing-cmds.zsh
 source ~/.config/zsh/functions.zsh
 
 if [ -f "${HOME}/.bash_aliases" ]; then
