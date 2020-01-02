@@ -17,7 +17,6 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
-alias wget='wget -c'
 alias free='free -ht'
 alias dig='dig +nocmd any +multiline +noall +answer'
 
@@ -37,6 +36,9 @@ have top && alias top='htop'
 have pydf && alias df='pydf'
 have ncdu && alias du='ncdu'
 have gpg2 && alias gpg='gpg2'
+have curl && alias wget='curl -O' || {
+	alias wget='wget -c'
+}
 
 ###############################################################################
 # colors: taste the rainbow
@@ -121,7 +123,7 @@ alias mine='sudo chown ${USER}:${USER}'
 
 # networking
 alias openports='sudo lsof -i -n -P' # list open ports / running network services
-alias whatismyip='curl ifconfig.me'
+alias whatismyip='dig +short myip.opendns.com @resolver1.opendns.com'
 alias whois='echo $1 | nc whois.internic.net 43 | sed '/NOTICE:/q' | head -n -4 -'
 alias downthemall='youtube-dl -a download.txt'
 
