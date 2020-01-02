@@ -36,7 +36,7 @@ have top && alias top='htop'
 have pydf && alias df='pydf'
 have ncdu && alias du='ncdu'
 have gpg2 && alias gpg='gpg2'
-have curl && alias wget='curl -O' || {
+have curl && alias wget='curl -# -O' || {
 	alias wget='wget -c'
 }
 
