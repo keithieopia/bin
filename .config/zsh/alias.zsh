@@ -19,6 +19,7 @@ alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
 alias wget='wget -c'
 alias free='free -ht'
+alias dig='dig +nocmd any +multiline +noall +answer'
 
 # safer commands
 alias rm="rm -Iv"
