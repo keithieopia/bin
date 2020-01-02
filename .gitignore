@@ -2,6 +2,8 @@
 bin/autostart
 bin/piu
 lost+found/
+.cache/
+.joe_state
 .local/share/nvim/plugged
 .local/share/nvim/shada
 .zgen/
@@ -11,3 +13,5 @@ lost+found/
 .ssh/known_hosts
 .ssh/authorized_keys
 .google_authenticator
+.sudo_as_admin_successful
+*~
