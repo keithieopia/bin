@@ -36,3 +36,5 @@
     helper = cache
 [core]
     editor = nvim
+[protocol]
+	version = 2

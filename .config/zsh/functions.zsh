@@ -134,10 +134,9 @@ function bing-vid() {
 }
 
 function weather() {
-    if [ -f "$HOME/.bash_secrets" ]; then
-        source "$HOME/.bash_secrets"
-        curl "wttr.in/$LOCATION_CITY"
-    fi
+	IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+	CITY=$(curl -s ipinfo.io/$IP/city)
+	curl -s wttr.in/$CITY | grep -v '^Weather' | grep -v '^Follow'
 }
 
 ################################################################################
