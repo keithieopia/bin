@@ -11,6 +11,7 @@ have() { command -v foo >/dev/null 2>&1 ; }
 
 alias ps='ps -auxf'
 alias du='du -h'
+alias dd='dd status=progress'
 alias mkdir='mkdir -pv'
 alias dir='dir --color=auto'
 alias grep='grep --color=auto'
@@ -31,7 +32,6 @@ have shred && alias shred='shred -fuzvn 1'
 # if available, replace coreutils with more feature rich programs
 ##
 
-have dcfldd && alias dd='dcfldd'
 have top && alias top='htop'
 have pydf && alias df='pydf'
 have ncdu && alias du='ncdu'
@@ -58,18 +58,28 @@ fi
 # ls
 ##
 
+# k is a zsh plugin (see .zshrc)
 if zgen list | grep -q "k.plugin.zsh"; then
-	# k is a zsh plugin (see .zshrc)
-	alias ls='k -h --group-directories-first'
 	alias lsl='k -h --group-directories-first | less -R'
 	alias lsd='k -h -d' # list only directories
+
+	# use `k` instead of `ls` if called without any arguments
+	# otherwise use GNU `ls` and pass the arguments to it like normal
+	function ls() {
+		if [ "$#" -eq 1 ]; then
+			k -h --group-directories-first
+		else
+			/bin/ls --color --group-directories-first -Fh $@
+		fi
+	}
 elif ls --version 2>/dev/null | grep -q GNU; then
 	# GNU coreutils only
-	alias ls='ls --color --group-directories-first -AFh'
+	alias ls='ls --color --group-directories-first -Fh'
 else
 	# BSD like
 	alias ls='ls -AFhG'
 fi
+
 
 # steam trains are nice, but this suits me better
 have lolcat && alias sl='ls $@ | lolcat' || function sl() {
@@ -98,7 +108,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 
 alias md="take" # included with oh-my-zsh; makes a dir and cd's into it
-alias trash="mv -t ~/.local/share/Trash/files --backup=t"
 alias yd="youtube-dl"
 alias timestamp='date +%s'
 alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
@@ -107,8 +116,6 @@ alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
 alias dirsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
 alias duless='du -ach 2>/dev/null | sort -h | less'
 alias wifi-scan='nmcli dev wifi list'
-alias ddstatus='pgrep -x dd && pkill -SIGUSR1 dd || echo "dd is not running!"'
-alias search="ddg" # see functions.zsh 
 
 # git
 alias push='git push'

@@ -109,27 +109,11 @@ function google() {
     fi
 }
 
-function wiki() {
+function wikipedia() {
     if [ $# -eq 0 ]; then
         xdg-open "https://en.wikipedia.org/wiki/Main_Page"
     else
         xdg-open "https://en.wikipedia.org/w/index.php?search=$(encode $@)"
-    fi
-}
-
-function ddg() {
-    if [ $# -eq 0 ]; then
-        xdg-open "https://duckduckgo.com/"
-    else
-        xdg-open "https://duckduckgo.com/?q=$(encode $@)"
-    fi
-}
-
-function bing-vid() {
-    if [ $# -eq 0 ]; then
-        xdg-open "http://www.bing.com/videos/explore"
-    else
-        xdg-open "http://www.bing.com/videos/search?q=$(encode $@)"
     fi
 }
 
@@ -228,3 +212,21 @@ function base64-img() {
   echo "data:image/${FILETYPE};base64,${IMAGE_BASE64}"
 }
 
+
+################################################################################
+# drive zeroing
+##
+
+function zero-drive() {
+	if ! grep -q '^/dev/sd' <<< $1 || grep -q '^/dev/sda' <<< $1; then
+		echo "$(tput setaf 1)This command intentially does not run on $(tput bold)/dev/sda$(tput sgr0 && tput setaf 1) or drives outside of $(tput bold)/dev/sd*"
+		return 1
+	else
+		sudo dc3dd wipe=$1
+		sudo sync
+	fi
+}
+
+function zero-drive-confirm() {
+	sudo od $1 | head
+}
