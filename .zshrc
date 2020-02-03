@@ -111,24 +111,6 @@ case "$TERM" in
 esac
 
 
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	# If running inside ssh, do nothing
-else
-	# Run the following if not in SSH and
-    # if we're *not* in a virtual terminal...
-	if ! tty | grep -q /dev/pts; then
-
-	    # and we have tmux and it's not running, start it
-	    if type tmux > /dev/null && [ -z "$TMUX" ]; then
-	        tmux
-
-			# exit zsh when we exit tmux
-		    exit
-		fi
-	fi
-fi
-
-#
 # output only if we're in a virtual terminal
 #
 if tty | grep -q /dev/pts; then
