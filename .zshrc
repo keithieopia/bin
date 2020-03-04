@@ -74,38 +74,6 @@ fi
 # set default editor
 export EDITOR=nvim
 
-# add sbin to path
-export PATH=/sbin:"${PATH}"
-
-# Include user's private bin if it exists
-if [ -d ~/bin ]; then
-    export PATH=~/bin:"${PATH}"
-fi
-
-# Include pip install path
-if [ -d ~/.local/bin ]; then
-    export PATH=~/.local/bin:"${PATH}"
-fi
-
-# set go path
-if [ -d ~/.go ]; then
-    export GOPATH=$HOME/.go
-    export PATH=$GOROOT/bin:"${PATH}"
-fi
-
-# set npm path
-if [ -d ~/.npm-packages ]; then
-	export NPM_PACKAGES="$HOME/.npm-packages"
-	export PATH=$NPM_PACKAGES/bin:"${PATH}"
-	unset MANPATH
-	MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
-	export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
-fi
-
-if type ccache > /dev/null; then
-    export PATH="/usr/lib/ccache/bin/:$PATH"
-fi
-
 case "$TERM" in
     xterm*) TERM=xterm-256color
 esac
