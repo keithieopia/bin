@@ -63,14 +63,6 @@ source ~/.config/zsh/alias.zsh
 source ~/.config/zsh/find-missing-cmds.zsh
 source ~/.config/zsh/functions.zsh
 
-if [ -f "${HOME}/.bash_aliases" ]; then
-	source "${HOME}/.bash_aliases"
-fi
-
-if [ -f "${HOME}/.bash_functions" ]; then
-	source "${HOME}/.bash_functions"
-fi
-
 # set default editor
 export EDITOR=nvim
 
