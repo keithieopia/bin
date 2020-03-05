@@ -146,3 +146,5 @@ alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
 alias status='systemctl status '
 alias syslog='journalctl -u '
+
+alias loc="git ls-files | xargs wc -l | tail -1 | sed 's/total/lines of code/g'"
