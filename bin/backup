@@ -19,7 +19,7 @@ echo
 export BORG_PASSPHRASE=$password
 
 
-LAST_HOME_ARCHIVE=$(borg list ${FOLDER}/backup | grep 'home' | tail -1 | awk -F- '{print $2$3$4}')
+LAST_HOME_ARCHIVE=$(borg list ${FOLDER}/backup | grep 'home' | tail -1 | awk -F- '{print $2$3$4}' | awk '{print $1}')
 
 if [ $LAST_HOME_ARCHIVE -ne $(date +%Y%m%d) ]; then
     BACKUPNAME="home-$(date +%F)"
@@ -40,5 +40,5 @@ INSTALL_DRIVE=$(find /run/media/$(whoami) -maxdepth 1 -name "installs" -type d -
 
 if [ -d "$INSTALL_DRIVE" ]; then
     BACKUPNAME="installs-$(date +%F)"
-    borg create -s --progress ${FOLDER}/backup::${BACKUPNAME} $INSTALL_DRIVE
+    borg create -e $INSTALL_DRIVE/lost+found -s --progress ${FOLDER}/backup::${BACKUPNAME} $INSTALL_DRIVE
 fi
