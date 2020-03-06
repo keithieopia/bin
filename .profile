@@ -38,4 +38,6 @@ if type ccache > /dev/null; then
     export PATH="/usr/lib/ccache/bin/:$PATH"
 fi
 
-_byobu_sourced=1 . /usr/bin/byobu-launch 2>/dev/null || true
+if type byobu > /dev/null; then
+	_byobu_sourced=1 . /usr/bin/byobu-launch 2>/dev/null || true
+fi
