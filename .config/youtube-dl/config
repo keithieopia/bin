@@ -2,6 +2,8 @@
 # (my ISP sucks and transfers tend to be throttled and/or slow)
 -f bestvideo[height<=?720]+bestaudio/best
 
+--no-check-certificate
+
 # axel is a great downloader and vastly speeds up transfers 
 --external-downloader axel 
---external-downloader-args "-n 15 -a -k"
+--external-downloader-args "--user-agent='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6' -n 15 -a -k"
