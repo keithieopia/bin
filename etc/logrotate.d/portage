@@ -1,0 +1,11 @@
+/var/log/portage/*.log {
+	su portage portage
+	createolddir 755 portage portage
+	rotate 1
+	weekly
+	nocreate
+	missingok
+	ifempty
+	olddir /var/log/portage/old
+	compress
+}

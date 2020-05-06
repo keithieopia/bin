@@ -1,98 +1,98 @@
-## Sudoers allows particular users to run various commands as
-## the root user, without needing the root password.
+## sudoers file.
 ##
-## Examples are provided at the bottom of the file for collections
-## of related commands, which can then be delegated out to particular
-## users or groups.
-## 
-## This file must be edited with the 'visudo' command.
-
-## Host Aliases
-## Groups of machines. You may prefer to use hostnames (perhaps using 
-## wildcards for entire domains) or IP addresses instead.
-# Host_Alias     FILESERVERS = fs1, fs2
-# Host_Alias     MAILSERVERS = smtp, smtp2
-
-## User Aliases
-## These aren't often necessary, as you can use regular groups
-## (ie, from files, LDAP, NIS, etc) in this file - just use %groupname 
-## rather than USERALIAS
-# User_Alias ADMINS = jsmith, mikem
-
-
-## Command Aliases
-## These are groups of related commands...
-
-## Networking
-# Cmnd_Alias NETWORKING = /sbin/route, /sbin/ifconfig, /bin/ping, /sbin/dhclient, /usr/bin/net, /sbin/iptables, /usr/bin/rfcomm, /usr/bin/wvdial, /sbin/iwconfig, /sbin/mii-tool
-
-## Installation and management of software
-# Cmnd_Alias SOFTWARE = /bin/rpm, /usr/bin/up2date, /usr/bin/yum
-
-## Services
-# Cmnd_Alias SERVICES = /sbin/service, /sbin/chkconfig
-
-## Updating the locate database
-# Cmnd_Alias LOCATE = /usr/bin/updatedb
-
-## Storage
-# Cmnd_Alias STORAGE = /sbin/fdisk, /sbin/sfdisk, /sbin/parted, /sbin/partprobe, /bin/mount, /bin/umount
-
-## Delegating permissions
-# Cmnd_Alias DELEGATING = /usr/sbin/visudo, /bin/chown, /bin/chmod, /bin/chgrp 
-
-## Processes
-# Cmnd_Alias PROCESSES = /bin/nice, /bin/kill, /usr/bin/kill, /usr/bin/killall
-
-## Drivers
-# Cmnd_Alias DRIVERS = /sbin/modprobe
-
-# Defaults specification
-
-#
-# Refuse to run if unable to disable echo on the tty.
-#
-Defaults   !visiblepw
-
-Defaults    env_reset
-Defaults    env_keep =  "COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS"
-Defaults    env_keep += "MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE"
-Defaults    env_keep += "LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES"
-Defaults    env_keep += "LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE"
-Defaults    env_keep += "LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY"
-
-Defaults    secure_path = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-## Next comes the main part: which users can run what software on 
-## which machines (the sudoers file can be shared between multiple
-## systems).
-## Syntax:
+## This file MUST be edited with the 'visudo' command as root.
+## Failure to use 'visudo' may result in syntax or file permission errors
+## that prevent sudo from running.
 ##
-## 	user	MACHINE=COMMANDS
+## See the sudoers man page for the details on how to write a sudoers file.
 ##
-## The COMMANDS section may have other options added to it.
+
 ##
-## Allow root to run any commands anywhere 
-root	ALL=(ALL) 	ALL
+## Host alias specification
+##
+## Groups of machines. These may include host names (optionally with wildcards),
+## IP addresses, network numbers or netgroups.
+# Host_Alias	WEBSERVERS = www1, www2, www3
 
-## Allows members of the 'sys' group to run networking, software, 
-## service management apps and more.
-# %sys ALL = NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS
+##
+## User alias specification
+##
+## Groups of users.  These may consist of user names, uids, Unix groups,
+## or netgroups.
+# User_Alias	ADMINS = millert, dowdy, mikef
 
-## Allows people in group wheel to run all commands
-%wheel	ALL=(ALL)	ALL
+##
+## Cmnd alias specification
+##
+## Groups of commands.  Often used to group related commands together.
+# Cmnd_Alias	PROCESSES = /usr/bin/nice, /bin/kill, /usr/bin/renice, \
+# 			    /usr/bin/pkill, /usr/bin/top
+# Cmnd_Alias	REBOOT = /sbin/halt, /sbin/reboot, /sbin/poweroff
+
+##
+## Defaults specification
+##
+## You may wish to keep some of the following environment variables
+## when running commands via sudo.
+##
+## Locale settings
+# Defaults env_keep += "LANG LANGUAGE LINGUAS LC_* _XKB_CHARSET"
+##
+## Run X applications through sudo; HOME is used to find the
+## .Xauthority file.  Note that other programs use HOME to find   
+## configuration files and this may lead to privilege escalation!
+# Defaults env_keep += "HOME"
+##
+## X11 resource path settings
+# Defaults env_keep += "XAPPLRESDIR XFILESEARCHPATH XUSERFILESEARCHPATH"
+##
+## Desktop path settings
+# Defaults env_keep += "QTDIR KDEDIR"
+##
+## Allow sudo-run commands to inherit the callers' ConsoleKit session
+# Defaults env_keep += "XDG_SESSION_COOKIE"
+##
+## Uncomment to enable special input methods.  Care should be taken as
+## this may allow users to subvert the command being run via sudo.
+# Defaults env_keep += "XMODIFIERS GTK_IM_MODULE QT_IM_MODULE QT_IM_SWITCHER"
+##
+## Uncomment to use a hard-coded PATH instead of the user's to find commands
+# Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+##
+## Uncomment to send mail if the user does not enter the correct password.
+# Defaults mail_badpass
+##
+## Uncomment to enable logging of a command's output, except for
+## sudoreplay and reboot.  Use sudoreplay to play back logged sessions.
+# Defaults log_output
+# Defaults!/usr/bin/sudoreplay !log_output
+# Defaults!/usr/local/bin/sudoreplay !log_output
+# Defaults!REBOOT !log_output
+
+##
+## Runas alias specification
+##
+
+##
+## User privilege specification
+##
+root ALL=(ALL) ALL
+
+## Uncomment to allow members of group wheel to execute any command
+%wheel ALL=(ALL) ALL
 
 ## Same thing without a password
-# %wheel	ALL=(ALL)	NOPASSWD: ALL
+# %wheel ALL=(ALL) NOPASSWD: ALL
 
-## Allows members of the users group to mount and unmount the 
-## cdrom as root
-# %users  ALL=/sbin/mount /mnt/cdrom, /sbin/umount /mnt/cdrom
+## Uncomment to allow members of group sudo to execute any command
+# %sudo	ALL=(ALL) ALL
 
-## Allows members of the users group to shutdown this system
-# %users  localhost=/sbin/shutdown -h now
+## Uncomment to allow any user to run sudo if they know the password
+## of the user they are running the command as (root by default).
+# Defaults targetpw  # Ask for the password of the target user
+# ALL ALL=(ALL) ALL  # WARNING: only use this together with 'Defaults targetpw'
 
-## Read drop-in files from /etc/sudoers.d (the # here does not mean a comment)
+## Read drop-in files from /etc/sudoers.d
+## (the '#' here does not indicate a comment)
 #includedir /etc/sudoers.d
-
-%wheel ALL=(ALL) NOPASSWD: /usr/bin/mount, /usr/bin/umount, /sbin/cryptsetup, /usr/bin/dnf update, /usr/bin/dnf upgrade
+%wheel ALL=(ALL) NOPASSWD: /bin/mount, /bin/umount, /sbin/cryptsetup, /usr/bin/emerge, /usr/bin/eix
