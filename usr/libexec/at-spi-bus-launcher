@@ -1,2 +1,7 @@
 #!/bin/bash
+
+# Accessibility services are on by default in Gnome. NO_AT_BRIDGE=1 is the
+# documented solution to disable at-spi from running, but in my experience
+# it usually isn't honored. So we fight fire with fire:
+
 exit 0
