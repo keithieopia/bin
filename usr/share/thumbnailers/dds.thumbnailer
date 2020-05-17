@@ -1,0 +1,3 @@
+[Thumbnailer Entry]
+Exec=/usr/bin/convert -thumbnail x%s %i png:%o
+MimeType=image/x-dds;
