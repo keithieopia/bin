@@ -10,11 +10,6 @@ function cdup() {
     cd $x
 }
 
-# lesspipe for non-text input files
-if type lesspipe &> /dev/null; then
-	eval "$(SHELL=/bin/sh lesspipe)"
-fi
-
 # auto sudo dpkg if needed
 function dpkg() {
 	if [ "$1" = "-i" ]; then
