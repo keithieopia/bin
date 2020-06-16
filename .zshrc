@@ -15,9 +15,8 @@ autoload -Uz compinit
 compinit
 
 # clone zgen if not present
-if [ ! -d "${HOME}/.zgen" ]; then
-	git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
-fi
+[ ! -d "${HOME}/.zgen" ] && git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
+
 
 # sanity check for above failing:
 # source zgen only if it exists
@@ -34,13 +33,23 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen oh-my-zsh plugins/compleat
 		zgen oh-my-zsh plugins/yarn
 		zgen oh-my-zsh plugins/wd
+		zgen oh-my-zsh plugins/dotenv
+		zgen oh-my-zsh plugins/gitfast
+		zgen oh-my-zsh plugins/git
+		zgen oh-my-zsh plugins/z
+		zgen oh-my-zsh plugins/ufw
+		zgen oh-my-zsh plugins/dirhistory
+		zgen load MichaelAquilina/zsh-you-should-use
 		zgen load supercrabtree/k
-
-		# Linux only plugins
-		if uname | grep -s Linux >/dev/null; then
-			zgen oh-my-zsh plugins/ufw
-		fi
-
+		zgen load robertzk/send.zsh
+		zgen load zlsun/solarized-man
+		zgen load $HOME/.config/zsh/colors.zsh
+		zgen load $HOME/.config/zsh/alias.zsh
+		zgen load $HOME/.config/zsh/find-missing-cmds.zsh
+		zgen load $HOME/.config/zsh/functions.zsh
+		zgen load $HOME/.config/zsh/remind.zsh
+		zgen load $HOME/.config/zsh/fortune.zsh
+		zgen load $HOME/.config/zsh/prompt.zsh
 		# generate the init script from plugins above
 		zgen save
 	fi
@@ -58,11 +67,6 @@ HISTSIZE=50
 SAVEHIST=50
 HISTFILE=~/.bash_history
 
-# Aliases & Functions
-source ~/.config/zsh/alias.zsh
-source ~/.config/zsh/find-missing-cmds.zsh
-source ~/.config/zsh/functions.zsh
-
 # set default editor
 export EDITOR=nvim
 
@@ -71,15 +75,13 @@ case "$TERM" in
 esac
 
 
-# output only if we're in a virtual terminal
-#
-if tty | grep -q /dev/pts; then
-	if [ -f "~/.config/zsh/remind.zsh" ]; then
-		source ~/.config/zsh/remind.zsh
-	fi
+# auto ls when cd'ing
+chpwd() { ls }
 
-	source ~/.config/zsh/fortune.zsh
-	echo
+# output only if we're in a virtual terminal
+if tty | grep -q /dev/pts; then
+	show_remind
+	show_fortune
 fi
 
-source ~/.config/zsh/prompt.zsh
+show_prompt

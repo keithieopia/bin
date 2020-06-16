@@ -1,7 +1,6 @@
 #
 # alias
 #
-
 # helper function to see if programs are installed
 have() { command -v foo >/dev/null 2>&1 ; }
 
@@ -13,10 +12,6 @@ alias ps='ps -auxf'
 alias du='du -h'
 alias dd='dd status=progress'
 alias mkdir='mkdir -pv'
-alias dir='dir --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
 alias ping='ping -c 5'
 alias free='free -ht'
 alias dig='dig +nocmd any +multiline +noall +answer'
@@ -40,13 +35,6 @@ have curl && alias wget='curl -# -O' || {
 	alias wget='wget -c'
 }
 
-###############################################################################
-# colors: taste the rainbow
-##
-
-have colordiff && alias diff='colordiff'
-have pygmentize && alias cat='pygmentize -O style=monokai -f console256 -g '
-
 ################################################################################
 # aliases for Linux programs to point to the FreeBSD alternate command
 ##
@@ -62,17 +50,9 @@ fi
 if zgen list | grep -q "k.plugin.zsh"; then
 	alias lsl='k -h --group-directories-first | less -R'
 	alias lsd='k -h -d' # list only directories
+fi
 
-	# use `k` instead of `ls` if called without any arguments
-	# otherwise use GNU `ls` and pass the arguments to it like normal
-	function ls() {
-		if [ "$#" -eq 1 ]; then
-			k -h --group-directories-first
-		else
-			/bin/ls --color --group-directories-first -Fh $@
-		fi
-	}
-elif ls --version 2>/dev/null | grep -q GNU; then
+if ls --version 2>/dev/null | grep -q GNU; then
 	# GNU coreutils only
 	alias ls='ls --color --group-directories-first -Fh'
 else

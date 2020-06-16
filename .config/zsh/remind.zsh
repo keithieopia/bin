@@ -1,3 +1,4 @@
+show_remind() {
 if which remind >/dev/null 2>&1; then
 	#
 	# this downloads events from google calendar and converts them
@@ -31,3 +32,4 @@ if which remind >/dev/null 2>&1; then
 	remind -mc+2w$(tput cols) $HOME/.remind
 	tput sgr0
 fi
+}
