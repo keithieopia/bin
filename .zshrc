@@ -3,6 +3,8 @@ if [ -f "${HOME}/.config/zsh/dotfiles-autoupdate.zsh" ]; then
 	source "${HOME}/.config/zsh/dotfiles-autoupdate.zsh"
 fi
 
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)
+
 # fix for slow git completion
 # must come before loading plugins
 __git_files () {
