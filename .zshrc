@@ -43,8 +43,8 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen oh-my-zsh plugins/dirhistory
 		zgen load MichaelAquilina/zsh-you-should-use
 		zgen load supercrabtree/k
-		zgen load robertzk/send.zsh
 		zgen load zlsun/solarized-man
+		zgen load psprint/zsh-morpho
 		zgen load $HOME/.config/zsh/colors.zsh
 		zgen load $HOME/.config/zsh/alias.zsh
 		zgen load $HOME/.config/zsh/find-missing-cmds.zsh
@@ -56,6 +56,13 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen save
 	fi
 fi
+
+# screensaver (zsh-morpho)
+zstyle ":morpho" screen-saver "cmatrix" # select screen saver "zmorpho"; available: zmorpho, zmandelbrot, zblank, pmorpho
+                                        # this  can also be a command, e.g. "cmatrix"
+zstyle ":morpho" arguments "-s"         # arguments given to screen saver program; -s - every key press ends
+zstyle ":morpho" delay "290"            # 5 minutes before screen saver starts
+zstyle ":morpho" check-interval "60"    # check every 1 minute if to run screen saver
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
