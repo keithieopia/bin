@@ -8,7 +8,7 @@
 #--external-downloader axel 
 #--external-downloader-args "-n 15 -a -k"
 --external-downloader aria2c
---external-downloader-args "-c -j5 -x5 -s5 "
+--external-downloader-args "-c -j5 -x5 -s5 --console-log-level=error"
 
 # avoid errors about latin-1 encoder without changing locale
 --restrict-filenames
