@@ -94,6 +94,7 @@ alias update-grub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
 alias copy='rsync -WaPh ' # cp with progress indicator
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e' # like pgrep, but better
 alias dirsize="pwd && du -h . 2>/dev/null | tail -1 | awk '{print $1}'"
+alias biggest='find . -type f -exec du -a {} + | sort -n -r | awk '\''{$1=""}1'\'' | head -25'
 alias duless='du -ach 2>/dev/null | sort -h | less'
 alias wifi-scan='nmcli dev wifi list'
 
