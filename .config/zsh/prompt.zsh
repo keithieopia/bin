@@ -5,7 +5,7 @@ zsh_usr_symbol() {
     if [ "$USER" = "root" ]; then
 		echo "%{%F{red}%}#%{%f%}"
     else
-    	echo "$"
+		echo "$"
     fi
 }
 
@@ -14,8 +14,8 @@ zsh_git() {
 	if git -C $PWD rev-parse --is-inside-work-tree 2>/dev/null | grep -q true; then
 
 		BRANCH="$(git -C $PWD branch --no-color | grep '*' | sed 's/* //g')"
-    	INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
-    	COLOR="%{%F{blue}%}"
+		INDEX=$(git status --porcelain 2> /dev/null | awk '{print $1}')
+		COLOR="%{%F{blue}%}"
 
 		if $(echo "$INDEX" | grep -q '??'); then # Untracked files
 			COLOR="%{%F{magenta}%}"
@@ -39,7 +39,7 @@ zsh_git() {
 
 zsh_remote_host() {
     if [ "$SSH_CONNECTION" ]; then
-    	echo -n "%{%F{yellow}%}"
+		echo -n "%{%F{yellow}%}"
 		echo -n "$(whoami)@$(hostname)"
         echo "%{%f%}"
     fi
@@ -53,7 +53,7 @@ preexec() {
 precmd() {
 	EXIT_STATUS=$?
 	if [ "$EXIT_STATUS" != 0 ] && [ "$preexec_called" = 1 ]; then
-		RPS1="%{%F{red}%}$EXIT_STATUS ✘%{%f%} "
+		RPS1="%{%F{red}%}$EXIT_STATUS X%{%f%} "
 		unset preexec_called
 	else
 		RPS1=""
@@ -65,4 +65,6 @@ precmd() {
 	RPS1="$RPS1$(zsh_git)"
 }
 
-export PROMPT="$(zsh_remote_host) %{%B%}%2~%{%b%} $(zsh_usr_symbol) "
+show_prompt() {
+	export PROMPT="$(zsh_remote_host) %{%B%}%2~%{%b%} $(zsh_usr_symbol) "
+}
