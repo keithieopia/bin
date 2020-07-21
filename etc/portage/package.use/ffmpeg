@@ -1,1 +1,1 @@
-media-video/ffmpeg vaapi vdpau
+media-video/ffmpeg vaapi vdpau dav1d x265
