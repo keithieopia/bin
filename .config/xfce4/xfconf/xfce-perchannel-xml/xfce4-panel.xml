@@ -15,13 +15,12 @@
       <property name="plugin-ids" type="array">
         <value type="int" value="1"/>
         <value type="int" value="4"/>
-        <value type="int" value="2"/>
+        <value type="int" value="5"/>
         <value type="int" value="28"/>
         <value type="int" value="12"/>
         <value type="int" value="3"/>
-        <value type="int" value="32"/>
+        <value type="int" value="2"/>
         <value type="int" value="6"/>
-        <value type="int" value="10"/>
         <value type="int" value="11"/>
         <value type="int" value="29"/>
       </property>
@@ -91,7 +90,7 @@
     <property name="plugin-16" type="string" value="separator"/>
     <property name="plugin-7" type="string" value="launcher">
       <property name="items" type="array">
-        <value type="string" value="15881670085.desktop"/>
+        <value type="string" value="15962297831.desktop"/>
       </property>
     </property>
     <property name="plugin-8" type="string" value="launcher">
@@ -130,7 +129,10 @@
     <property name="plugin-32" type="string" value="pulseaudio">
       <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
     </property>
-    <property name="plugin-2" type="string" value="netload"/>
-    <property name="plugin-4" type="string" value="systemload"/>
+    <property name="plugin-2" type="string" value="pulseaudio">
+      <property name="enable-keyboard-shortcuts" type="bool" value="true"/>
+    </property>
+    <property name="plugin-4" type="string" value="cpugraph"/>
+    <property name="plugin-5" type="string" value="netload"/>
   </property>
 </channel>
