@@ -58,11 +58,15 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 fi
 
 # screensaver (zsh-morpho)
-zstyle ":morpho" screen-saver "cmatrix" # select screen saver "zmorpho"; available: zmorpho, zmandelbrot, zblank, pmorpho
-                                        # this  can also be a command, e.g. "cmatrix"
-zstyle ":morpho" arguments "-s"         # arguments given to screen saver program; -s - every key press ends
-zstyle ":morpho" delay "290"            # 5 minutes before screen saver starts
-zstyle ":morpho" check-interval "60"    # check every 1 minute if to run screen saver
+if tty | grep -q /dev/tty; then
+	if hash cmatrix 2>/dev/null; then
+		zstyle ":morpho" screen-saver "cmatrix" # select screen saver "zmorpho"; available: zmorpho, zmandelbrot, zblank, pmorpho
+	fi
+	
+	zstyle ":morpho" arguments "-s"         # arguments given to screen saver program; -s - every key press ends
+	zstyle ":morpho" delay "300"            # 5 minutes before screen saver starts
+	zstyle ":morpho" check-interval "60"    # check every 1 minute if to run screen saver
+fi
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
