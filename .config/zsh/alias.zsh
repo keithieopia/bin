@@ -10,7 +10,7 @@ have() { command -v foo >/dev/null 2>&1 ; }
 
 alias ps='ps -auxf'
 alias du='du -h'
-alias dd='dd status=progress'
+alias dd='sudo dd status=progress'
 alias mkdir='mkdir -pv'
 alias ping='ping -c 5'
 alias free='free -ht'
