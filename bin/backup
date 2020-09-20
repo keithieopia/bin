@@ -13,15 +13,20 @@ if ! grep -q "Borg Backup" ${FOLDER}/backup/README 2>/dev/null; then
   exit 1
 fi
 
-echo -n "Archive Password: "
-read -s password
-echo
-export BORG_PASSPHRASE=$password
-
+if [ -z $BORG_PASSPHRASE ]; then
+	echo -n "Archive Password: "
+	read -s password
+	echo
+	export BORG_PASSPHRASE=$password
+fi
 
 LAST_HOME_ARCHIVE=$(borg list ${FOLDER}/backup | grep 'home' | tail -1 | awk -F- '{print $2$3$4}' | awk '{print $1}')
 
-if [ $LAST_HOME_ARCHIVE -ne $(date +%Y%m%d) ]; then
+if [ $(echo $LAST_HOME_ARCHIVE | wc -c) -eq 0 ]; then
+	LAST_HOME_ARCHIVE=0
+fi
+
+if [[ $LAST_HOME_ARCHIVE -ne $(date +%Y%m%d) ]]; then
     BACKUPNAME="home-$(date +%F)"
     borg create -e ~/.cache -e ~/.local/share/Trash -e ~/.local/share/Steam -s --progress ${FOLDER}/backup::${BACKUPNAME} ~
 else
