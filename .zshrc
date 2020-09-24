@@ -16,6 +16,14 @@ __git_files () {
 autoload -Uz compinit
 compinit
 
+# fix for root shell
+MORPHO=/tmp/morpho-active-shell
+if test -f $MORPHO; then
+	if ! namei $MORPHO > /dev/null; then
+		sudo chown $(whoami) $MORPHO
+	fi
+fi
+
 # clone zgen if not present
 [ ! -d "${HOME}/.zgen" ] && git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
 
@@ -67,6 +75,7 @@ if tty | grep -q /dev/tty; then
 	zstyle ":morpho" delay "300"            # 5 minutes before screen saver starts
 	zstyle ":morpho" check-interval "60"    # check every 1 minute if to run screen saver
 fi
+
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
