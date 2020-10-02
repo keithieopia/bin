@@ -16,17 +16,8 @@ __git_files () {
 autoload -Uz compinit
 compinit
 
-# fix for root shell
-MORPHO=/tmp/morpho-active-shell
-if test -f $MORPHO; then
-	if ! namei $MORPHO > /dev/null; then
-		sudo chown $(whoami) $MORPHO
-	fi
-fi
-
 # clone zgen if not present
 [ ! -d "${HOME}/.zgen" ] && git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
-
 
 # sanity check for above failing:
 # source zgen only if it exists
@@ -52,7 +43,6 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen load MichaelAquilina/zsh-you-should-use
 		zgen load supercrabtree/k
 		zgen load zlsun/solarized-man
-		zgen load psprint/zsh-morpho
 		zgen load $HOME/.config/zsh/colors.zsh
 		zgen load $HOME/.config/zsh/alias.zsh
 		zgen load $HOME/.config/zsh/find-missing-cmds.zsh
@@ -64,18 +54,6 @@ if [ -f "${HOME}/.zgen/zgen.zsh" ]; then
 		zgen save
 	fi
 fi
-
-# screensaver (zsh-morpho)
-if tty | grep -q /dev/tty; then
-	if hash cmatrix 2>/dev/null; then
-		zstyle ":morpho" screen-saver "cmatrix" # select screen saver "zmorpho"; available: zmorpho, zmandelbrot, zblank, pmorpho
-	fi
-	
-	zstyle ":morpho" arguments "-s"         # arguments given to screen saver program; -s - every key press ends
-	zstyle ":morpho" delay "300"            # 5 minutes before screen saver starts
-	zstyle ":morpho" check-interval "60"    # check every 1 minute if to run screen saver
-fi
-
 
 # reset frozen terminals by misbehaving applications
 ttyctl -f
