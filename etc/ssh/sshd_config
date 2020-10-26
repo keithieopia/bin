@@ -147,4 +147,5 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 #	AllowTcpForwarding no
 #	PermitTTY no
 #	ForceCommand cvs server
-AuthenticationMethods publickey,password password,keyboard-interactive
+
+AuthenticationMethods publickey password,keyboard-interactive
