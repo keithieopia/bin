@@ -1,4 +1,4 @@
-# dotfiles [ ![Codacy Badge](https://api.codacy.com/project/badge/Grade/45075b8bb6664b8c82e1b5d1f707fe7c)](https://www.codacy.com/app/timothykeith/dotfiles) [![MIT License](https://img.shields.io/github/license/keithieopia/dotfiles.svg)](https://github.com/keithieopia/dotfiles/blob/master/LICENSE) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/keithieopia)
+# dotfiles
 
 > These are my dotfiles. There are many dotfile repos, but this one is mine.  
 > My dotfiles are my best friend. They are my life. I must master what
@@ -30,14 +30,14 @@ Here's a high level overview if you just want to see what I use:
 
 | Category                | Program                                                                     |
 | ----------------------- | --------------------------------------------------------------------------- |
-| **Distro**:             | [Fedora Workstation](https://getfedora.org/en/workstation/)                 |
+| **Distro**:             | [openSUSE Tumbleweed](https://get.opensuse.org/tumbleweed/)                 |
 | **Desktop Environment** | [KDE Plasma](https://kde.org/plasma-desktop)                                |
 | **Browser**:            | [Firefox](https://www.mozilla.org/en-US/firefox/new/)                       |
 | **Shell**:              | [Zsh](http://zsh.sourceforge.net/)                                          |
 | **Shell Plugins**:      | [zgen](https://github.com/tarjoilija/zgen) & [Oh-My-Zsh](http://ohmyz.sh/)  |
 | **Shell Theme**:        | [Solarized Dark](https://ethanschoonover.com/solarized/)                    |
-| **Editor**:             | [Neovim](https://neovim.io/) and [JOE](https://joe-editor.sourceforge.io/)  |
-| **IDE**:                | [Kate](https://kate-editor.org/)                                            |
+| **Editor**:             | [Neovim](https://neovim.io/) & [kate](https://kate-editor.org/)             |
+| **IDE**:                | [Visual Studio Code](https://code.visualstudio.com/)                        |
 
 ## Installation / Managing
 <a name="install"></a>
@@ -84,19 +84,14 @@ To import it into your keyring:
 $ curl https://gist.githubusercontent.com/keithieopia/434f3575ec1f020d6589a4c01dc0847e/raw/2e0749f2966ff501ee28797a926229c081f7e652/timothykeith.pub.asc | gpg --import -
 ```
 
-**NOTE:** SKS Public Key Servers (such as pgp.mit.edu) don't support
-Curve25519 keys yet. In the meantime, consider using
-[Keybase.io](https://keybase.io/); my username is [timothykeith](https://keybase.io/timothykeith).
-
-
 ### Bug Reports
 Submit bug reports via GitHub's [Issue Tracker](https://github.com/keithieopia/dotfiles/issues)
 
 
 ## Author
-Copyright &copy; 2016 - 2020 Timothy Keith, except where otherwise noted.
+Copyright &copy; 2016 - 2021 Timothy Keith, except where otherwise noted.
 
-Licensed under the [MIT license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
+Licensed under the [ISC license](https://github.com/keithieopia/dotfiles/blob/master/LICENSE).
 
 *This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.*
