@@ -1,14 +1,12 @@
-# When given the choice, ignore formats greater than 720p.
-# (my ISP sucks and transfers tend to be throttled and/or slow)
--f bestvideo[height<=?720]+bestaudio/best
-
+-f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4'
+--hls-prefer-native
 --no-check-certificate
 
-# axel is a great downloader and vastly speeds up transfers 
-#--external-downloader axel 
-#--external-downloader-args "-n 15 -a -k"
+--embed-subs 
+--all-subs
+
 --external-downloader aria2c
---external-downloader-args "-c -j5 -x5 -s5 --console-log-level=error"
+--external-downloader-args '-c -j8 -x8 -s8 -k1M --console-log-level=error'
 
 # avoid errors about latin-1 encoder without changing locale
 --restrict-filenames
