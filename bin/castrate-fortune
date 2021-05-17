@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+	sudo $0 $*
+fi
+
+COOKIEDIR=/usr/share/fortune
+
+rm $COOKIEDIR/ascii-art
+rm $COOKIEDIR/ascii-art.dat
+rm $COOKIEDIR/ascii-art.u8
+
+rm $COOKIEDIR/knghtbrd
+rm $COOKIEDIR/knghtbrd.dat
+rm $COOKIEDIR/knghtbrd.u8
+
+rm $COOKIEDIR/off/racism
+rm $COOKIEDIR/off/racism.dat
+rm $COOKIEDIR/off/racism.u8
+
+rm $COOKIEDIR/off/misogyny
+rm $COOKIEDIR/off/misogyny.dat
+rm $COOKIEDIR/off/misogyny.u8
+
+# could be the crux of a zeitgeist theory on humor
+rm $COOKIEDIR/zippy
+rm $COOKIEDIR/zippy.dat
+rm $COOKIEDIR/zippy.u8
+rm $COOKIEDIR/off/zippy
+rm $COOKIEDIR/off/zippy.dat
+rm $COOKIEDIR/off/zippy.u8
