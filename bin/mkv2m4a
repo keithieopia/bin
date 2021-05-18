@@ -1,0 +1,6 @@
+#!/bin/bash
+
+FILE=$@
+NAME=$(basename "$FILE" .mkv)
+
+ffmpeg -i $FILE -vn -c:a aac -b:a 256k ${NAME}.m4a
