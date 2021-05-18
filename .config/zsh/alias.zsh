@@ -60,11 +60,6 @@ else
 	alias ls='ls -AFhG'
 fi
 
-USRBIN=$(find /usr/bin)
-if grep -q lolcat <<< $USRBIN; then
-  alias lolcat=$(grep lolcat <<< $USRBIN)
-fi
-
 # steam trains are nice, but this suits me better
 have lolcat && alias sl='ls $@ | lolcat' || function sl() {
 	# settle for a Monty Python insult if we don't have lolcat
