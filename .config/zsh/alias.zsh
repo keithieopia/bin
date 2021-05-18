@@ -2,7 +2,7 @@
 # alias
 #
 # helper function to see if programs are installed
-have() { command -v foo >/dev/null 2>&1 ; }
+have() { command -v $@ >/dev/null 2>&1 ; }
 
 ################################################################################
 # default flags to built-in programs
