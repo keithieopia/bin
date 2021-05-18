@@ -16,7 +16,7 @@ alias ping='ping -c 5'
 alias free='free -ht'
 alias dig='dig +nocmd any +multiline +noall +answer'
 alias wget='wget -c'
-alias curl='curl -L -# -O'
+alias curl='curl -L -O'
 
 # safer commands
 alias rm="rm -Iv"
