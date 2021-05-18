@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$1" -eq "-h" ]] || [[ "$1" -eq "--help" ]]; then
 cat <<EOF
