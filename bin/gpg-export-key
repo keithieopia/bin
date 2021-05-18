@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 gpg2 --export -a "$1" > ${1}.pub.asc
 gpg2 --export-secret-keys -a "$1" > ${1}.sec.asc
