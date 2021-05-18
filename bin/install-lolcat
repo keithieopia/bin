@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if command -v lolcat > /dev/null; then
+	echo "lolcat is already installed"
+	exit 1
+fi
+
+if grep -q y <<< $1 || grep -q opensuse /etc/os-release; then
+	sudo gem install lolcat
+	ln -s $(grep lolcat <<< $(find /usr/bin)) $HOME/.local/bin/lolcat
+else
+	source /etc/os-release
+	echo "Are you sure lolcat isn't already packaged for $NAME? If not, re-run me with:"
+	echo "$0 yes"
+	exit 1
+fi

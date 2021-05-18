@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ ! -e "$HOME/.local/bin/micro" ]; then
+	if ! [ -f /tmp/micro ]; then
+		curl -L https://getmic.ro > /tmp/micro
+	fi
+
+	echo "After this message, micro's installer will be shown"
+	echo "Reminder: to be lazy and insecure, you can press q once it's shown to immediately exit"
+	echo
+	read -p
+	
+	less /tmp/micro
+	read -p "Do you want to trust micro's installer and run it? " yn
+	if [ "$yn" != "${yn#[Yy]}" ]; then
+		cd $HOME/.local/bin
+		bash /tmp/micro		
+		rm /tmp/micro
+	else
+		rm /tmp/micro
+		exit 1
+	fi
+else
+	echo "micro is already installed!"
+	exit 1
+fi
