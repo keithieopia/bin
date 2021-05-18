@@ -3,6 +3,10 @@ if [ -f "${HOME}/.config/zsh/dotfiles-autoupdate.zsh" ]; then
 	source "${HOME}/.config/zsh/dotfiles-autoupdate.zsh"
 fi
 
+# add ~/.local/bin to path
+mkdir -p $HOME/.local/bin
+export PATH="$HOME/.local/bin:$PATH"
+
 ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)
 
 # fix for slow git completion
