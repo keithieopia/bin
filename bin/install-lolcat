@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if command -v lolcat > /dev/null; then
 	echo "lolcat is already installed"

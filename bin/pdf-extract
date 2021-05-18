@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if ! hash gs 2>/dev/null; then
     echo "Could not find ghostscript, perhaps it isn't installed?"

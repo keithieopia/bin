@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # freedns.afraid.org updater script
 
 if [ -f "$HOME/.bash_secrets" ]; then

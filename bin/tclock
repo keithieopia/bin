@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # tclock - Display a clock in a terminal
 # http://linuxcommand.org/lc3_adv_tput.php

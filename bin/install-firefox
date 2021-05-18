@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 URL="https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US"
 DIR=$(mktemp -d)

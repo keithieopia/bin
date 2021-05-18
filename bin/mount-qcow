@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # libguestfs is a more robust solution, but it has a lot of deps
 # and has poor Ubuntu support (issues mounting ntfs partitions)

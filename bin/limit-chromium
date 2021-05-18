@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # 2 GB RAM & Swap limit
 mkdir -p /sys/fs/cgroup/memory/browsers

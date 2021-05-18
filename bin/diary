@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DIARY_DIR="$HOME/.diary"
 DATE=$(date +%Y-%m-%d)

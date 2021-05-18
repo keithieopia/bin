@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # port to use on the client for the SOCKS proxy 
 LOCAL_PORT=50080

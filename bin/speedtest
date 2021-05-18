@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 tput setaf 4; echo "Performing speedtest, please wait..."; tput sgr0
 

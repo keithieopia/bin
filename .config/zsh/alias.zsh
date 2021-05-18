@@ -15,6 +15,8 @@ alias mkdir='mkdir -pv'
 alias ping='ping -c 5'
 alias free='free -ht'
 alias dig='dig +nocmd any +multiline +noall +answer'
+alias wget='wget -c'
+alias curl='curl -L -# -O'
 
 # safer commands
 alias rm="rm -Iv"
@@ -31,9 +33,8 @@ have top && alias top='htop'
 have pydf && alias df='pydf'
 have ncdu && alias du='ncdu'
 have gpg2 && alias gpg='gpg2'
-have curl && alias wget='curl -# -O' || {
-	alias wget='wget -c'
-}
+have curl && alias wget='curl'
+have micro && alias nano='micro'
 
 ################################################################################
 # aliases for Linux programs to point to the FreeBSD alternate command
@@ -80,6 +81,9 @@ have lolcat && alias sl='ls $@ | lolcat' || function sl() {
 # new commands
 ##
 
+# find problematic #!/bin/bash compared to the better #!/usr/bin/env bash
+alias shebangbad="find . -type f -exec grep -l '#!/bin/bash' {} \;"
+
 # navigation
 alias ~='cd $HOME && clear'
 alias ..="cd .."
@@ -98,10 +102,9 @@ alias duless='du -ach 2>/dev/null | sort -h | less'
 alias wifi-scan='nmcli dev wifi list'
 
 # git
-alias push='git push'
-alias clone='git clone'
-alias undopush='git push -f origin HEAD^:master'
-alias undocommit='git reset --soft HEAD~1'
+alias git-loc="git ls-files | xargs wc -l | tail -1 | sed 's/total/lines of code/g'"
+alias git-undopush='git push -f origin HEAD^:master'
+alias git-undocommit='git reset --soft HEAD~1'
 
 # permissions
 alias chrw='chmod ug+rw'
@@ -126,5 +129,3 @@ alias stop='sudo systemctl stop '
 alias restart='sudo systemctl restart '
 alias status='systemctl status '
 alias syslog='journalctl -u '
-
-alias loc="git ls-files | xargs wc -l | tail -1 | sed 's/total/lines of code/g'"

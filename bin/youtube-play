@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if grep -q youtube.com <<< "$1" ; then
     URL="$1"

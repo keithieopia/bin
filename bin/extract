@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 
 extract_gz() {
     if hash pigz 2>/dev/null; then

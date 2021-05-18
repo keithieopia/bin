@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 sums() {
     echo "CRC: $(cksum $1 | awk '{print $1}')"
